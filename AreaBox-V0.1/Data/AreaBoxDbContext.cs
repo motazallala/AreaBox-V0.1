@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
+public class AreaBoxDbContext : IdentityDbContext
 {
     public AreaBoxDbContext(DbContextOptions<AreaBoxDbContext> options)
         : base(options)
@@ -44,9 +44,6 @@ public partial class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-
-
 
         modelBuilder.Entity<Categories>(entity =>
         {
@@ -355,8 +352,6 @@ public partial class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasConstraintName("FK_UsersQusetionPostComments_AspNetUsers");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
