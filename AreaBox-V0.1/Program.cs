@@ -1,4 +1,6 @@
 using AreaBox_V0._1.Data;
+using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,14 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<AreaBoxDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("AreaBoxDb"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AreaBoxDbContext>();
 
 
 var app = builder.Build();
