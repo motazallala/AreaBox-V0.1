@@ -1,0 +1,124 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "AreaBoxDbContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "AreaBox_V0._1",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[AspNetRoleClaims]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserClaims]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserLogins]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUsers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserTokens]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cities]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Countries]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MediaPostComments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MediaPostLikes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MediaPosts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MediaPostsReports]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionPostComments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionPosts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionPostsReports]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReportTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TechnicalReports]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UsersMediaPostComments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UsersQusetionPostComments]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "desktop-8d4ecu1.AreaBoxDb.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
