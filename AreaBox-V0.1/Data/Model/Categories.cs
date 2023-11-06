@@ -3,17 +3,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace AreaBox_V0._1.Models;
+namespace AreaBox_V0._1.Data.Model;
 
-public partial class Cities
+public partial class Categories
 {
-    public int CitryId { get; set; }
+    public int CategoryId { get; set; }
 
-    public string CityName { get; set; }
-
-    public int CountryId { get; set; }
-
-    public virtual Countries Country { get; set; }
+    public string CategoryName { get; set; }
 
     public virtual ICollection<MediaPosts> MediaPosts { get; set; } = new List<MediaPosts>();
 
