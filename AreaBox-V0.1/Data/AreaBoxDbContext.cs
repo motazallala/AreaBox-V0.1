@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaBox_V0._1.Data.Model;
 
-public class AreaBoxDbContext : IdentityDbContext
+public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 {
     public AreaBoxDbContext(DbContextOptions<AreaBoxDbContext> options)
         : base(options)

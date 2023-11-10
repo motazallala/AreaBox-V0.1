@@ -13,7 +13,8 @@ builder.Services.AddDbContext<AreaBoxDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AreaBoxDb"));
 });
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AreaBoxDbContext>();
 
 
@@ -38,4 +39,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapRazorPages();
 app.Run();
