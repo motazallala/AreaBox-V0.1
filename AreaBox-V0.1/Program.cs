@@ -2,6 +2,8 @@ using AreaBox_V0._1.Data;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing.Template;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Policy;
 
@@ -39,7 +41,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
 
 app.MapControllerRoute(
     name: "default",
