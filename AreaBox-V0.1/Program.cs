@@ -1,6 +1,7 @@
 using AreaBox_V0._1.Data;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models;
+using AreaBox_V0._1.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<AreaBoxDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AreaBoxDbContext>();
+
+builder.Services.AddSignalR();
 
 
 var app = builder.Build();
@@ -38,6 +41,14 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHub>("/chathub");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Chat}/{id?}");
+});
 
 app.MapRazorPages();
 app.Run();

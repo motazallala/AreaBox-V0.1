@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+</head>
+<body>
+    <input type="text" id="cityID" placeholder="city">
+    <input type="text" id="messageInput" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+    <ul id="messagesList"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", (userId, message, time) => {
+            const messagesList = document.getElementById("messagesList");
+            const li = document.createElement("li");
+
+            // Create a link to the user profile page
+            const link = document.createElement("a");
+            link.href = `/profile/${userId}`;
+
+            // Format the timestamp to a readable date
+            const formattedTime = new Date(time).toLocaleString();
+
+            link.textContent = `${message} ${formattedTime}`;
+            
+            li.appendChild(link);
+            messagesList.appendChild(li);
+        });
+
+        connection.start().catch(err => console.error(err));
+
+        function sendMessage() {
+            const cityInput = document.getElementById('cityID');
+            const messageInput = document.getElementById("messageInput");
+            const city = cityInput.value;
+            const message = messageInput.value;
+            const time = Date.now();
+            // Join the city group when sending a message
+            connection.invoke("JoinCityGroup", city).catch(err => console.error(err));
+
+            // Send the message to the server along with the city and timestamp
+            connection.invoke("SendMessage", message, city, time).catch(err => console.error(err));
+
+            messageInput.value = "";
+        }
+
+        // Leave the city group when disconnecting or navigating away
+        window.addEventListener('beforeunload', () => {
+            const cityInput = document.getElementById('cityID');
+            const city = cityInput.value;
+
+            // Leave the city group when disconnecting or navigating away
+            connection.invoke("LeaveCityGroup", city).catch(err => console.error(err));
+        });
+    </script>
+</body>
+</html>
