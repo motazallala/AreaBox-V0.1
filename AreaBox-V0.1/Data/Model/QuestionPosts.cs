@@ -4,6 +4,10 @@ namespace AreaBox_V0._1.Data.Model;
 
 public partial class QuestionPosts
 {
+    public QuestionPosts()
+    {
+        this.QpostId = Guid.NewGuid().ToString();
+    }
     public string QpostId { get; set; }
 
     public int QpcategoryId { get; set; }

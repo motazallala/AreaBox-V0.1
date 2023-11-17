@@ -181,18 +181,16 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostLikes", b =>
                 {
                     b.Property<string>("MpostId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("MPostID");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("UserID");
 
-                    b.HasIndex("MpostId");
+                    b.HasKey("MpostId", "UserId");
 
                     b.HasIndex("UserId");
 
@@ -430,6 +428,23 @@ namespace AreaBox_V0._1.Migrations
                     b.ToTable("TechnicalReports");
                 });
 
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserCategories", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserID");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("UserCategories");
+                });
+
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.UsersMediaPostComments", b =>
                 {
                     b.Property<string>("MpcommentId")
@@ -634,7 +649,7 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostLikes", b =>
                 {
                     b.HasOne("AreaBox_V0._1.Data.Model.MediaPosts", "Mpost")
-                        .WithMany()
+                        .WithMany("MediaPostsLikes")
                         .HasForeignKey("MpostId")
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostLikes_MediaPosts");
@@ -764,6 +779,25 @@ namespace AreaBox_V0._1.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserCategories", b =>
+                {
+                    b.HasOne("AreaBox_V0._1.Data.Model.Categories", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserCategories_Category");
+
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserCategories_AspNetUsers");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.UsersMediaPostComments", b =>
                 {
                     b.HasOne("AreaBox_V0._1.Data.Model.MediaPostComments", "Mpcomment")
@@ -884,6 +918,8 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPosts", b =>
                 {
                     b.Navigation("MediaPostComments");
+
+                    b.Navigation("MediaPostsLikes");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPosts", b =>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaBox_V0._1.Migrations
 {
     [DbContext(typeof(AreaBoxDbContext))]
-    [Migration("20231106163901_initMig")]
+    [Migration("20231117175701_initMig")]
     partial class initMig
     {
         /// <inheritdoc />
@@ -24,6 +24,71 @@ namespace AreaBox_V0._1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.Categories", b =>
                 {
@@ -119,18 +184,16 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostLikes", b =>
                 {
                     b.Property<string>("MpostId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("MPostID");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("UserID");
 
-                    b.HasIndex("MpostId");
+                    b.HasKey("MpostId", "UserId");
 
                     b.HasIndex("UserId");
 
@@ -368,6 +431,23 @@ namespace AreaBox_V0._1.Migrations
                     b.ToTable("TechnicalReports");
                 });
 
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserCategories", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserID");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("UserCategories");
+                });
+
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.UsersMediaPostComments", b =>
                 {
                     b.Property<string>("MpcommentId")
@@ -462,79 +542,6 @@ namespace AreaBox_V0._1.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -563,10 +570,12 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -603,10 +612,12 @@ namespace AreaBox_V0._1.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -614,13 +625,6 @@ namespace AreaBox_V0._1.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("AreaBox_V0._1.Data.Model.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.Cities", b =>
@@ -648,7 +652,7 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostLikes", b =>
                 {
                     b.HasOne("AreaBox_V0._1.Data.Model.MediaPosts", "Mpost")
-                        .WithMany()
+                        .WithMany("MediaPostsLikes")
                         .HasForeignKey("MpostId")
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostLikes_MediaPosts");
@@ -778,6 +782,25 @@ namespace AreaBox_V0._1.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserCategories", b =>
+                {
+                    b.HasOne("AreaBox_V0._1.Data.Model.Categories", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserCategories_Category");
+
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserCategories_AspNetUsers");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.UsersMediaPostComments", b =>
                 {
                     b.HasOne("AreaBox_V0._1.Data.Model.MediaPostComments", "Mpcomment")
@@ -827,7 +850,7 @@ namespace AreaBox_V0._1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -836,7 +859,7 @@ namespace AreaBox_V0._1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -851,7 +874,7 @@ namespace AreaBox_V0._1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -860,11 +883,20 @@ namespace AreaBox_V0._1.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.ApplicationUser", b =>
+                {
+                    b.Navigation("MediaPosts");
+
+                    b.Navigation("QuestionPosts");
+
+                    b.Navigation("TechnicalReports");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.Categories", b =>
@@ -889,20 +921,13 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPosts", b =>
                 {
                     b.Navigation("MediaPostComments");
+
+                    b.Navigation("MediaPostsLikes");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPosts", b =>
                 {
                     b.Navigation("QuestionPostComments");
-                });
-
-            modelBuilder.Entity("AreaBox_V0._1.Data.Model.ApplicationUser", b =>
-                {
-                    b.Navigation("MediaPosts");
-
-                    b.Navigation("QuestionPosts");
-
-                    b.Navigation("TechnicalReports");
                 });
 #pragma warning restore 612, 618
         }

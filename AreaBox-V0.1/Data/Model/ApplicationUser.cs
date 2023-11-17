@@ -8,4 +8,6 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<QuestionPosts> QuestionPosts { get; set; } = new List<QuestionPosts>();
 
     public virtual ICollection<TechnicalReports> TechnicalReports { get; set; } = new List<TechnicalReports>();
+
+
 }
