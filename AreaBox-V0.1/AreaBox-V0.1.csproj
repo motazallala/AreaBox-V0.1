@@ -31,7 +31,6 @@
     <Folder Include="Areas\User\Models\" />
     <Folder Include="Interface\" />
     <Folder Include="Services\" />
-    <Folder Include="wwwroot\tabler\" />
   </ItemGroup>
 
 </Project>
