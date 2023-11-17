@@ -6,7 +6,6 @@ public class UserCategories
 
     public string UserId { get; set; }
 
-
     public virtual Categories Category { get; set; }
 
     public virtual ApplicationUser User { get; set; }

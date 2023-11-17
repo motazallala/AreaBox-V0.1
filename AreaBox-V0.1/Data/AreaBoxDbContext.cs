@@ -45,6 +45,15 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(u => u.FirstName).HasMaxLength(255);
+            entity.Property(u => u.LastName).HasMaxLength(255);
+            entity.Property(u => u.Gender).HasMaxLength(20);
+            entity.Property(u => u.DOB).HasColumnType("Date");
+            entity.Property(u => u.Bio).HasMaxLength(450);
+            entity.Property(u => u.ProfilePicture).HasColumnType("nvarchar(max)");
+        });
 
         modelBuilder.Entity<Categories>(entity =>
         {
