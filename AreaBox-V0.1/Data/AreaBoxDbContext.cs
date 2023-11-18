@@ -15,6 +15,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public virtual DbSet<Categories> Categories { get; set; }
+    public virtual DbSet<UserCategories> UserCategories { get; set; }
 
     public virtual DbSet<Cities> Cities { get; set; }
 
@@ -44,6 +45,15 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(u => u.FirstName).HasMaxLength(255);
+            entity.Property(u => u.LastName).HasMaxLength(255);
+            entity.Property(u => u.Gender).HasMaxLength(20);
+            entity.Property(u => u.DOB).HasColumnType("Date");
+            entity.Property(u => u.Bio).HasMaxLength(450);
+            entity.Property(u => u.ProfilePicture).HasColumnType("nvarchar(max)");
+        });
 
         modelBuilder.Entity<Categories>(entity =>
         {
@@ -102,10 +112,31 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaPostComments_MediaPosts");
         });
+        modelBuilder.Entity<UserCategories>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.CategoryId});
+
+            entity.Property(e => e.CategoryId)
+                .IsRequired();
+            entity.Property(e => e.UserId)
+                .IsRequired()
+                .HasMaxLength(450)
+                .HasColumnName("UserID");
+
+            entity.HasOne(d => d.Category).WithMany()
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserCategories_Category");
+
+            entity.HasOne(d => d.User).WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserCategories_AspNetUsers");
+        });
 
         modelBuilder.Entity<MediaPostLikes>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => new { e.MpostId , e.UserId});
 
             entity.Property(e => e.MpostId)
                 .IsRequired()
@@ -116,7 +147,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasMaxLength(450)
                 .HasColumnName("UserID");
 
-            entity.HasOne(d => d.Mpost).WithMany()
+            entity.HasOne(d => d.Mpost).WithMany(l => l.MediaPostsLikes)
                 .HasForeignKey(d => d.MpostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaPostLikes_MediaPosts");

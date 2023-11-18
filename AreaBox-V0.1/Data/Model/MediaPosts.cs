@@ -4,6 +4,10 @@ namespace AreaBox_V0._1.Data.Model;
 
 public partial class MediaPosts
 {
+    public MediaPosts()
+    {
+        this.MpostId = Guid.NewGuid().ToString();
+    }
     public string MpostId { get; set; }
 
     public int MpcategoryId { get; set; }
@@ -22,7 +26,11 @@ public partial class MediaPosts
 
     public bool Mpstate { get; set; }
 
+    public virtual ICollection<MediaPostLikes> MediaPostsLikes { get; set; } = new List<MediaPostLikes>();
+    public int PostLike => MediaPostsLikes.Count;
+
     public virtual ICollection<MediaPostComments> MediaPostComments { get; set; } = new List<MediaPostComments>();
+
 
     public virtual Categories Mpcategory { get; set; }
 

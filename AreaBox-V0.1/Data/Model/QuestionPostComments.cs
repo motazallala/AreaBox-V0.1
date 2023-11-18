@@ -4,6 +4,10 @@ namespace AreaBox_V0._1.Data.Model;
 
 public partial class QuestionPostComments
 {
+    public QuestionPostComments()
+    {
+        this.QpcommentId = Guid.NewGuid().ToString();
+    }
     public string QpcommentId { get; set; }
 
     public string QpostId { get; set; }

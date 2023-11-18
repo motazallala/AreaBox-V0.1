@@ -112,7 +112,15 @@ namespace AreaBox_V0._1.Areas.Auth.Pages
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var userName = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+
+                if (userName == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email incorrect. Please check your email!");
+                    return Page();
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(userName.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

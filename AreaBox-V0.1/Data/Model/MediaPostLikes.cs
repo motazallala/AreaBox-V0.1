@@ -10,4 +10,5 @@ public partial class MediaPostLikes
     public virtual MediaPosts Mpost { get; set; }
 
     public virtual ApplicationUser User { get; set; }
+
 }
