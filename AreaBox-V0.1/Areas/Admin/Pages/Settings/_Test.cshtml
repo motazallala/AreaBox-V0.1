@@ -1,0 +1,31 @@
+﻿@{
+	var ViewData2 = ViewData["ActivePage"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Profile - AreaBox_V0._1</title>
+</head>
+<body>
+	<h1>Manage your account</h1>
+
+	<div>
+		<h2>Change your account settings</h2>
+		<hr />
+		<div class="row">
+			<div class="col-md-3">
+				<ul class="nav nav-pills flex-column">
+					<li class="nav-item"><a class="nav-link @(ViewData2 == "Index" ? "active" : "")" id="profile" href="/Admin/Settings">Profile</a></li>
+					<li class="nav-item"><a class="nav-link @(ViewData2 == "Email" ? "active" : "")" " id="email" href="/Admin/Settings/Email">Email</a></li>
+					<li class="nav-item"><a class="nav-link @(ViewData2 == "Password" ? "active" : "")" id="change-password" href="/Admin/Settings/ChangePassword">Password</a></li>
+					<li class="nav-item"><a class="nav-link @(ViewData2 == "T2f" ? "active" : "")" id="two-factor" href="/Admin/Settings/TwoFactorAuthentication">Two-factor authentication</a></li>
+					<li class="nav-item"><a class="nav-link @(ViewData2 == "Data" ? "active" : "")" id="personal-data" href="/Admin/Settings/PersonalData">Personal data</a></li>
+				</ul>
+			</div>
+			<div class="col-md-9">
+
+</body>
+</html>
