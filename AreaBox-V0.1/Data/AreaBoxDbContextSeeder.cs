@@ -6,12 +6,28 @@ namespace AreaBox_V0._1.Data
 {
     public class AreaBoxDbContextSeeder
     {
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public AreaBoxDbContextSeeder(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            _userManager = userManager;
+            _roleManager = roleManager;
+
+        }
+
         public async Task SeedAsync(AreaBoxDbContext dbContext, ILogger logger)
         {
             var seeders = new List<ISeeder>
             {
-                new RolesSeeder(),
-                new UsersSeeder(),
+                new RolesSeeder(_roleManager),
+                new UsersSeeder(_userManager),
+                new CategoriesSeeder(),
+                new UserCategoriesSeeder(),
+                new CountriesSeeder(),
+                new CitiesSeeder(),
+                new MediaPostsSeeder(),
+                new QuestionPostsSeeder(),
+
             };
 
             foreach (var seeder in seeders)

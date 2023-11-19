@@ -1,16 +1,12 @@
 ﻿using AreaBox_V0._1.Data.Model;
 using Microsoft.AspNetCore.Identity;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace AreaBox_V0._1.Data.Seeders
 {
     public class UsersSeeder : ISeeder
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public UsersSeeder()
-        {
 
-        }
         public UsersSeeder(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
@@ -27,6 +23,7 @@ namespace AreaBox_V0._1.Data.Seeders
             var contentManagerEmail = "CManager@gmail.com";
             var technicalSupportEmail = "TSupport@gmail.com";
             var userEmail = "User@gmail.com";
+            var userEmail2 = "User2@gmail.com";
 
             var initSuperAdmin = new ApplicationUser
             {
@@ -36,7 +33,7 @@ namespace AreaBox_V0._1.Data.Seeders
                 Gender = "Male",
                 DOB = DateTime.Now,
                 Email = superAdminEmail,
-                
+
             };
 
             await _userManager.CreateAsync(initSuperAdmin, "Admin123@");
@@ -82,6 +79,20 @@ namespace AreaBox_V0._1.Data.Seeders
 
             await _userManager.CreateAsync(initUser, "Admin123@");
             await _userManager.AddToRoleAsync(initUser, "User");
+
+            var initUser2 = new ApplicationUser
+            {
+                FirstName = "User2",
+                LastName = "",
+                UserName = "User2",
+                Gender = "Male",
+                DOB = DateTime.Today,
+                Email = userEmail2,
+            };
+
+            await _userManager.CreateAsync(initUser2, "Admin123@");
+            await _userManager.AddToRoleAsync(initUser2, "User");
+
 
 
             logger.LogInformation($"Finished executing {nameof(UsersSeeder)}");

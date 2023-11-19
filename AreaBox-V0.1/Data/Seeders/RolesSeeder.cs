@@ -7,9 +7,6 @@ namespace AreaBox_V0._1.Data.Seeders
     {
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RolesSeeder()
-        {
-        }
         public RolesSeeder(RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
