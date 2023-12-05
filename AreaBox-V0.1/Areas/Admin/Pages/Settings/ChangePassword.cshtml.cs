@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace AreaBox_V0._1.Areas.Admin.Pages.Settings;
+namespace AreaBox_V0._1.Areas.Admin.Pages.Settings.Manage;
 
 public class ChangePasswordModel : PageModel
 {

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AreaBox_V0._1.Areas.Admin.Pages;
+namespace AreaBox_V0._1.Areas.Admin.Pages.Settings.Manage;
 
 public class IndexModel : PageModel
 {

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace AreaBox_V0._1.Areas.Admin.Pages;
+namespace AreaBox_V0._1.Areas.Admin.Pages.Settings.Manage;
 
 public class EmailModel : PageModel
 {
