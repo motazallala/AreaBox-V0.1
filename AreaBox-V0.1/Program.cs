@@ -13,7 +13,7 @@ builder.Services.AddDbContext<AreaBoxDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AreaBoxDb"));
 });
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AreaBoxDbContext>();
 
