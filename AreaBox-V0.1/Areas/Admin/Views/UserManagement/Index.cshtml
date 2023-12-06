@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="mb-3">
+    <div style="display: inline-block; margin-right: 10px;">
+        <div class="form-label">Search By:</div>
+        <select style="width:300px" class="form-select">
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+    </div>
+
+    <div style="display: inline-block; margin-right: 10px;">
+        <select style="width:300px" class="form-select">
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+    </div>
+    <a style="display: inline-block; width:100px" href="#" class="btn btn-primary">
+        Submit
+    </a>
+</div>
+
+@*<div style="display: flex;align-items: center;">
+    <h3 style="margin: 0; margin-right:10px">Post Type :</h3>
+    <a style="text-decoration: none; margin-right:15px" href="#">Media</a>
+    <a style="text-decoration: none" href="#">Question</a>
+</div>*@
+
+
+<div class="row row-cards">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <table border="1" class="table table-vcenter card-table table-striped">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>User Name</th>
+                            <th>User Gender</th>
+                            <th>User Email</th>
+                            <th>State</th>
+                            <th>Control</th>
+                            <th class="w-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+
+
+                        <tr>
+                            <td>1</td>
+                            <td>Calvin</td>
+                            <td class="text-secondary">
+                                Male
+                            </td>
+                            <td>
+                                alma.lawson@example.com
+                            </td>
+                            <td>
+                                <span class="badge bg-success me-1"></span> Published
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-purple w-100">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+
+
+
+
+                        <tr>
+                            <td>2</td>
+                            <td>Calvin</td>
+                            <td class="text-secondary">
+                                Male
+                            </td>
+                            <td>
+                                alma.lawson@example.com
+                            </td>
+                            <td>
+                                <span class="badge bg-success me-1"></span> Published
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-purple w-100">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td>Calvin</td>
+                            <td class="text-secondary">
+                                Male
+                            </td>
+                            <td>
+                                alma.lawson@example.com
+                            </td>
+                            <td>
+                                <span class="badge bg-danger me-1"></span> Suspended
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-purple w-100">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+
+
+
+
+
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
