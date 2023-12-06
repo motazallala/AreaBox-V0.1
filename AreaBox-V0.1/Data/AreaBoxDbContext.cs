@@ -37,6 +37,10 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<ReportTypes> ReportTypes { get; set; }
 
+    public virtual DbSet<PostType> PostTypes { get; set; }
+
+    public virtual DbSet<PostReports> PostReports { get; set; }
+
     public virtual DbSet<TechnicalReports> TechnicalReports { get; set; }
 
     public virtual DbSet<UsersMediaPostComments> UsersMediaPostComments { get; set; }
@@ -209,15 +213,15 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .IsRequired()
                 .HasMaxLength(450)
                 .HasColumnName("MPostID");
-            entity.Property(e => e.ReportTypeId).HasColumnName("ReportTypeID");
+            entity.Property(e => e.PostReportId).HasColumnName("ReportTypeID");
 
             entity.HasOne(d => d.Mpost).WithMany()
                 .HasForeignKey(d => d.MpostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaPostsReports_MediaPosts");
 
-            entity.HasOne(d => d.ReportType).WithMany()
-                .HasForeignKey(d => d.ReportTypeId)
+            entity.HasOne(d => d.PostReports).WithMany()
+                .HasForeignKey(d => d.PostReportId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaPostsReports_ReportTypes");
         });
@@ -304,14 +308,25 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasConstraintName("FK_QuestionPostsReports_ReportTypes");
         });
 
+        modelBuilder.Entity<PostReports>(entity =>
+        {
+            entity.HasKey(e => e.PostReportId);
+
+            entity.Property(e => e.ReportTypeId).HasColumnName("ReportTypeID");
+            entity.HasOne(d => d.PostType).WithMany(d => d.PostReports)
+            .HasForeignKey(d => d.PostTypeId);
+            entity.HasOne(d => d.ReportTypes).WithMany(d => d.PostReports)
+            .HasForeignKey(d => d.ReportTypeId);
+        });
+
+        modelBuilder.Entity<PostType>(entity =>
+        {
+            entity.HasKey(e => e.PostTypeId);
+        });
+
         modelBuilder.Entity<ReportTypes>(entity =>
         {
             entity.HasKey(e => e.ReportTypeId);
-
-            entity.Property(e => e.ReportTypeId).HasColumnName("ReportTypeID");
-            entity.Property(e => e.Type)
-                .IsRequired()
-                .HasMaxLength(150);
         });
 
         modelBuilder.Entity<TechnicalReports>(entity =>

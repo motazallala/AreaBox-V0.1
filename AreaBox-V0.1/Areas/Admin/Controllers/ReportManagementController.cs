@@ -10,13 +10,13 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Route("[controller]/[action]")]
 public class ReportManagementController : Controller
 {
-    private readonly IRepository<ReportTypes> _repoReportType;
+    private readonly IRepository<PostReports> _repoReportType;
     private readonly IRepository<MediaPostViewModel> _repoMediaPost;
     private readonly IRepository<QuestionPostViewModel> _repoQuestionPost;
     private readonly IReportType _reportType;
 
     public ReportManagementController
-        (IRepository<ReportTypes> repository,
+        (IRepository<PostReports> repository,
         IReportType reportType,
         IRepository<MediaPostViewModel> mediaPost,
         IRepository<QuestionPostViewModel> questionPost

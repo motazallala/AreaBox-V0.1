@@ -289,15 +289,56 @@ namespace AreaBox_V0._1.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("MPostID");
 
-                    b.Property<int>("ReportTypeId")
+                    b.Property<int>("PostReportId")
                         .HasColumnType("int")
                         .HasColumnName("ReportTypeID");
 
                     b.HasIndex("MpostId");
 
-                    b.HasIndex("ReportTypeId");
+                    b.HasIndex("PostReportId");
 
                     b.ToTable("MediaPostsReports");
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostReports", b =>
+                {
+                    b.Property<int>("PostReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostReportId"));
+
+                    b.Property<int>("PostTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReportTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("ReportTypeID");
+
+                    b.HasKey("PostReportId");
+
+                    b.HasIndex("PostTypeId");
+
+                    b.HasIndex("ReportTypeId");
+
+                    b.ToTable("PostReports");
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostType", b =>
+                {
+                    b.Property<int>("PostTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostTypeId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PostTypeId");
+
+                    b.ToTable("PostTypes");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPostComments", b =>
@@ -401,19 +442,16 @@ namespace AreaBox_V0._1.Migrations
                 {
                     b.Property<int>("ReportTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ReportTypeID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportTypeId"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ReportTypeId");
 
@@ -728,15 +766,34 @@ namespace AreaBox_V0._1.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostsReports_MediaPosts");
 
-                    b.HasOne("AreaBox_V0._1.Data.Model.ReportTypes", "ReportType")
+                    b.HasOne("AreaBox_V0._1.Data.Model.PostReports", "PostReports")
                         .WithMany()
-                        .HasForeignKey("ReportTypeId")
+                        .HasForeignKey("PostReportId")
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostsReports_ReportTypes");
 
                     b.Navigation("Mpost");
 
-                    b.Navigation("ReportType");
+                    b.Navigation("PostReports");
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostReports", b =>
+                {
+                    b.HasOne("AreaBox_V0._1.Data.Model.PostType", "PostType")
+                        .WithMany("PostReports")
+                        .HasForeignKey("PostTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AreaBox_V0._1.Data.Model.ReportTypes", "ReportTypes")
+                        .WithMany("PostReports")
+                        .HasForeignKey("ReportTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PostType");
+
+                    b.Navigation("ReportTypes");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPostComments", b =>
@@ -785,7 +842,7 @@ namespace AreaBox_V0._1.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_QuestionPostsReports_QuestionPosts");
 
-                    b.HasOne("AreaBox_V0._1.Data.Model.ReportTypes", "ReportType")
+                    b.HasOne("AreaBox_V0._1.Data.Model.PostReports", "ReportType")
                         .WithMany()
                         .HasForeignKey("ReportTypeId")
                         .IsRequired()
@@ -950,9 +1007,19 @@ namespace AreaBox_V0._1.Migrations
                     b.Navigation("MediaPostsLikes");
                 });
 
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostType", b =>
+                {
+                    b.Navigation("PostReports");
+                });
+
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPosts", b =>
                 {
                     b.Navigation("QuestionPostComments");
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.ReportTypes", b =>
+                {
+                    b.Navigation("PostReports");
                 });
 #pragma warning restore 612, 618
         }
