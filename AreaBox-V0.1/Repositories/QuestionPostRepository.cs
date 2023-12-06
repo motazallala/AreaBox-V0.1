@@ -5,43 +5,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AreaBox_V0._1.Repositories
 {
-    public class QuestionPostRepository : IRepository<QuestionPost>
+    public class QuestionPostRepository : IQuestionPost
     {
-        private readonly Repository<QuestionPost> _repository;
+        private AreaBoxDbContext _db;
 
-        public QuestionPostRepository(Repository<QuestionPost> repository)
+        public QuestionPostRepository(AreaBoxDbContext db)
         {
-            _repository = repository;
+            _db = db;
         }
 
-        public async Task<List<QuestionPost>> GetAllAsync()
+        public async void Disable(Guid id)
         {
-            return await _repository.GetAllAsync();
-        }
+            var getQAPost = await _db.QuestionPosts.FindAsync(id);
 
-        public async Task<QuestionPost?> GetByIdAsync(Guid id)
-        {
-            return await _repository.GetByIdAsync(id);
-        }
-
-        public void Add(QuestionPost entity)
-        {
-            _repository.Add(entity);
-        }
-
-        public void Remove(QuestionPost entity)
-        {
-            _repository.Remove(entity);
-        }
-
-        public void Update(QuestionPost entity)
-        {
-            _repository.Update(entity);
-        }
-
-        public Task SaveChangesAsync()
-        {
-            return _repository.SaveChangesAsync();
+            if (getQAPost != null)
+            {
+                getQAPost.Qpstate = !getQAPost.Qpstate;
+                _db.QuestionPosts.Update(getQAPost);
+                await _db.SaveChangesAsync();
+            }
         }
     }
 }

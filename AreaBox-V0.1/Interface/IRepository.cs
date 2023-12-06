@@ -12,6 +12,6 @@
 
         void Remove(TEntity entity);
 
-        Task SaveChangesAsync();
+        Task SaveChnageAsync();
     }
 }
