@@ -3,7 +3,7 @@
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class TechnicalReports
+public class TechnicalReports
 {
     public int TechnicalReportId { get; set; }
 

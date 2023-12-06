@@ -2,7 +2,7 @@
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class QuestionPostComments
+public class QuestionPostComments
 {
     public QuestionPostComments()
     {

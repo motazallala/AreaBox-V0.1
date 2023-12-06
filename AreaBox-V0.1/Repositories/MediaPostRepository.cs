@@ -6,43 +6,25 @@ using NuGet.Protocol.Core.Types;
 
 namespace AreaBox_V0._1.Repositories
 {
-    public class MediaPostRepository : IRepository<MediaPost>
+    public class MediaPostRepository : IMediaPost
     {
-        private readonly Repository<MediaPost> _repository;
+        private AreaBoxDbContext _db;
 
-        public MediaPostRepository(Repository<MediaPost> repository)
+        public MediaPostRepository(AreaBoxDbContext db)
         {
-            _repository = repository;
+            _db = db;
         }
 
-        public async Task<List<MediaPost>> GetAllAsync()
+        public async void Disable(Guid id)
         {
-            return await _repository.GetAllAsync();
-        }
+            var getMediaPost = await _db.MediaPosts.FindAsync(id);
 
-        public async Task<MediaPost?> GetByIdAsync(Guid id)
-        {
-            return await _repository.GetByIdAsync(id);
-        }
-
-        public void Add(MediaPost entity)
-        {
-            _repository.Add(entity);
-        }
-
-        public void Remove(MediaPost entity)
-        {
-            _repository.Remove(entity);
-        }
-
-        public void Update(MediaPost entity)
-        {
-            _repository.Update(entity);
-        }
-
-        public Task SaveChangesAsync()
-        {
-            return _repository.SaveChangesAsync();
+            if(getMediaPost != null)
+            {
+                getMediaPost.Mpstate = !getMediaPost.Mpstate;
+                _db.MediaPosts.Update(getMediaPost);
+                await _db.SaveChangesAsync();
+            }
         }
     }
 }

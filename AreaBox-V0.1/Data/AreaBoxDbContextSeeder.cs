@@ -27,7 +27,10 @@ namespace AreaBox_V0._1.Data
                 new CitiesSeeder(),
                 new MediaPostsSeeder(),
                 new QuestionPostsSeeder(),
-
+                new PostTypesSeeder(),
+                new ReportTypesSeeder(),
+                new PostReportsSeeder(),
+                new MediaPostReportsSeeder()
             };
 
             foreach (var seeder in seeders)

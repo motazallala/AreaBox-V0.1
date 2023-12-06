@@ -1,8 +1,8 @@
 ﻿using AreaBox_V0._1.Data.Model;
 
-namespace AreaBox_V0._1.Models
+namespace AreaBox_V0._1.Models.QuestionPost
 {
-    public class QuestionPost
+    public class QuestionPostViewModel
     {
         public Guid Id { get; set; }
 
@@ -24,7 +24,7 @@ namespace AreaBox_V0._1.Models
 
         public virtual Cities City { get; set; }
 
-        public virtual ApplicationUser User { get; set; }  
+        public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<QuestionPostComments> QuestionPostComments { get; set; } = new List<QuestionPostComments>();
     }

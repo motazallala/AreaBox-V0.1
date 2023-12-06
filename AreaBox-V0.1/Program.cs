@@ -1,8 +1,12 @@
+using AreaBox_V0._1.Common;
 using AreaBox_V0._1.Data;
 using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Interface;
+using AreaBox_V0._1.Repositories;
 using AreaBox_V0._1.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +22,10 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<AreaBoxDbContext>();
 
 builder.Services.AddRazorPages();
-
 builder.Services.AddSignalR();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
 
 /*builder.Services.ConfigureApplicationCookie(options =>
 {

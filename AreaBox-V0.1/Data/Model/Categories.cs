@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class Categories
+public class Categories
 {
     public int CategoryId { get; set; }
 

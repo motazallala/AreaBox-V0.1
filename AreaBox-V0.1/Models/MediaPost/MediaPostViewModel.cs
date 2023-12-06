@@ -1,8 +1,8 @@
 ﻿using AreaBox_V0._1.Data.Model;
 
-namespace AreaBox_V0._1.Models
+namespace AreaBox_V0._1.Models.MediaPost
 {
-    public class MediaPost
+    public class MediaPostViewModel
     {
         public Guid Id { get; set; }
 

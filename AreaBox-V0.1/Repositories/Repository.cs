@@ -38,7 +38,7 @@ namespace AreaBox_V0._1.Repositories
             _db.Set<TEntity>().Update(entity);
         }
 
-        public Task SaveChangesAsync()
+        public Task SaveChnageAsync()
         {
             return _db.SaveChangesAsync();
         }

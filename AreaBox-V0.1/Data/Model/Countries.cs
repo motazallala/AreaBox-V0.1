@@ -4,7 +4,7 @@
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class Countries
+public class Countries
 {
     public int CountryId { get; set; }
 

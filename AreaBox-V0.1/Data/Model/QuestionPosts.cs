@@ -2,7 +2,7 @@
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class QuestionPosts
+public class QuestionPosts
 {
     public QuestionPosts()
     {
