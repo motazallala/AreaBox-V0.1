@@ -1,13 +1,8 @@
 using AreaBox_V0._1.Data;
 using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Data.Seeders;
-using AreaBox_V0._1.Models;
 using AreaBox_V0._1.Utilities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing.Template;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Policy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +17,15 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AreaBoxDbContext>();
 
+builder.Services.AddRazorPages();
+
 builder.Services.AddSignalR();
 
+/*builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
 
+});*/
 
 
 var app = builder.Build();
@@ -51,13 +52,13 @@ using (var serviceScope = app.Services.CreateScope())
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        new RolesSeeder(roleManager)
-            .SeedAsync(dbContext, loggerFactory.CreateLogger<RolesSeeder>())
-            .GetAwaiter()
-            .GetResult();
 
-        new UsersSeeder(userManager)
-            .SeedAsync(dbContext, loggerFactory.CreateLogger<UsersSeeder>())
+        new AreaBoxDbContextSeeder(userManager, roleManager)
+            .SeedAsync(dbContext,
+                       serviceScope
+                       .ServiceProvider
+                       .GetService<ILoggerFactory>()
+                       .CreateLogger(typeof(AreaBoxDbContextSeeder)))
             .GetAwaiter()
             .GetResult();
     }
