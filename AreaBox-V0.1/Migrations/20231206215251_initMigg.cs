@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AreaBox_V0._1.Migrations
 {
     /// <inheritdoc />
-    public partial class InitNewMig : Migration
+    public partial class initMigg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -416,11 +416,12 @@ namespace AreaBox_V0._1.Migrations
                 name: "MediaPostsReports",
                 columns: table => new
                 {
-                    ReportTypeID = table.Column<int>(type: "int", nullable: false),
-                    MPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                    PostReportID = table.Column<int>(type: "int", nullable: false),
+                    MPostID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_MediaPostsReports", x => new { x.MPostID, x.PostReportID });
                     table.ForeignKey(
                         name: "FK_MediaPostsReports_MediaPosts",
                         column: x => x.MPostID,
@@ -428,7 +429,7 @@ namespace AreaBox_V0._1.Migrations
                         principalColumn: "MPostID");
                     table.ForeignKey(
                         name: "FK_MediaPostsReports_ReportTypes",
-                        column: x => x.ReportTypeID,
+                        column: x => x.PostReportID,
                         principalTable: "PostReports",
                         principalColumn: "PostReportId");
                 });
@@ -590,9 +591,9 @@ namespace AreaBox_V0._1.Migrations
                 column: "MPostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MediaPostsReports_ReportTypeID",
+                name: "IX_MediaPostsReports_PostReportID",
                 table: "MediaPostsReports",
-                column: "ReportTypeID");
+                column: "PostReportID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostReports_PostTypeId",

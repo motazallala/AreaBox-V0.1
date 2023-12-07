@@ -10,5 +10,6 @@ public class MediaPostsReports
 
     public virtual MediaPosts Mpost { get; set; }
 
-    public virtual PostReports PostReports { get; set; }
+    public virtual PostReports PostReport { get; set; }
+
 }

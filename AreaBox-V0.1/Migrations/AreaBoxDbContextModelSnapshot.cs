@@ -284,18 +284,18 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostsReports", b =>
                 {
                     b.Property<string>("MpostId")
-                        .IsRequired()
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("MPostID");
 
                     b.Property<int>("PostReportId")
                         .HasColumnType("int")
-                        .HasColumnName("ReportTypeID");
+                        .HasColumnName("PostReportID");
 
-                    b.HasIndex("MpostId");
+                    b.HasKey("MpostId", "PostReportId");
 
-                    b.HasIndex("PostReportId");
+                    b.HasIndex(new[] { "MpostId" }, "IX_MediaPostsReports_MPostID");
+
+                    b.HasIndex(new[] { "PostReportId" }, "IX_MediaPostsReports_PostReportID");
 
                     b.ToTable("MediaPostsReports");
                 });
@@ -766,7 +766,7 @@ namespace AreaBox_V0._1.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostsReports_MediaPosts");
 
-                    b.HasOne("AreaBox_V0._1.Data.Model.PostReports", "PostReports")
+                    b.HasOne("AreaBox_V0._1.Data.Model.PostReports", "PostReport")
                         .WithMany()
                         .HasForeignKey("PostReportId")
                         .IsRequired()
@@ -774,7 +774,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.Navigation("Mpost");
 
-                    b.Navigation("PostReports");
+                    b.Navigation("PostReport");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostReports", b =>

@@ -40,7 +40,7 @@ namespace AreaBox_V0._1.Data.Seeders
             };
 
             dbContext.MediaPostsReports.AddRange(newReportType);
-            await dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
         }
     }
 }

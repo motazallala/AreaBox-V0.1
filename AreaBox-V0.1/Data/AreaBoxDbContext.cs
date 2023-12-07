@@ -207,20 +207,23 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MediaPostsReports>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => new { e.MpostId, e.PostReportId });
+
+            entity.HasIndex(e => e.MpostId, "IX_MediaPostsReports_MPostID");
+
+            entity.HasIndex(e => e.PostReportId, "IX_MediaPostsReports_PostReportID");
 
             entity.Property(e => e.MpostId)
                 .IsRequired()
-                .HasMaxLength(450)
                 .HasColumnName("MPostID");
-            entity.Property(e => e.PostReportId).HasColumnName("ReportTypeID");
+            entity.Property(e => e.PostReportId).HasColumnName("PostReportID");
 
             entity.HasOne(d => d.Mpost).WithMany()
                 .HasForeignKey(d => d.MpostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaPostsReports_MediaPosts");
 
-            entity.HasOne(d => d.PostReports).WithMany()
+            entity.HasOne(d => d.PostReport).WithMany()
                 .HasForeignKey(d => d.PostReportId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaPostsReports_ReportTypes");
