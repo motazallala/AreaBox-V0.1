@@ -25,7 +25,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-
+builder.Services.AddScoped<IMediaPost, MediaPostRepository>();
 
 /*builder.Services.ConfigureApplicationCookie(options =>
 {

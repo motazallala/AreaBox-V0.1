@@ -1,8 +1,6 @@
-﻿using AreaBox_V0._1.Interface;
-using AreaBox_V0._1.Models.MediaPost;
-using AreaBox_V0._1.Repositories;
+﻿using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Interface;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Core.Types;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Area("Admin")]
@@ -10,9 +8,9 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 public class MediaManagementController : Controller
 {
     private readonly IMediaPost _mediaPost;
-    private readonly IRepository<MediaPostViewModel> _repository;
+    private readonly IRepository<MediaPosts> _repository;
 
-    public MediaManagementController(IMediaPost mediaPost, IRepository<MediaPostViewModel> repository)
+    public MediaManagementController(IMediaPost mediaPost, IRepository<MediaPosts> repository)
     {
         _mediaPost = mediaPost;
         _repository = repository;

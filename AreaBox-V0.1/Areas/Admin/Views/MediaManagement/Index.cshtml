@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<AreaBox_V0._1.Data.Model.MediaPosts>;
 @{
     ViewData["Title"] = "Index";
 }
@@ -51,6 +51,7 @@
                   <div class="table-responsive">
                     <table border="1" class="table table-vcenter card-table table-striped">
                       <thead>
+                         
                         <tr>
                           <th>ID</th>
                           <th>User</th>
@@ -59,15 +60,16 @@
                             <th>Control</th>
                           <th class="w-1"></th>
                         </tr>
+
                       </thead>
                       <tbody>
 
 
 
-
+                         @foreach(var item in Model){
                         <tr>
-                          <td>1</td>
-                          <td >Maryjo Lebarree</td>
+                          <td>@item.MpostId</td>
+                          <td >@item.MpshortDescription</td>
                           <td class="text-secondary" >
                             Civil Engineer, Product Management
                           </td>
@@ -80,8 +82,8 @@
                                 </a>
                           </td>
                         </tr>
-
-                        <tr>
+                        }
+@*                         <tr>
                             <td>2</td>
                             <td>Maryjo Lebarree</td>
                             <td class="text-secondary">
@@ -191,7 +193,7 @@
                                     View
                                 </a>
                             </td>
-                        </tr>
+                        </tr> *@
 
 
 
