@@ -1,8 +1,6 @@
 ﻿using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
-using AreaBox_V0._1.Models.MediaPost;
-using AreaBox_V0._1.Models.QuestionPost;
-using AreaBox_V0._1.Models.ReportType;
+using AreaBox_V0._1.Models.PostReport;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
@@ -11,15 +9,15 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 public class ReportManagementController : Controller
 {
     private readonly IRepository<PostReports> _repoReportType;
-    private readonly IRepository<MediaPostViewModel> _repoMediaPost;
-    private readonly IRepository<QuestionPostViewModel> _repoQuestionPost;
+    private readonly IRepository<MediaPosts> _repoMediaPost;
+    private readonly IRepository<QuestionPosts> _repoQuestionPost;
     private readonly IReportType _reportType;
 
     public ReportManagementController
         (IRepository<PostReports> repository,
         IReportType reportType,
-        IRepository<MediaPostViewModel> mediaPost,
-        IRepository<QuestionPostViewModel> questionPost
+        IRepository<MediaPosts> mediaPost,
+        IRepository<QuestionPosts> questionPost
         )
     {
         _repoReportType = repository;
@@ -30,7 +28,7 @@ public class ReportManagementController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var getAllReports = await _repoReportType.GetAllAsync();
+        var getAllReports = await _repoReportType.GetAllAsync<PostReports, PostReportViewModel>();
         return View(getAllReports);
     }
 
@@ -42,25 +40,25 @@ public class ReportManagementController : Controller
 
     public async Task<IActionResult> Disable(Guid id)
     {
-        var getReportMPost = await _reportType.GetPostByReportId<MediaPostViewModel>(id);
-        var getReportQAPost = await _reportType.GetPostByReportId<QuestionPostViewModel>(id);
+        /*        var getReportMPost = await _reportType.GetPostByReportId<MediaPostViewModel>(id);
+                var getReportQAPost = await _reportType.GetPostByReportId<QuestionPostViewModel>(id);
 
-        if (getReportMPost != null)
-        {
-            getReportMPost.State = !getReportMPost.State;
-            _repoMediaPost.Update(getReportMPost);
-        }
-        else if (getReportQAPost != null)
-        {
-            getReportQAPost.State = !getReportQAPost.State;
-            _repoQuestionPost.Update(getReportQAPost);
-        }
-        else
-        {
-            return NotFound("Post not found");
-        }
+                if (getReportMPost != null)
+                {
+                    getReportMPost.State = !getReportMPost.State;
+                    _repoMediaPost.Update(getReportMPost);
+                }
+                else if (getReportQAPost != null)
+                {
+                    getReportQAPost.State = !getReportQAPost.State;
+                    _repoQuestionPost.Update(getReportQAPost);
+                }
+                else
+                {
+                    return NotFound("Post not found");
+                }
 
-        await _repoReportType.SaveChnageAsync();
+                await _repoReportType.SaveChnageAsync();*/
         return Ok("Post state updated successfully");
     }
 }

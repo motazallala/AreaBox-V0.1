@@ -23,9 +23,11 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 builder.Services.AddScoped<IMediaPost, MediaPostRepository>();
+builder.Services.AddScoped<IReportType, ReportTypeRepository>();
+builder.Services.AddScoped<IQuestionPost, QuestionPostRepository>();
 
 /*builder.Services.ConfigureApplicationCookie(options =>
 {

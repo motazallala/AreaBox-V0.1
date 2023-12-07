@@ -1,5 +1,7 @@
 ﻿using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
+using AreaBox_V0._1.Models.MediaPost;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
@@ -10,7 +12,7 @@ public class MediaManagementController : Controller
     private readonly IMediaPost _mediaPost;
     private readonly IRepository<MediaPosts> _repository;
 
-    public MediaManagementController(IMediaPost mediaPost, IRepository<MediaPosts> repository)
+    public MediaManagementController(IMediaPost mediaPost, IRepository<MediaPosts> repository, IMapper mapper)
     {
         _mediaPost = mediaPost;
         _repository = repository;
@@ -18,7 +20,8 @@ public class MediaManagementController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var getAllMediaPosts = await _repository.GetAllAsync();
+        var getAllMediaPosts = await _repository.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpcity", "Mpuser" });
+
         return View(getAllMediaPosts);
     }
 

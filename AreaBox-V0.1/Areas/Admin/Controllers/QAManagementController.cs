@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Interface;
+﻿using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Interface;
 using AreaBox_V0._1.Models.QuestionPost;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,16 +8,16 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Route("[controller]/[action]")]
 public class QAManagementController : Controller
 {
-    private readonly IRepository<QuestionPostViewModel> _repository;
+    private readonly IRepository<QuestionPosts> _repository;
 
-    public QAManagementController(IRepository<QuestionPostViewModel> repository)
+    public QAManagementController(IRepository<QuestionPosts> repository)
     {
         _repository = repository;
     }
 
     public async Task<IActionResult> Index()
     {
-        var getAllQAPost = await _repository.GetAllAsync();
+        var getAllQAPost = await _repository.GetAllAsync<QuestionPosts, QuestionPostViewModel>();
         return View(getAllQAPost);
     }
 

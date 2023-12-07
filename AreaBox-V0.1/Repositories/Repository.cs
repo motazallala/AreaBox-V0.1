@@ -1,46 +1,105 @@
 ﻿using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AreaBox_V0._1.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly AreaBoxDbContext _db;
+        private readonly IMapper _mapper;
 
-        public Repository(AreaBoxDbContext db)
+        public Repository(AreaBoxDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
-        public async Task<List<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>()
+            where TEntity : class
+            where TViewModel : class
         {
-            return await _db.Set<TEntity>().ToListAsync();
+            var entities = await _db.Set<TEntity>().ToListAsync();
+            var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
+
+            return viewModels;
         }
 
-        public async Task<TEntity?> GetByIdAsync(Guid id)
+        public async Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>(string[] includes = null)
+            where TEntity : class
+            where TViewModel : class
         {
-            return await _db.Set<TEntity>().FindAsync(id);
+            IQueryable<TEntity> query = _db.Set<TEntity>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            var entities = await query.ToListAsync();
+            var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
+
+            return viewModels;
         }
 
-        public void Add(TEntity entity)
+        public async Task<T> GetByIdAsync(Guid id)
         {
-            _db.Set<TEntity>().Add(entity);
+            return await _db.Set<T>().FindAsync(id);
         }
 
-        public void Remove(TEntity entity)
+        public void Add(T entity)
         {
-            _db.Set<TEntity>().Remove(entity);
+            _db.Set<T>().Add(entity);
         }
 
-        public void Update(TEntity entity)
+        public void Remove(T entity)
         {
-            _db.Set<TEntity>().Update(entity);
+            _db.Set<T>().Remove(entity);
+        }
+
+        public void Update(T entity)
+        {
+            _db.Set<T>().Update(entity);
         }
 
         public Task SaveChnageAsync()
         {
             return _db.SaveChangesAsync();
         }
+
+        public T Find(Expression<Func<T, bool>> match, String[] includes = null)
+        {
+            IQueryable<T> query = _db.Set<T>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return _db.Set<T>().SingleOrDefault(match);
+        }
+
+        public IEnumerable<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null)
+        {
+            IQueryable<T> query = _db.Set<T>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return _db.Set<T>().Where(match).ToList();
+        }
+
+
     }
 }
