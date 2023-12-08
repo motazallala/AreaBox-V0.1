@@ -61,134 +61,30 @@
 
 
 
-
+                        @foreach(var item in Model){
                         <tr>
-                            <td>1</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>@item.Id</td>
+                                <td>@item.User.UserName</td>
                             <td class="text-secondary">
-                                Civil Engineer, Product Management
+                                    @item.Description
                             </td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Published
-                            </td>
+                               <td>
+                                    @if (item.State == false)
+                                    {
+                                                <span class="badge bg-success me-1"></span> <span>Published</span>
+                                    }
+                                    else
+                                    {
+                                                <span class="badge bg-danger me-1"></span> <span>Suspended</span>
+                                    }
+                                </td>
                             <td>
                                 <button type="button" class="btn btn-purple w-100" data-toggle="modal" data-target="#exampleModal">
                                     View
                                 </button>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-danger me-1"></span> Suspended
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Published
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>4</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Published
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>5</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-danger me-1"></span> Suspended
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>6</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Published
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>7</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Published
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>8</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                Civil Engineer, Product Management
-                            </td>
-                            <td>
-                                <span class="badge bg-danger me-1"></span> Suspended
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
+                        }
 
 
 
