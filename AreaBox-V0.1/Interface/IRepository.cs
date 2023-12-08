@@ -14,7 +14,7 @@ namespace AreaBox_V0._1.Interface
                   where TViewModel : class;
 
 
-        Task<T> GetByIdAsync(Guid id);
+        Task<T> GetByIdAsync(string id);
 
         T Find(Expression<Func<T, bool>> match, String[] includes = null);
         IEnumerable<T> FindAll(Expression<Func<T, bool>> match, String[] includes = null);

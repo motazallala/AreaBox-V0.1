@@ -21,7 +21,7 @@ public class QAManagementController : Controller
         return View(getAllQAPost);
     }
 
-    public async Task<IActionResult> Details(Guid id)
+    public async Task<IActionResult> Details(string id)
     {
         var getQAPost = await _repository.GetByIdAsync(id);
         return View(getQAPost);

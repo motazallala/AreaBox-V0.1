@@ -47,7 +47,7 @@ namespace AreaBox_V0._1.Repositories
             return viewModels;
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(string id)
         {
             return await _db.Set<T>().FindAsync(id);
         }

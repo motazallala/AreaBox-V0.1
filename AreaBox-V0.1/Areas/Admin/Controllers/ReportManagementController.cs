@@ -32,7 +32,7 @@ public class ReportManagementController : Controller
         return View(getAllReports);
     }
 
-    public async Task<IActionResult> Details(Guid id)
+    public async Task<IActionResult> Details(string id)
     {
         var getReport = await _repoReportType.GetByIdAsync(id);
         return View(getReport);
