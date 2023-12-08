@@ -69,9 +69,9 @@
                          @foreach(var item in Model){
                         <tr>
                           <td>@item.Id</td>
-                                <td>@item.City.CityName</td>
+                                <td>@item.User.UserName</td>
                           <td class="text-secondary" >
-                                    @item.User.Email
+                                    @item.ShortDescription
                           </td>
                            <td>
                                @if(item.State == false){

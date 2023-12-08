@@ -17,7 +17,7 @@ public class QAManagementController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var getAllQAPost = await _repository.GetAllAsync<QuestionPosts, QuestionPostViewModel>();
+        var getAllQAPost = await _repository.GetAllAsync<QuestionPosts, QuestionPostViewModel>(new[] { "Qpcategory", "Qpcity", "Qpuser" } );
         return View(getAllQAPost);
     }
 
