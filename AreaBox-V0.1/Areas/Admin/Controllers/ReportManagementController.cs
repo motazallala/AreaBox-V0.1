@@ -1,6 +1,8 @@
-﻿using AreaBox_V0._1.Data.Model;
+﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostsReport;
+using AreaBox_V0._1.Areas.Admin.Models.QuestionPostsReports;
+using AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel;
+using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
-using AreaBox_V0._1.Models.PostReport;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
@@ -8,33 +10,43 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Route("[controller]/[action]")]
 public class ReportManagementController : Controller
 {
-    private readonly IRepository<PostReports> _repoReportType;
+    private readonly IRepository<PostReports> _repoPostReports;
     private readonly IRepository<MediaPosts> _repoMediaPost;
     private readonly IRepository<QuestionPosts> _repoQuestionPost;
     private readonly IReportType _reportType;
+    private readonly IRepository<MediaPostsReports> __repoMediaPostReports;
 
     public ReportManagementController
         (IRepository<PostReports> repository,
         IReportType reportType,
         IRepository<MediaPosts> mediaPost,
-        IRepository<QuestionPosts> questionPost
+        IRepository<QuestionPosts> questionPost,
+        IRepository<MediaPostsReports> repoMediaPostReports
         )
     {
-        _repoReportType = repository;
+        _repoPostReports = repository;
         _repoMediaPost = mediaPost;
         _repoQuestionPost = questionPost;
         _reportType = reportType;
+        __repoMediaPostReports = repoMediaPostReports;
+
     }
 
     public async Task<IActionResult> Index()
     {
-        var getAllReports = await _repoReportType.GetAllAsync<PostReports, PostReportViewModel>();
-        return View(getAllReports);
+        var mediaPostsReports = await __repoMediaPostReports.GetAllAsync<MediaPostsReports, MediaPostsReportViewModel>(new[] { "Mpost", "PostReport" });
+        var questionPostsReports = await __repoMediaPostReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportViewModel>(new[] { "Mpost", "PostReport" });
+        var MpQpReports = new MediaQuestionPostsReportViewModel
+        {
+            MediaPostsReports = mediaPostsReports,
+            QuestionPostsReports = questionPostsReports
+        };
+        return View(MpQpReports);
     }
 
     public async Task<IActionResult> Details(Guid id)
     {
-        var getReport = await _repoReportType.GetByIdAsync(id);
+        var getReport = await _repoPostReports.GetByIdAsync(id);
         return View(getReport);
     }
 

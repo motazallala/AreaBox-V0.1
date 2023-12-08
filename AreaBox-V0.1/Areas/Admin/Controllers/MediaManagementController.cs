@@ -20,7 +20,7 @@ public class MediaManagementController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var getAllMediaPosts = await _repository.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpcity", "Mpuser" });
+        var getAllMediaPosts = await _repository.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpcity", "Mpuser", "Mpcategory" });
 
         return View(getAllMediaPosts);
     }
