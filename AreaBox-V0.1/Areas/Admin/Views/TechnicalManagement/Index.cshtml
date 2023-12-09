@@ -1,24 +1,19 @@
-﻿@model AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel.MediaQuestionPostsReportViewModel
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 <h3>Loction :</h3>
 <div class="mb-3">
     <div style="display: inline-block; margin-right: 10px;">
-    <div class="form-label">Country:</div>
-        <select style="width:300px" class="form-select">
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-    </div>
-    <div style="display: inline-block; margin-right: 10px;">
-        <div class="form-label">Post Report Type:</div>
+        <div class="form-label">Country:</div>
         <select style="width:300px" class="form-select">
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3">Three</option>
         </select>
+    </div>
+    <div style="display: inline-block; margin-right: 10px;">
+        <div class="form-label">Technical Report Type :</div>
+        <input type="text" placeholder="Enter Any Issues" />
     </div>
 
 
@@ -62,9 +57,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>User</th>
-                            <th>Number Of Report</th>
-                            <th>State</th>
+                            <th>Description</th>
+                            <th>Technical Report Type </th>
+                            <th>Email</th>
                             <th>Control</th>
                             <th class="w-1"></th>
                         </tr>
@@ -72,41 +67,14 @@
                     <tbody>
 
 
-
-@*                        @foreach(var item in Model){
                         <tr>
-                                <td>@item.ReportTypeId</td>
-                                <td>@item.PostType.Name</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                    @item.ReportTypes.PostReports.Count()
-                            </td>
-                               <td>
-
-                                    {
-                                                <span class="badge bg-success me-1"></span> <span>Published</span>
-                                    else
-                                    {
-                                                <span class="badge bg-danger me-1"></span> <span>Suspended</span>
-                                    }
-                                </td>
-                            <td>
-                                <button type="button" class="btn btn-purple w-100" data-toggle="modal" data-target="#exampleModal">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                        }*@
-
-
-
-                        <tr>
-                            <td>2</td>
-                            <td>Maryjo Lebarree</td>
-                            <td class="text-secondary">
-                                5
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-danger me-1"></span> Suspended
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
@@ -116,13 +84,13 @@
                         </tr>
 
                         <tr>
-                            <td>3</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                20
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-success me-1"></span> Published
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
@@ -132,13 +100,13 @@
                         </tr>
 
                         <tr>
-                            <td>4</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                9
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-success me-1"></span> Published
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
@@ -148,13 +116,13 @@
                         </tr>
 
                         <tr>
-                            <td>5</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                50
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-danger me-1"></span> Suspended
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
@@ -164,13 +132,13 @@
                         </tr>
 
                         <tr>
-                            <td>6</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                8
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-success me-1"></span> Published
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
@@ -180,13 +148,13 @@
                         </tr>
 
                         <tr>
-                            <td>7</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                30
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-success me-1"></span> Published
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
@@ -196,13 +164,13 @@
                         </tr>
 
                         <tr>
-                            <td>8</td>
-                            <td>Maryjo Lebarree</td>
+                            <td>1</td>
+                            <td>Many transaction reports use a unique</td>
                             <td class="text-secondary">
-                                90
+                                Transaction Report
                             </td>
                             <td>
-                                <span class="badge bg-danger me-1"></span> Suspended
+                                tranthuy.nute@gmail.com
                             </td>
                             <td>
                                 <a href="#" class="btn btn-purple w-100">
