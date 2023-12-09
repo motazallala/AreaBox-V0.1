@@ -157,7 +157,7 @@
 				type: 'GET',
 				data: { id: postId },
 				success: function (data) {
-					$('#mediaImage').attr('src', data.imageSrc);
+					$('#mediaImage').attr('src', 'data:image/png;base64,' + data.imageSrc);
 					$('#mediaDetails').html(`
 						<p>Name Publisher: ${data.name}</p>
 						<p>Email: ${data.email}</p>

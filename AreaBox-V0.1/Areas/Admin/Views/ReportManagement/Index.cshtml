@@ -47,11 +47,11 @@
     </a>
 </div>
 
-@*<div style="display: flex;align-items: center;">
+<div style="display: flex;align-items: center;">
     <h3 style="margin: 0; margin-right:10px">Post Type :</h3>
     <a style="text-decoration: none; margin-right:15px" href="#">Media</a>
     <a style="text-decoration: none" href="#">Question</a>
-</div>*@
+</div>
 
 
 <div class="row row-cards">
@@ -72,34 +72,25 @@
                     <tbody>
 
 
-
-@*                        @foreach(var item in Model){
+                   @foreach(var item in Model.MediaPostsReports){
                         <tr>
-                                <td>@item.ReportTypeId</td>
-                                <td>@item.PostType.Name</td>
+                                <td>@item.PostReportId</td>
+                                <td>@item.User.Id</td>
                             <td class="text-secondary">
-                                    @item.ReportTypes.PostReports.Count()
+                                    @Model.MediaPostsReports.Count()
                             </td>
                                <td>
-
-                                    {
-                                                <span class="badge bg-success me-1"></span> <span>Published</span>
-                                    else
-                                    {
-                                                <span class="badge bg-danger me-1"></span> <span>Suspended</span>
-                                    }
+gvdfgvdf
                                 </td>
                             <td>
-                                <button type="button" class="btn btn-purple w-100" data-toggle="modal" data-target="#exampleModal">
-                                    View
-                                </button>
+
+                                    <button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaManagementModal" data-id="@item.PostReportId">
+                                        View
+                                    </button>
                             </td>
                         </tr>
-                        }*@
-
-
-
-                        <tr>
+                        }
+@*                         <tr>
                             <td>2</td>
                             <td>Maryjo Lebarree</td>
                             <td class="text-secondary">
@@ -209,7 +200,7 @@
                                     View
                                 </a>
                             </td>
-                        </tr>
+                        </tr> *@
 
 
 
@@ -221,3 +212,54 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="mediaManagementModal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Media Post Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div id="mediaDetails">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mediaManagementModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var PostReportId = button.data('id');
+    
+
+            $.ajax({
+                url: `/AdminApi/GetMediaPostReportDetails/${PostReportId}`,
+                type: 'GET',
+                data: { id: PostReportId },
+                success: function (data) {
+                    $('#mediaDetails').html(`
+                                    <p>report Id: ${data.reportId}</p>
+                                    <p>user Name: ${data.userName}</p>
+                                    <p>user Email: ${data.userEmail}</p>
+                                    <p>report Type: ${data.reportType}</p>
+                                    <p>report Type Description: ${data.reportTypeDescription}</p>
+                            `);
+
+                },
+                error: function (error) {
+                    console.error('Error fetching media details:', error);
+                }
+            });
+        });
+
+
+    });
+</script>
