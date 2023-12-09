@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AreaBox_V0._1.Migrations
 {
     /// <inheritdoc />
-    public partial class initMigg : Migration
+    public partial class newMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -417,7 +417,8 @@ namespace AreaBox_V0._1.Migrations
                 columns: table => new
                 {
                     PostReportID = table.Column<int>(type: "int", nullable: false),
-                    MPostID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    MPostID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -432,6 +433,11 @@ namespace AreaBox_V0._1.Migrations
                         column: x => x.PostReportID,
                         principalTable: "PostReports",
                         principalColumn: "PostReportId");
+                    table.ForeignKey(
+                        name: "FK_MediaPostsReports_Users",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -457,21 +463,28 @@ namespace AreaBox_V0._1.Migrations
                 name: "QuestionPostsReports",
                 columns: table => new
                 {
-                    ReportTypeID = table.Column<int>(type: "int", nullable: false),
-                    QPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                    PostReportID = table.Column<int>(type: "int", nullable: false),
+                    QPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_QuestionPostsReports", x => new { x.QPostID, x.PostReportID });
+                    table.ForeignKey(
+                        name: "FK_QuestionPostsReports_PostReports",
+                        column: x => x.PostReportID,
+                        principalTable: "PostReports",
+                        principalColumn: "PostReportId");
                     table.ForeignKey(
                         name: "FK_QuestionPostsReports_QuestionPosts",
                         column: x => x.QPostID,
                         principalTable: "QuestionPosts",
                         principalColumn: "QPostID");
                     table.ForeignKey(
-                        name: "FK_QuestionPostsReports_ReportTypes",
-                        column: x => x.ReportTypeID,
-                        principalTable: "PostReports",
-                        principalColumn: "PostReportId");
+                        name: "FK_QuestionPostsReports_Users",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -596,6 +609,11 @@ namespace AreaBox_V0._1.Migrations
                 column: "PostReportID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MediaPostsReports_UserId",
+                table: "MediaPostsReports",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostReports_PostTypeId",
                 table: "PostReports",
                 column: "PostTypeId");
@@ -626,14 +644,14 @@ namespace AreaBox_V0._1.Migrations
                 column: "QPUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionPostsReports_QPostID",
+                name: "IX_QuestionPostsReports_PostReportID",
                 table: "QuestionPostsReports",
-                column: "QPostID");
+                column: "PostReportID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionPostsReports_ReportTypeID",
+                name: "IX_QuestionPostsReports_UserId",
                 table: "QuestionPostsReports",
-                column: "ReportTypeID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TechnicalReports_UserID",

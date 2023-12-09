@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AreaBox_V0._1.Models.PostReport.PostReportViewModel>
+﻿@model AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel.MediaQuestionPostsReportViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -73,23 +73,29 @@
 
 
 
-
+@*                        @foreach(var item in Model){
                         <tr>
-                            <td>1</td>
-                            <td>Maryjo Lebarree</td>
+                                <td>@item.ReportTypeId</td>
+                                <td>@item.PostType.Name</td>
                             <td class="text-secondary">
-                                10
+                                    @item.ReportTypes.PostReports.Count()
                             </td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Published
-                            </td>
+                               <td>
+
+                                    {
+                                                <span class="badge bg-success me-1"></span> <span>Published</span>
+                                    else
+                                    {
+                                                <span class="badge bg-danger me-1"></span> <span>Suspended</span>
+                                    }
+                                </td>
                             <td>
                                 <button type="button" class="btn btn-purple w-100" data-toggle="modal" data-target="#exampleModal">
                                     View
                                 </button>
                             </td>
                         </tr>
-
+                        }*@
                         <tr>
                             <td>2</td>
                             <td>Maryjo Lebarree</td>

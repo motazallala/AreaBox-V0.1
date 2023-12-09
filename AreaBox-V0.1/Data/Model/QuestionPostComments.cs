@@ -11,8 +11,10 @@ public class QuestionPostComments
     public string QpcommentId { get; set; }
 
     public string QpostId { get; set; }
+    public string UserId { get; set; }
 
     public DateTime QpcommentDate { get; set; }
+    public ApplicationUser User { get; set; }
 
     public string QpcommentContent { get; set; }
 

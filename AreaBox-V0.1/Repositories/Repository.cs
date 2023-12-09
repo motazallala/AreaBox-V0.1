@@ -23,7 +23,6 @@ namespace AreaBox_V0._1.Repositories
         {
             var entities = await _db.Set<TEntity>().ToListAsync();
             var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
-
             return viewModels;
         }
 
