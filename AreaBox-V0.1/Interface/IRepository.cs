@@ -2,29 +2,32 @@
 
 namespace AreaBox_V0._1.Interface
 {
-    public interface IRepository<T> where T : class
-    {
-        Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>()
-             where TEntity : class
-             where TViewModel : class;
+	public interface IRepository<T> where T : class
+	{
+		Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>()
+			 where TEntity : class
+			 where TViewModel : class;
 
 
-        Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>(string[] includes = null)
-                  where TEntity : class
-                  where TViewModel : class;
+		Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>(string[] includes = null)
+				  where TEntity : class
+				  where TViewModel : class;
 
 
-        Task<T> GetByIdAsync(Guid id);
+		Task<T> GetByIdAsync(string id);
 
-        T Find(Expression<Func<T, bool>> match, String[] includes = null);
-        IEnumerable<T> FindAll(Expression<Func<T, bool>> match, String[] includes = null);
+		TViewModel Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, String[] includes = null)
+		 where TEntity : class
+		 where TViewModel : class;
 
-        void Add(T entity);
+		IEnumerable<T> FindAll(Expression<Func<T, bool>> match, String[] includes = null);
 
-        void Update(T entity);
+		void Add(T entity);
 
-        void Remove(T entity);
+		void Update(T entity);
 
-        Task SaveChnageAsync();
-    }
+		void Remove(T entity);
+
+		Task SaveChnagesAsync();
+	}
 }

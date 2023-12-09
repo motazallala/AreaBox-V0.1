@@ -29,6 +29,7 @@ builder.Services.AddScoped<IMediaPost, MediaPostRepository>();
 builder.Services.AddScoped<IReportType, ReportTypeRepository>();
 builder.Services.AddScoped<IQuestionPost, QuestionPostRepository>();
 
+
 /*builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";

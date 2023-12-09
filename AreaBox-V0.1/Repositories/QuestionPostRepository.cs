@@ -1,29 +1,27 @@
 ﻿using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
-using AreaBox_V0._1.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace AreaBox_V0._1.Repositories
 {
     public class QuestionPostRepository : IQuestionPost
     {
-        private AreaBoxDbContext _db;
+		private readonly IRepository<QuestionPosts> _repoQuestionPosts;
 
-        public QuestionPostRepository(AreaBoxDbContext db)
+		public QuestionPostRepository(IRepository<QuestionPosts> repoQuestionPosts)
         {
-            _db = db;
+			_repoQuestionPosts = repoQuestionPosts;
         }
 
-        public async void Disable(Guid id)
-        {
-            var getQAPost = await _db.QuestionPosts.FindAsync(id);
+		public async Task Disable(string id, bool state)
+		{
+			var getMediaPost = await _repoQuestionPosts.GetByIdAsync(id);
 
-            if (getQAPost != null)
-            {
-                getQAPost.Qpstate = !getQAPost.Qpstate;
-                _db.QuestionPosts.Update(getQAPost);
-                await _db.SaveChangesAsync();
-            }
-        }
-    }
+			if (getMediaPost != null)
+			{
+				getMediaPost.Qpstate = !state;
+				_repoQuestionPosts.Update(getMediaPost);
+				await _repoQuestionPosts.SaveChnagesAsync();
+			}
+		}
+	}
 }

@@ -2,6 +2,6 @@
 {
     public interface IQuestionPost
     {
-        void Disable(Guid id);
+        Task Disable(string id, bool state);
     }
 }
