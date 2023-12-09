@@ -68,17 +68,19 @@
 								<td>@item.Id</td>
 								<td>@item.City.CityName</td>
 								<td class="text-secondary">
-									@item.User.Email
+									@item.LongDescription
 								</td>
 								<td>
-									@if (item.State == false)
-									{
-										<span class="badge bg-success me-1"></span> <span>Published</span>
-									}
-									else
-									{
-										<span class="badge bg-danger me-1"></span> <span>Suspended</span>
-									}
+									<span class="post-state-badge @item.Id">
+										@if (item.State == false)
+										{
+											<span class="badge bg-success me-1"></span> <span>Published</span>
+										}
+										else
+										{
+											<span class="badge bg-danger me-1"></span> <span>Suspended</span>
+										}
+									</span>
 								</td>
 								<td>
 									<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaManagementModal" data-id="@item.Id">
@@ -151,19 +153,20 @@
 			$('#enablePostSwitch').data('postId', postId);
 
 			$.ajax({
-				url: '/MediaManagement/GetMediaDetails',
+				url: `/AdminApi/GetMediaPostDetails/${postId}`,
 				type: 'GET',
 				data: { id: postId },
 				success: function (data) {
 					$('#mediaImage').attr('src', data.imageSrc);
 					$('#mediaDetails').html(`
-					<p>Name Publisher: ${data.name}</p>
-					<p>Email: ${data.email}</p>
-					<p>City: ${data.city}</p>
-					<p>Category: ${data.category}</p>
-					<p>Description: ${data.description}</p>
-					<p>Date: ${data.date}</p>
-				`);
+						<p>Name Publisher: ${data.name}</p>
+						<p>Email: ${data.email}</p>
+						<p>City: ${data.city}</p>
+						<p>Country: ${data.country}</p>
+						<p>Category: ${data.category}</p>
+						<p>Description: ${data.description}</p>
+						<p>Date: ${data.date}</p>
+					`);
 
 					var enablePostSwitch = $('#enablePostSwitch');
 					enablePostSwitch.prop('checked', !button.closest('tr').find('td:nth-child(4) span').hasClass('bg-danger'));
@@ -191,15 +194,14 @@
 	function saveChanges() {
 		var postId = $('#enablePostSwitch').data('postId');
 		var enablePostSwitch = $('#enablePostSwitch');
-		var newState = enablePostSwitch.prop('checked') ? 'Published' : 'Suspended';
+		var newState = enablePostSwitch.prop('checked') ? 'true' : 'false';
 
 		$.ajax({
-			url: '/MediaManagement/Disable',
+			url: `/AdminApi/DisableMediaPost`,
 			type: 'POST',
-			contentType: 'application/json', 
-			data: JSON.stringify({ id: postId }), 
-			success: function () {
-				console.log('Post state updated successfully');
+			data: { id: postId, newState },
+			success: function (data) {
+				updateBadge(postId, enablePostSwitch.prop('checked'));
 				$('#mediaManagementModal').modal('hide');
 			},
 			error: function (error) {
@@ -207,4 +209,19 @@
 			}
 		});
 	}
+	function updateBadge(postId, isChecked) {
+		var badge = $('.post-state-badge.' + postId + ' .badge');
+		var text = $('.post-state-badge.' + postId + ' span:last-child');
+
+		if (isChecked) {
+			badge.removeClass('bg-danger').addClass('bg-success');
+			text.text('Published');
+		} else {
+			badge.removeClass('bg-success').addClass('bg-danger');
+			text.text('Suspended');
+		}
+	}
 </script>
+
+
+

@@ -2,8 +2,6 @@
 {
     public interface IMediaPost
     {
-        Task<string> getCityById(int id);
-        Task<string> getCountryById(int id);
-		Task Disable(string id);
+		Task Disable(string id, bool state);
     }
 }

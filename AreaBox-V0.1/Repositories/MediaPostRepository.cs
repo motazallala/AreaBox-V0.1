@@ -7,52 +7,25 @@ using NuGet.Protocol.Core.Types;
 
 namespace AreaBox_V0._1.Repositories
 {
-    public class MediaPostRepository : IMediaPost
-    {
-        private readonly AreaBoxDbContext _db;
+	public class MediaPostRepository : IMediaPost
+	{
+		private readonly IRepository<MediaPosts> _repoMediaPost;
 
-        public MediaPostRepository(AreaBoxDbContext db)
-        {
-            _db = db;
-        }
-
-        public async Task<string> getCityById(int id)
-        {
-            var city = await _db.Cities.FindAsync(id);
-
-            if(city != null)
-            {
-				return city.CityName;
-            }
-
-            return null;
-            
+		public MediaPostRepository(IRepository<MediaPosts> repoMediaPost)
+		{
+			_repoMediaPost = repoMediaPost;
 		}
 
-
-		public async Task<string> getCountryById(int id)
+		public async Task Disable(string id, bool state)
 		{
-			var country = await _db.Countries.FindAsync(id);
-
-			if (country != null)
-			{
-				return country.CountryName;
-			}
-
-			return null;
-		}
-
-		public async Task Disable(string id)
-		{
-			var getMediaPost = await _db.MediaPosts.FindAsync(id);
+			var getMediaPost = await _repoMediaPost.GetByIdAsync(id);
 
 			if (getMediaPost != null)
 			{
-				getMediaPost.Mpstate = !getMediaPost.Mpstate;
-				_db.MediaPosts.Update(getMediaPost);
-				await _db.SaveChangesAsync();
+				getMediaPost.Mpstate = !state;
+				_repoMediaPost.Update(getMediaPost);
+				await _repoMediaPost.SaveChnagesAsync();
 			}
 		}
-
 	}
 }

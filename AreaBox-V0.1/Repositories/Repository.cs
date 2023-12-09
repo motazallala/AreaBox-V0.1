@@ -67,26 +67,31 @@ namespace AreaBox_V0._1.Repositories
             _db.Set<T>().Update(entity);
         }
 
-        public Task SaveChnageAsync()
-        {
-            return _db.SaveChangesAsync();
-        }
+		public async Task SaveChnagesAsync()
+		{
+			await _db.SaveChangesAsync();
+		}
 
-        public T Find(Expression<Func<T, bool>> match, String[] includes = null)
-        {
-            IQueryable<T> query = _db.Set<T>();
 
-            if (includes != null)
-            {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
-            }
-            return _db.Set<T>().SingleOrDefault(match);
-        }
+		public TViewModel Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, String[] includes = null)
+			 where TEntity : class
+			 where TViewModel : class
+		{
+			IQueryable<TEntity> query = _db.Set<TEntity>();
 
-        public IEnumerable<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null)
+			if (includes != null)
+			{
+				foreach (var include in includes)
+				{
+					query = query.Include(include);
+				}
+			}
+			var entities = query.SingleOrDefault(match);
+			var viewModels = _mapper.Map<TViewModel>(entities);
+			return viewModels;
+		}
+
+		public IEnumerable<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null)
         {
             IQueryable<T> query = _db.Set<T>();
 
@@ -99,7 +104,5 @@ namespace AreaBox_V0._1.Repositories
             }
             return _db.Set<T>().Where(match).ToList();
         }
-
-
-    }
+	}
 }
