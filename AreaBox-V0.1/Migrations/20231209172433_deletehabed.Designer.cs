@@ -4,6 +4,7 @@ using AreaBox_V0._1.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaBox_V0._1.Migrations
 {
     [DbContext(typeof(AreaBoxDbContext))]
-    partial class AreaBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231209172433_deletehabed")]
+    partial class deletehabed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

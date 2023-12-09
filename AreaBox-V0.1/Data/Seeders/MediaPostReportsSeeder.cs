@@ -12,31 +12,34 @@ namespace AreaBox_V0._1.Data.Seeders
                 return;
             }
 
+            var exUser = await dbContext.Users.FirstOrDefaultAsync(e => e.UserName == "User");
+            var exUser2 = await dbContext.Users.FirstOrDefaultAsync(e => e.UserName == "User2");
+
             var exCategories = await dbContext.Categories.FirstOrDefaultAsync(e => e.CategoryName == "News");
             var exCity = await dbContext.Cities.FirstOrDefaultAsync(e => e.CityName == "Amman");
-            var exCity2 = await dbContext.Cities.FirstOrDefaultAsync(e => e.CityName == "Zarqa");
             var mdeiaPost = dbContext.MediaPosts.FirstOrDefault(x => x.MpcategoryId == exCategories.CategoryId && x.MpcityId == exCity.CitryId);
-            var mdeiaPost2 = dbContext.MediaPosts.FirstOrDefault(x => x.MpcategoryId == exCategories.CategoryId && x.MpcityId == exCity2.CitryId);
 
             var postMPType = dbContext.PostTypes.FirstOrDefault(x => x.Name == "MediaPost");
-            var postQAType = dbContext.PostTypes.FirstOrDefault(x => x.Name == "QAPost");
             var misleadingType = dbContext.ReportTypes.FirstOrDefault(x => x.Type == "Misleading");
             var explicitType = dbContext.ReportTypes.FirstOrDefault(x => x.Type == "Explicit");
-            var postReport = dbContext.PostReports.FirstOrDefault(x => x.PostTypeId == postMPType.PostTypeId && x.ReportTypeId == explicitType.ReportTypeId);
-            var postReport2 = dbContext.PostReports.FirstOrDefault(x => x.PostTypeId == postQAType.PostTypeId && x.ReportTypeId == misleadingType.ReportTypeId);
+            var postReportMisleading = dbContext.PostReports.FirstOrDefault(x => x.PostTypeId == postMPType.PostTypeId && x.ReportTypeId == misleadingType.ReportTypeId);
+            var postReportExplicit = dbContext.PostReports.FirstOrDefault(x => x.PostTypeId == postMPType.PostTypeId && x.ReportTypeId == explicitType.ReportTypeId);
 
             var newReportType = new List<MediaPostsReports>
             {
                 new MediaPostsReports
                 {
                     MpostId = mdeiaPost.MpostId,
-                    PostReportId = postReport.PostReportId
+                    PostReportId = postReportMisleading.PostReportId,
+                    UserId =exUser.Id
                 },
                 new MediaPostsReports
                 {
-                    MpostId = mdeiaPost2.MpostId,
-                    PostReportId = postReport2.PostReportId
-                }
+                    MpostId = mdeiaPost.MpostId,
+                    PostReportId = postReportExplicit.PostReportId,
+                    UserId =exUser2.Id
+                },
+
             };
 
             dbContext.MediaPostsReports.AddRange(newReportType);
