@@ -1,6 +1,7 @@
-﻿using AreaBox_V0._1.Data.Model;
+﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostsReport;
+using AreaBox_V0._1.Areas.Admin.Models.QuestionPostsReports;
+using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.MediaPost;
-using AreaBox_V0._1.Models.PostReport;
 using AreaBox_V0._1.Models.QuestionPost;
 using AutoMapper;
 
@@ -42,7 +43,10 @@ namespace AreaBox_V0._1.Common
                 .ForMember(dest => dest.QuestionPostComments, opt => opt.MapFrom(src => src.QuestionPostComments))
                 ;
 
-            CreateMap<PostReports, PostReportViewModel>()
+            CreateMap<MediaPostsReports, MediaPostsReportViewModel>()
+                ;
+
+            CreateMap<QuestionPostsReports, QuestionPostsReportViewModel>()
                 ;
         }
     }

@@ -35,7 +35,7 @@ public class ReportManagementController : Controller
     public async Task<IActionResult> Index()
     {
         var mediaPostsReports = await __repoMediaPostReports.GetAllAsync<MediaPostsReports, MediaPostsReportViewModel>(new[] { "Mpost", "PostReport" });
-        var questionPostsReports = await __repoMediaPostReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportViewModel>(new[] { "Mpost", "PostReport" });
+        var questionPostsReports = await __repoMediaPostReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportViewModel>(new[] { "Qpost", "PostReports" });
         var MpQpReports = new MediaQuestionPostsReportViewModel
         {
             MediaPostsReports = mediaPostsReports,
