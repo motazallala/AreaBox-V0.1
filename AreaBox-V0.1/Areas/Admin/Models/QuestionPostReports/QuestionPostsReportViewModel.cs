@@ -1,6 +1,6 @@
 ﻿using AreaBox_V0._1.Data.Model;
 
-namespace AreaBox_V0._1.Areas.Admin.Models.QuestionPostsReports;
+namespace AreaBox_V0._1.Areas.Admin.Models.QuestionPostReports;
 
 public class QuestionPostsReportViewModel
 {
@@ -14,5 +14,5 @@ public class QuestionPostsReportViewModel
 
     public virtual QuestionPosts Qpost { get; set; }
 
-    public virtual PostReports PostReports { get; set; }
+    public virtual PostReports PostReport { get; set; }
 }

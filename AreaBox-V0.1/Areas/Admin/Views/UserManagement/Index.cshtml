@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<AreaBox_V0._1.Areas.Admin.Models.UserManagement.UserManagementViewModel>
+@{
     ViewData["Title"] = "Index";
 }
 
@@ -34,86 +35,39 @@
                             <th>User Gender</th>
                             <th>User Email</th>
                             <th>State</th>
-                            <th>Control</th>
+                            <th>View</th>
                             <th class="w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-
-
-
-                        <tr>
-                            <td>2</td>
-                            <td>Maryjo</td>
-                            <td class="text-secondary">
-                                Male
-                            </td>
-                            <td>alma.lawson@example.com</td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Active
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Maryjo</td>
-                            <td class="text-secondary">
-                                Male
-                            </td>
-                            <td>alma.lawson@example.com</td>
-                            <td>
-                                <span class="badge bg-danger me-1"></span> NonActive
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Maryjo</td>
-                            <td class="text-secondary">
-                                Male
-                            </td>
-                            <td>alma.lawson@example.com</td>
-                            <td>
-                                <span class="badge bg-success me-1"></span> Active
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Maryjo</td>
-                            <td class="text-secondary">
-                                Male
-                            </td>
-                            <td>alma.lawson@example.com</td>
-                            <td>
-                                <span class="badge bg-danger me-1"></span> NonActive
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-
-
-
-
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.UserID</td>
+                                <td>@user.UserName</td>
+                                <td class="text-secondary">
+                                    @user.Gender
+                                </td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <span class="post-state-badge @user.UserID">
+                                        @if (user.State == false)
+                                        {
+                                            <span class="badge bg-success me-1"></span> <span>Activated</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger me-1"></span> <span>Suspended</span>
+                                        }
+                                    </span>
+                                </td>
+                                <td>
+									<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#userManagementModal" data-id="@user.UserID">
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                        }
 
                     </tbody>
                 </table>
@@ -121,3 +75,113 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal" id="userManagementModal" tabindex="-1">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Media Post Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<img id="mediaImage" src="" alt="Media Image" style="max-width: 100%; height: auto;">
+
+				<div id="mediaDetails">
+				</div>
+
+				<div class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" id="enableUserSwitch">
+					<label class="form-check-label" for="enableUserSwitch">State</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="saveChanges()">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+		$('#userManagementModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var userId = button.data('id');
+
+			$('#enableUserSwitch').data('userId', userId);
+
+			$.ajax({
+				url: `/AdminApi/GetUserDetails/${userId}`,
+				type: 'GET',
+				data: { id: userId },
+				success: function (data) {
+					$('#mediaImage').attr('src', 'data:image/png;base64,' + data.profilePicture);
+					$('#mediaDetails').html(`
+							<p>Name Publisher: ${data.userName}</p>
+							<p>Email: ${data.email}</p>
+							<p>Bio: ${data.bio}</p>
+                            <p>Gender: ${data.gender}</p>
+							<p>Date: ${data.dob}</p>
+							<p>State: ${data.state}</p>
+						`);
+
+					var enableUserSwitch = $('#enableUserSwitch');
+					enableUserSwitch.prop('checked', !button.closest('tr').find('td:nth-child(4) span').hasClass('bg-danger'));
+					updateSwitchLabel(enableUserSwitch.prop('checked'));
+				},
+				error: function (error) {
+					console.error('Error fetching media details:', error);
+				}
+			});
+		});
+
+		function updateSwitchLabel(isChecked) {
+			var label = $('#enableUserSwitch').next('.form-check-label');
+			label.text(isChecked ? 'Active' : 'Inactive');
+		}
+
+		$('#enableUserSwitch').on('change', function () {
+			updateSwitchLabel($(this).prop('checked'));
+		});
+
+	});
+</script>
+
+<script>
+	function saveChanges() {
+		var userId = $('#enableUserSwitch').data('userId');
+		var enablePostSwitch = $('#enableUserSwitch');
+		var newState = enablePostSwitch.prop('checked') ? 'true' : 'false';
+
+		$.ajax({
+			url: `/AdminApi/DisableUser`,
+			type: 'POST',
+			data: { id: userId, newState },
+			success: function (data) {
+				updateBadge(userId, enablePostSwitch.prop('checked'));
+				$('#userManagementModal').modal('hide');
+			},
+			error: function (error) {
+				console.error('Error updating user state:', error);
+			}
+		});
+	}
+	function updateBadge(userId, isChecked) {
+		var badge = $('.post-state-badge.' + userId + ' .badge');
+		var text = $('.post-state-badge.' + userId + ' span:last-child');
+
+		if (isChecked) {
+			badge.removeClass('bg-danger').addClass('bg-success');
+			text.text('Activated');
+		} else {
+			badge.removeClass('bg-success').addClass('bg-danger');
+			text.text('Suspended');
+		}
+	}
+</script>

@@ -19,7 +19,4 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<MediaPostComments> MediaPostComments { get; set; }
     public virtual ICollection<QuestionPostComments> QuestionPostComments { get; set; }
 
-
-
-
 }

@@ -25,6 +25,7 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
+
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 /*builder.Services.ConfigureApplicationCookie(options =>
 {
