@@ -1,8 +1,6 @@
-﻿using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
+﻿using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.MediaPost;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
@@ -10,27 +8,23 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Route("[controller]/[action]")]
 public class MediaManagementController : Controller
 {
-	private readonly IRepository<MediaPosts> _repository;
+    private readonly IUnitOfWork db;
 
-	public MediaManagementController(
-		IMediaPost mediaPost,
-		IRepository<MediaPosts> repository,
-		IMapper mapper,
-		UserManager<ApplicationUser> userManager)
-	{
-		_repository = repository;
-	}
+    public MediaManagementController(IUnitOfWork _db)
+    {
+        db = _db;
+    }
 
     public async Task<IActionResult> Index()
     {
-      var getAllMediaPosts = await _repository.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpcity", "Mpuser", "Mpcategory" });
-		return View(getAllMediaPosts);
-	}
+        var getAllMediaPosts = await db.MediaPosts.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpcity", "Mpuser", "Mpcategory" });
+        return View(getAllMediaPosts);
+    }
 
-	public async Task<IActionResult> Details(string id)
-	{
-		var getMediaPost = await _repository.GetByIdAsync(id);
-		return View(getMediaPost);
-	}
+    public async Task<IActionResult> Details(string id)
+    {
+        var getMediaPost = await db.MediaPosts.GetByIdAsync(id);
+        return View(getMediaPost);
+    }
 
 }

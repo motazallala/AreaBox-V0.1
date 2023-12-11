@@ -1,10 +1,10 @@
-﻿using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
+﻿using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AreaBox_V0._1.Repositories
+namespace AreaBox_V0._1.Data.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -66,31 +66,31 @@ namespace AreaBox_V0._1.Repositories
             _db.Set<T>().Update(entity);
         }
 
-		public async Task SaveChnagesAsync()
-		{
-			await _db.SaveChangesAsync();
-		}
+        public async Task SaveChnagesAsync()
+        {
+            await _db.SaveChangesAsync();
+        }
 
 
-		public TViewModel Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, String[] includes = null)
-			 where TEntity : class
-			 where TViewModel : class
-		{
-			IQueryable<TEntity> query = _db.Set<TEntity>();
+        public TViewModel Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
+             where TEntity : class
+             where TViewModel : class
+        {
+            IQueryable<TEntity> query = _db.Set<TEntity>();
 
-			if (includes != null)
-			{
-				foreach (var include in includes)
-				{
-					query = query.Include(include);
-				}
-			}
-			var entities = query.SingleOrDefault(match);
-			var viewModels = _mapper.Map<TViewModel>(entities);
-			return viewModels;
-		}
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            var entities = query.SingleOrDefault(match);
+            var viewModels = _mapper.Map<TViewModel>(entities);
+            return viewModels;
+        }
 
-		public IEnumerable<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null)
+        public IEnumerable<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null)
         {
             IQueryable<T> query = _db.Set<T>();
 
@@ -103,5 +103,5 @@ namespace AreaBox_V0._1.Repositories
             }
             return _db.Set<T>().Where(match).ToList();
         }
-	}
+    }
 }

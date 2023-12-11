@@ -1,5 +1,5 @@
-﻿using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
+﻿using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.MediaPost;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
