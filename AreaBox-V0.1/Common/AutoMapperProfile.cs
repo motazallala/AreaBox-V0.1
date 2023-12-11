@@ -1,5 +1,6 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostsReport;
 using AreaBox_V0._1.Areas.Admin.Models.QuestionPostReports;
+using AreaBox_V0._1.Areas.Admin.Models.UserManagement;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.MediaPost;
 using AreaBox_V0._1.Models.QuestionPost;
@@ -48,6 +49,7 @@ namespace AreaBox_V0._1.Common
 
             CreateMap<QuestionPostsReports, QuestionPostsReportViewModel>()
                 ;
+            CreateMap<ApplicationUser, UserManagementViewModel>();
         }
     }
 }

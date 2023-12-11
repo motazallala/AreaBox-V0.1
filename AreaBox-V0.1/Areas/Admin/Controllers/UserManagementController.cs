@@ -10,26 +10,16 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Route("[controller]/[action]")]
 public class UserManagementController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    public UserManagementController(UserManager<ApplicationUser> userManager)
+    private readonly IRepository<ApplicationUser> _userManager;
+
+    public UserManagementController(IRepository<ApplicationUser> userManager)
     {
         _userManager = userManager;
     }
+
     public async Task<IActionResult> Index()
     {
-        var getUsers = await _userManager.Users.ToListAsync();
-        var userManagementViewModels = getUsers.Select(u => new UserManagementViewModel
-        {
-            UserID = u.Id,
-            UserName = u.UserName,
-            Email = u.Email,
-            Bio = u.Bio,
-            DOB = u.DOB,
-            Gender = u.Gender,
-            ProfilePicture = u.ProfilePicture,
-            State = u.State,
-        });
-
-        return View(userManagementViewModels);
+        var getUsers = await _userManager.GetAllAsync<ApplicationUser,UserManagementViewModel>();
+        return View(getUsers);
     }
 }

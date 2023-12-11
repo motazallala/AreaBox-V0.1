@@ -43,14 +43,14 @@
                         @foreach (var user in Model)
                         {
                             <tr>
-                                <td>@user.UserID</td>
+                                <td>@user.Id</td>
                                 <td>@user.UserName</td>
                                 <td class="text-secondary">
                                     @user.Gender
                                 </td>
                                 <td>@user.Email</td>
                                 <td>
-                                    <span class="post-state-badge @user.UserID">
+                                    <span class="post-state-badge @user.Id">
                                         @if (user.State == false)
                                         {
                                             <span class="badge bg-success me-1"></span> <span>Activated</span>
@@ -62,7 +62,7 @@
                                     </span>
                                 </td>
                                 <td>
-									<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#userManagementModal" data-id="@user.UserID">
+									<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#userManagementModal" data-id="@user.Id">
                                         View
                                     </button>
                                 </td>
@@ -156,15 +156,15 @@
 <script>
 	function saveChanges() {
 		var userId = $('#enableUserSwitch').data('userId');
-		var enablePostSwitch = $('#enableUserSwitch');
-		var newState = enablePostSwitch.prop('checked') ? 'true' : 'false';
+		var enableUserSwitch = $('#enableUserSwitch');
+		var newState = enableUserSwitch.prop('checked') ? 'true' : 'false';
 
 		$.ajax({
 			url: `/AdminApi/DisableUser`,
 			type: 'POST',
 			data: { id: userId, newState },
 			success: function (data) {
-				updateBadge(userId, enablePostSwitch.prop('checked'));
+				updateBadge(userId, enableUserSwitch.prop('checked'));
 				$('#userManagementModal').modal('hide');
 			},
 			error: function (error) {
