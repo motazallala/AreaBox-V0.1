@@ -28,6 +28,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 builder.Services.AddScoped<IMediaPost, MediaPostRepository>();
 builder.Services.AddScoped<IReportType, ReportTypeRepository>();
 builder.Services.AddScoped<IQuestionPost, QuestionPostRepository>();
+builder.Services.AddScoped<IUserManagement, UserManagementRepository>();
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 /*builder.Services.ConfigureApplicationCookie(options =>

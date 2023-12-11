@@ -1,8 +1,10 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostsReport;
+using AreaBox_V0._1.Areas.Admin.Models.QuestionPostReports;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
 using AreaBox_V0._1.Models.MediaPost;
 using AreaBox_V0._1.Models.QuestionPost;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers
@@ -13,22 +15,31 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
     {
         private readonly IMediaPost _mediaPost;
         private readonly IQuestionPost _questionPost;
+        private readonly IUserManagement _userManagement;
         private readonly IRepository<MediaPosts> _repoMediaPost;
         private readonly IRepository<QuestionPosts> _repoQuestionPosts;
         private readonly IRepository<MediaPostsReports> _repoMediaPostsReports;
+        private readonly IRepository<QuestionPostsReports> _repoQuestionPostsReports;
+        private readonly IRepository<ApplicationUser> _repoUserManager;
 
         public AdminApiController(
             IMediaPost mediaPost,
             IQuestionPost questionPost,
+            IUserManagement userManagement,
             IRepository<MediaPosts> repository,
             IRepository<QuestionPosts> repoQuestionPosts,
-            IRepository<MediaPostsReports> repoMediaPostsReports)
+            IRepository<MediaPostsReports> repoMediaPostsReports,
+            IRepository<QuestionPostsReports> repoQuestionPostsReports,
+            IRepository<ApplicationUser> repoUserManager)
         {
             _mediaPost = mediaPost;
             _questionPost = questionPost;
+            _userManagement = userManagement;
             _repoMediaPost = repository;
             _repoQuestionPosts = repoQuestionPosts;
             _repoMediaPostsReports = repoMediaPostsReports;
+            _repoQuestionPostsReports = repoQuestionPostsReports;
+			_repoUserManager = repoUserManager;
         }
 
         [HttpPost("DisableMediaPost")]
@@ -134,7 +145,7 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var mediaDetails = new
+            var mediaPostDetails = new
             {
                 reportId = mediaPostReports.PostReportId,
                 userName = mediaPostReports.User.UserName,
@@ -144,35 +155,73 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
             };
 
-            return Ok(mediaDetails);
+            return Ok(mediaPostDetails);
         }
 
-        /*        [HttpGet("GetQAPostReportDetails/{id}")]
+        [HttpGet("GetUserDetails/{id}")]
+        public async Task<IActionResult> GetUserDetails(string id)
+        {
+            var user = await _repoUserManager.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userDetails = new
+            {
+                userID = user.Id,
+                userName = user.UserName,
+                email = user.Email,
+                bio = user.Bio,
+                dob = user.DOB,
+                gender = user.Gender,
+                profilePicture = user.ProfilePicture,
+                state = user.State,
+            };
+
+            return Ok(userDetails);
+        }
+
+
+		[HttpPost("DisableUser")]
+		public async Task<IActionResult> DisableUser([FromForm] string id, [FromForm] string newState)
+		{
+			bool state = bool.Parse(newState);
+			await _userManagement.Disable(id, state);
+
+			if (state)
+			{
+				return Ok(new { Message = $"User has been successfully Activated" });
+			}
+			else
+			{
+				return Ok(new { Message = $"User has been successfully Suspended" });
+			}
+		}
+
+		/*        [HttpGet("GetQAPostReportDetails/{id}")]
                 public async Task<IActionResult> GetQAPostReportDetails(int id)
                 {
 
-                    var mediaPost = _repoMediaPost.Find<MediaPosts, MediaPostViewModel>
-                        (x => x.MpostId == id, new[] { "Mpcity", "Mpcategory", "Mpcity.Country", "Mpuser" });
+                    var qAPostReport = _repoQuestionPostsReports.Find<QuestionPostsReports, QuestionPostsReportViewModel>
+                        (x => x.PostReportId == id, new[] { "Qpost", "User", "PostReport", "PostReport.ReportTypes" });
 
-                    if (mediaPost == null)
+                    if (qAPostReport == null)
                     {
                         return NotFound();
                     }
 
-                    var mediaDetails = new
+                    var qAPostDetails = new
                     {
-                        imageSrc = mediaPost.Image,
-                        name = mediaPost.User.UserName,
-                        email = mediaPost.User.Email,
-                        city = mediaPost.City.CityName,
-                        country = mediaPost.City.Country.CountryName,
-                        category = mediaPost.Category.CategoryName,
-                        description = mediaPost.LongDescription,
-                        date = mediaPost.Date,
-                        state = mediaPost.State
+                        reportId = qAPostReport.PostReportId,
+                        userName = qAPostReport.User.UserName,
+                        userEmail = qAPostReport.User.Email,
+                        reportType = qAPostReport.PostReport.ReportTypes.Type,
+                        reportTypeDescription = qAPostReport.PostReport.ReportTypes.Description
                     };
 
-                    return Ok(mediaDetails);
+                    return Ok(qAPostDetails);
                 }*/
-    }
+	}
 }

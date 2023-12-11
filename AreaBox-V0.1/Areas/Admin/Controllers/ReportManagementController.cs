@@ -1,5 +1,5 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostsReport;
-using AreaBox_V0._1.Areas.Admin.Models.QuestionPostsReports;
+using AreaBox_V0._1.Areas.Admin.Models.QuestionPostReports;
 using AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
