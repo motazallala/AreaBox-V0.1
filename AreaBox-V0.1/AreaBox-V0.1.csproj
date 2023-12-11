@@ -32,7 +32,6 @@
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Models\" />
-    <Folder Include="xx\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

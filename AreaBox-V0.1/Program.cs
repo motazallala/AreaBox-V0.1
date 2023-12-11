@@ -1,8 +1,7 @@
 using AreaBox_V0._1.Common;
 using AreaBox_V0._1.Data;
+using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
-using AreaBox_V0._1.Repositories;
 using AreaBox_V0._1.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +22,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
-builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-builder.Services.AddScoped<IMediaPost, MediaPostRepository>();
-builder.Services.AddScoped<IReportType, ReportTypeRepository>();
-builder.Services.AddScoped<IQuestionPost, QuestionPostRepository>();
-builder.Services.AddScoped<IUserManagement, UserManagementRepository>();
+
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 /*builder.Services.ConfigureApplicationCookie(options =>

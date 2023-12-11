@@ -1,7 +1,8 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostsReport;
-using AreaBox_V0._1.Areas.Admin.Models.QuestionPostReports;
+
+using AreaBox_V0._1.Data.Interface;
+
 using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
 using AreaBox_V0._1.Models.MediaPost;
 using AreaBox_V0._1.Models.QuestionPost;
 using Microsoft.AspNetCore.Identity;
@@ -13,40 +14,19 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
     [ApiController]
     public class AdminApiController : ControllerBase
     {
-        private readonly IMediaPost _mediaPost;
-        private readonly IQuestionPost _questionPost;
-        private readonly IUserManagement _userManagement;
-        private readonly IRepository<MediaPosts> _repoMediaPost;
-        private readonly IRepository<QuestionPosts> _repoQuestionPosts;
-        private readonly IRepository<MediaPostsReports> _repoMediaPostsReports;
-        private readonly IRepository<QuestionPostsReports> _repoQuestionPostsReports;
-        private readonly IRepository<ApplicationUser> _repoUserManager;
 
-        public AdminApiController(
-            IMediaPost mediaPost,
-            IQuestionPost questionPost,
-            IUserManagement userManagement,
-            IRepository<MediaPosts> repository,
-            IRepository<QuestionPosts> repoQuestionPosts,
-            IRepository<MediaPostsReports> repoMediaPostsReports,
-            IRepository<QuestionPostsReports> repoQuestionPostsReports,
-            IRepository<ApplicationUser> repoUserManager)
+        private readonly IUnitOfWork db;
+
+        public AdminApiController(IUnitOfWork _db)
         {
-            _mediaPost = mediaPost;
-            _questionPost = questionPost;
-            _userManagement = userManagement;
-            _repoMediaPost = repository;
-            _repoQuestionPosts = repoQuestionPosts;
-            _repoMediaPostsReports = repoMediaPostsReports;
-            _repoQuestionPostsReports = repoQuestionPostsReports;
-			_repoUserManager = repoUserManager;
+            db = _db;
         }
 
         [HttpPost("DisableMediaPost")]
         public async Task<IActionResult> DisableMediaPost([FromForm] string id, [FromForm] string newState)
         {
             bool state = bool.Parse(newState);
-            await _mediaPost.Disable(id, state);
+            await db.MediaPosts.Disable(id, state);
 
             if (state)
             {
@@ -63,7 +43,7 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
         public async Task<IActionResult> GetMediaPostDetails(string id)
         {
 
-            var mediaPost = _repoMediaPost.Find<MediaPosts, MediaPostViewModel>
+            var mediaPost = db.MediaPosts.Find<MediaPosts, MediaPostViewModel>
                 (x => x.MpostId == id, new[] { "Mpcity", "Mpcategory", "Mpcity.Country", "Mpuser" });
 
             if (mediaPost == null)
@@ -91,7 +71,7 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
         public async Task<IActionResult> DisableQAPost([FromForm] string id, [FromForm] string newState)
         {
             bool state = bool.Parse(newState);
-            await _questionPost.Disable(id, state);
+            await db.QuestionPosts.Disable(id, state);
 
             if (state)
             {
@@ -107,7 +87,7 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
         public async Task<IActionResult> GetQAPostDetails(string id)
         {
 
-            var qAPost = _repoQuestionPosts.Find<QuestionPosts, QuestionPostViewModel>
+            var qAPost = db.QuestionPosts.Find<QuestionPosts, QuestionPostViewModel>
                 (x => x.QpostId == id, new[] { "Qpcity", "Qpcategory", "Qpcity.Country", "Qpuser" });
 
             if (qAPost == null)
@@ -137,7 +117,7 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
         public async Task<IActionResult> GetMediaPostReportDetails(int id)
         {
 
-            var mediaPostReports = _repoMediaPostsReports.Find<MediaPostsReports, MediaPostsReportViewModel>
+            var mediaPostReports = db.MediaPostsReports.Find<MediaPostsReports, MediaPostsReportViewModel>
                 (x => x.PostReportId == id, new[] { "User", "Mpost", "PostReport", "PostReport.ReportTypes" });
 
             if (mediaPostReports == null)
