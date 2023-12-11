@@ -12,17 +12,29 @@ namespace AreaBox_V0._1.Areas.User.Controllers;
 public class HomeController : Controller
 {
     private readonly IRepository<MediaPosts> _repoMediaPost;
+    private readonly IRepository<MediaPostLikes> _repoMediaPostLikes;
+    private readonly IRepository<ApplicationUser> _repoUserManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMapper _mapper;
-    public HomeController(IRepository<MediaPosts> repoMediaPost, IMapper mapper, UserManager<ApplicationUser> userManager)
+
+    public HomeController(IRepository<MediaPosts> repoMediaPost,
+        IMapper mapper,
+        IRepository<ApplicationUser> repoUserManager,
+        UserManager<ApplicationUser> userManager,
+		IRepository<MediaPostLikes> repoMediaPostLikes)
     {
         _repoMediaPost = repoMediaPost;
-        _userManager = userManager;
+		_repoUserManager = repoUserManager;
+        _repoMediaPostLikes = repoMediaPostLikes;
+		_userManager = userManager;
         _mapper = mapper;
     }
-    public IActionResult Index()
+
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var getUsers = await _repoUserManager.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpuser", "MediaPostComments", "MediaPostsLikes" });
+
+		return View(getUsers);
     }
 
     public IActionResult Info()

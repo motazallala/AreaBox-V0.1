@@ -30,9 +30,9 @@ public class MediaPosts
     public int PostLike => MediaPostsLikes.Count;
 
     public virtual ICollection<MediaPostComments> MediaPostComments { get; set; } = new List<MediaPostComments>();
+	public int PostCommends => MediaPostComments.Count;
 
-
-    public virtual Categories Mpcategory { get; set; }
+	public virtual Categories Mpcategory { get; set; }
 
     public virtual Cities Mpcity { get; set; }
 

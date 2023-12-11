@@ -4,18 +4,20 @@ using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Interface;
 using AreaBox_V0._1.Models.MediaPost;
 using AreaBox_V0._1.Models.QuestionPost;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers
 {
     [Route("AdminApi")]
-    [ApiController]
+	[ApiController]
     public class AdminApiController : ControllerBase
     {
         private readonly IMediaPost _mediaPost;
         private readonly IQuestionPost _questionPost;
         private readonly IUserManagement _userManagement;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRepository<MediaPosts> _repoMediaPost;
         private readonly IRepository<QuestionPosts> _repoQuestionPosts;
         private readonly IRepository<MediaPostsReports> _repoMediaPostsReports;
@@ -25,7 +27,8 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
         public AdminApiController(
             IMediaPost mediaPost,
             IQuestionPost questionPost,
-            IUserManagement userManagement,
+			UserManager<ApplicationUser> userManager,
+			IUserManagement userManagement,
             IRepository<MediaPosts> repository,
             IRepository<QuestionPosts> repoQuestionPosts,
             IRepository<MediaPostsReports> repoMediaPostsReports,
@@ -35,7 +38,8 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
             _mediaPost = mediaPost;
             _questionPost = questionPost;
             _userManagement = userManagement;
-            _repoMediaPost = repository;
+            _userManager = userManager;
+			_repoMediaPost = repository;
             _repoQuestionPosts = repoQuestionPosts;
             _repoMediaPostsReports = repoMediaPostsReports;
             _repoQuestionPostsReports = repoQuestionPostsReports;
@@ -59,7 +63,7 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
         }
 
-        [HttpGet("GetMediaPostDetails/{id}")]
+		[HttpGet("GetMediaPostDetails/{id}")]
         public async Task<IActionResult> GetMediaPostDetails(string id)
         {
 
@@ -103,7 +107,25 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
             }
         }
 
-        [HttpGet("GetQAPostDetails/{id}")]
+		[HttpPost("LikeMediaPost")]
+		public async Task<IActionResult> LikeMediaPost([FromForm] string id, [FromForm] string newState)
+		{
+			bool state = bool.Parse(newState);
+            var currentUserID = _userManager.GetUserId(User);
+			await _mediaPost.Like(id, state, currentUserID);
+			
+
+			if (state)
+			{
+				return Ok(new { Message = $"Media Post han been Liked" });
+			}
+			else
+			{
+				return Ok(new { Message = $"Media Post han been Unliked" });
+			}
+		}
+
+		[HttpGet("GetQAPostDetails/{id}")]
         public async Task<IActionResult> GetQAPostDetails(string id)
         {
 

@@ -66,6 +66,16 @@ namespace AreaBox_V0._1.Repositories
             _db.Set<T>().Update(entity);
         }
 
+		public void Detach<TEntity>(TEntity entity) 
+            where TEntity : class
+		{
+			var entry = _db.Entry(entity);
+			if (entry.State != EntityState.Detached)
+			{
+				entry.State = EntityState.Detached;
+			}
+		}
+
 		public async Task SaveChnagesAsync()
 		{
 			await _db.SaveChangesAsync();

@@ -26,6 +26,8 @@ namespace AreaBox_V0._1.Models.MediaPost
 
         public int PostLike => MediaPostLikes.Count;
 
+        public int PostCommends => MediaPostComments.Count;
+
         public virtual ICollection<MediaPostComments> MediaPostComments { get; set; } = new List<MediaPostComments>();
 
         public virtual Categories Category { get; set; }

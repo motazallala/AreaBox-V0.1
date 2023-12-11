@@ -28,6 +28,8 @@ namespace AreaBox_V0._1.Interface
 
 		void Remove(T entity);
 
+		void Detach<TEntity>(TEntity entity) where TEntity : class;
+
 		Task SaveChnagesAsync();
 	}
 }

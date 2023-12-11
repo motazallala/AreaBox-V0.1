@@ -50,6 +50,7 @@ namespace AreaBox_V0._1.Common
             CreateMap<QuestionPostsReports, QuestionPostsReportViewModel>()
                 ;
             CreateMap<ApplicationUser, UserManagementViewModel>();
-        }
+			CreateMap<MediaPostLikes, MediaPostLikes>();
+		}
     }
 }
