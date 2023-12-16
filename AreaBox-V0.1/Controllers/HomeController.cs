@@ -24,7 +24,6 @@ namespace AreaBox_V0._1.Controllers
 
         public IActionResult x()
         {
-            User
             return View();
         }
 

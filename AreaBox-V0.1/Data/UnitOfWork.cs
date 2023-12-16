@@ -7,7 +7,7 @@ namespace AreaBox_V0._1.Data;
 
 public class UnitOfWork : IUnitOfWork
 {
-    public IRepository<ApplicationUser> Users { get; private set; }
+    public IUserManagement Users { get; private set; }
     public IRepository<Categories> Categories { get; private set; }
 
     public IRepository<Cities> Cities { get; private set; }
@@ -45,7 +45,7 @@ public class UnitOfWork : IUnitOfWork
     {
         db = _db;
         mapper = _mapper;
-        Users = new Repository<ApplicationUser>(db, mapper);
+        Users = new UserManagementRepository(db, mapper);
         Categories = new Repository<Categories>(db, mapper);
         Cities = new Repository<Cities>(db, mapper);
         Countries = new Repository<Countries>(db, mapper);
