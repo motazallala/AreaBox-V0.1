@@ -1,6 +1,5 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.UserManagement;
 using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

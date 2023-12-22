@@ -1,8 +1,5 @@
-﻿using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Interface;
-using AreaBox_V0._1.Models.MediaPost;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPost;
+using AreaBox_V0._1.Data.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
@@ -10,26 +7,63 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Route("[controller]/[action]")]
 public class MediaManagementController : Controller
 {
-	private readonly IRepository<MediaPosts> _repository;
+	private readonly IUnitOfWork db;
 
-	public MediaManagementController(
-		IMediaPost mediaPost,
-		IRepository<MediaPosts> repository,
-		IMapper mapper,
-		UserManager<ApplicationUser> userManager)
+	public MediaManagementController(IUnitOfWork _db)
 	{
-		_repository = repository;
+		db = _db;
 	}
 
-    public async Task<IActionResult> Index()
-    {
-      var getAllMediaPosts = await _repository.GetAllAsync<MediaPosts, MediaPostViewModel>(new[] { "Mpcity", "Mpuser", "Mpcategory" });
-		return View(getAllMediaPosts);
+	public async Task<IActionResult> Index(int id = 1, int pageSize = 5, int? Country = null, int? City = null, int? Category = null, string? ss = null)
+	{
+		int skip = pageSize * (id - 1);
+		int take = pageSize;
+		IEnumerable<MediaPostViewModel> getAllMediaPosts;
+		int resultsCount;
+		if (ss != null)
+		{
+			getAllMediaPosts = await db.MediaPosts.FindAndFilter(x => x.MplongDescription.Contains(ss),
+																	new[] { "Mpcity", "Mpuser", "Mpcategory" },
+																	City, Category, Country, skip, take);
+			resultsCount = await db.MediaPosts.CountMediaPost(x => x.MplongDescription.Contains(ss), City, Category, Country);
+		}
+		else
+		{
+			getAllMediaPosts = await db.MediaPosts.FindAndFilter(x => true,
+												new[] { "Mpcity", "Mpuser", "Mpcategory" },
+												City, Category, Country, skip, take);
+			resultsCount = await db.MediaPosts.CountMediaPost(x => true, City, Category, Country);
+		}
+
+		if (pageSize <= 0)
+		{
+			pageSize = 5;
+		}
+
+		var pages = (int)Math.Ceiling((double)resultsCount / pageSize);
+		var par = new Dictionary<string, string>();
+		par.Add("id", id.ToString());
+		par.Add("pageSize", pageSize.ToString());
+		par.Add("Country", Country.ToString());
+		par.Add("City", City.ToString());
+		par.Add("Category", Category.ToString());
+		par.Add("ss", ss);
+		var mediaPostPaged = new MediaPostIndexViewModel
+		{
+			mediaPosts = getAllMediaPosts,
+			Controller = "MediaManagement",
+			Action = nameof(Index),
+			CurrentPage = id,
+			PagesCount = pages,
+			paramss = par
+
+		};
+		return View(mediaPostPaged);
 	}
 
 	public async Task<IActionResult> Details(string id)
 	{
-		var getMediaPost = await _repository.GetByIdAsync(id);
+		var getMediaPost = await db.MediaPosts.GetByIdAsync(id);
 		return View(getMediaPost);
 	}
 

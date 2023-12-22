@@ -22,6 +22,11 @@ namespace AreaBox_V0._1.Controllers
             return View();
         }
 
+        public IActionResult x()
+        {
+            return View();
+        }
+
         public IActionResult Chat()
         {
             return View();

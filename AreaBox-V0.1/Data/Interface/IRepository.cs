@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace AreaBox_V0._1.Interface
+namespace AreaBox_V0._1.Data.Interface
 {
 	public interface IRepository<T> where T : class
 	{
@@ -16,11 +16,14 @@ namespace AreaBox_V0._1.Interface
 
 		Task<T> GetByIdAsync(string id);
 
-		TViewModel Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, String[] includes = null)
+		TViewModel Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
 		 where TEntity : class
 		 where TViewModel : class;
 
-		IEnumerable<T> FindAll(Expression<Func<T, bool>> match, String[] includes = null);
+		Task<IEnumerable<TViewModel>> FindAll<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
+		   where TEntity : class
+			where TViewModel : class;
+
 
 		void Add(T entity);
 
