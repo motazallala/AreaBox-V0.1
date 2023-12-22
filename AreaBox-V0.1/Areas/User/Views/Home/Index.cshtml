@@ -5,12 +5,13 @@
 
 <h1>Index</h1>
 
-<form method="post" action="AddPost" enctype="multipart/form-data">
+@*<form method="post" action="AddPost" enctype="multipart/form-data">
     <input type="file" name="file" accept="image/*" />
     <input type="text" asp-for="@Model.ShortDescription" placeholder="Short Description" />
     <textarea asp-for="@Model.LongDescription" placeholder="Long Description"></textarea>
     <button type="submit">Add Post</button>
 </form>
+*@
 
 
 <a asp-area="User" asp-controller="Home" asp-action="Info">Info</a>
