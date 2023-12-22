@@ -1,6 +1,6 @@
 ﻿using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Models.QuestionPost;
+using AreaBox_V0._1.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
@@ -18,7 +18,7 @@ public class QAManagementController : Controller
     public async Task<IActionResult> Index()
     {
 
-        var getAllQAPost = await db.QuestionPosts.GetAllAsync<QuestionPosts, QuestionPostViewModel>(new[] { "Qpcategory", "Qpcity", "Qpuser" });
+        var getAllQAPost = await db.QuestionPosts.GetAllAsync<QuestionPosts, QuestionPostsDto>(new[] { "Qpcategory", "Qpcity", "Qpuser" });
         return View(getAllQAPost);
     }
 

@@ -1,6 +1,6 @@
-﻿namespace AreaBox_V0._1.Areas.Admin.Models.CitiesModel;
+﻿namespace AreaBox_V0._1.Areas.Admin.Models.CitiesModel.send;
 
-public class CitiesViewModel
+public class CitiesDtoForApi
 {
     public int CitryId { get; set; }
 
