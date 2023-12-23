@@ -2,45 +2,86 @@
     ViewData["Title"] = "Index";
 }
 <h3>Loction :</h3>
-<div class="mb-3">
-    <div style="display: inline-block; margin-right: 10px;">
-        <div class="form-label">Country:</div>
-        <select style="width:300px" class="form-select">
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
-    </div>
-    <div style="display: inline-block; margin-right: 10px;">
-        <div class="form-label">Technical Report Type :</div>
-        <input type="text" placeholder="Enter Any Issues" />
-    </div>
 
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="row row-cards">
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive table-nowrap">
+                        <table border="1" class="table table-vcenter card-table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                    <th>Technical Report Type </th>
+                                    <th>Email</th>
+                                    <th>Control</th>
+                                    <th class="w-1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>Many transaction reports use a unique</td>
+                                    <td class="text-secondary">
+                                        Transaction Report
+                                    </td>
+                                    <td>
+                                        tranthuy.nute@gmail.com
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-purple w-100">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+    <div class="col-3 ">
+		<form class="card mb-4" asp-action="Index" asp-area="admin" asp-controller="MediaManagement" method="get">
+			<div class="card-header">
+				<h3 class="card-title">Basic form</h3>
+			</div>
+			<div class="card-body">
+				<div class="mb-3">
+					<div style="display: inline-block; margin-right: 10px;">
+						<div class="form-label">Search:</div>
+						<select class="form-select">
+							<option value="1">One</option>
+							<option value="2">Two</option>
+							<option value="3">Three</option>
+						</select>
+					</div>
+				</div>
+				<div class="mb-3">
+
+					<div style="display: inline-block; margin-right: 10px;">
+						<div class="form-label">Category:</div>
+						<input type="text" class="form-control" name="ss" value='' placeholder="Enter Email Search" />
+					</div>
+				</div>
+
+			</div>
+			<div class="card-footer text-end">
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</form>
+	</div>
 
 </div>
 
-<div class="mb-3">
-    <div style="display: inline-block; margin-right: 10px;">
-        <div class="form-label">City:</div>
-        <select style="width:300px" class="form-select">
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
-    </div>
 
-    <div style="display: inline-block; margin-right: 10px;">
-        <div class="form-label">Category:</div>
-        <select style="width:300px" class="form-select">
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
-    </div>
-    <a style="display: inline-block; width:100px" href="#" class="btn btn-primary">
-        Submit
-    </a>
-</div>
+
 
 @*<div style="display: flex;align-items: center;">
     <h3 style="margin: 0; margin-right:10px">Post Type :</h3>
@@ -49,143 +90,3 @@
 </div>*@
 
 
-<div class="row row-cards">
-    <div class="col-12">
-        <div class="card">
-            <div class="table-responsive">
-                <table border="1" class="table table-vcenter card-table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Description</th>
-                            <th>Technical Report Type </th>
-                            <th>Email</th>
-                            <th>Control</th>
-                            <th class="w-1"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>1</td>
-                            <td>Many transaction reports use a unique</td>
-                            <td class="text-secondary">
-                                Transaction Report
-                            </td>
-                            <td>
-                                tranthuy.nute@gmail.com
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-purple w-100">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-
-
-
-
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>

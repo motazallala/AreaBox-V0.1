@@ -1,95 +1,98 @@
-﻿@model IEnumerable<AreaBox_V0._1.Areas.Admin.Models.UserManagement.UserManagementViewModel>
+﻿@model AreaBox_V0._1.Areas.Admin.Models.UserManagementDto.send.UserManagementIndexDto
 @{
     ViewData["Title"] = "Index";
 }
+<div class="row">
+	<div class="col-12">
+		<h2>User List : </h2>
+	</div>
+</div>
 
 <div class="row">
-<div class="col-9">
-<div class="row row-cards">
-    <div class="col-12">
-        <div class="card">
-            <div class="table-responsive">
-                <table border="1" class="table table-vcenter card-table table-striped">
-                    <thead>
-                        <tr>
-                            <th>UserID</th>
-                            <th>User Name</th>
-                            <th>User Gender</th>
-                            <th>User Email</th>
-                            <th>State</th>
-                            <th>View</th>
-                            <th class="w-1"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in Model)
-                        {
-                            <tr>
-                                <td>@user.UserID</td>
-                                <td>@user.UserName</td>
-                                <td class="text-secondary">
-                                    @user.Gender
-                                </td>
-                                <td>@user.Email</td>
-                                <td>
-                                    <span class="post-state-badge @user.UserID">
-                                        @if (user.State == false)
-                                        {
-                                            <span class="badge bg-success me-1"></span> <span>Activated</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger me-1"></span> <span>Suspended</span>
-                                        }
-                                    </span>
-                                </td>
-                                <td>
-									<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#userManagementModal" data-id="@user.UserID">
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-                        }
+	<div class="col-9">
+		<div class="row row-cards">
+			<div class="col-12">
+				<div class="card">
+						<div class="table-responsive table-nowrap">
+						<table border="1" class="table table-vcenter card-table table-striped">
+							<thead>
+								<tr>
+									<th>UserID</th>
+									<th>User Name</th>
+									<th>User Gender</th>
+									<th>User Email</th>
+									<th>State</th>
+									<th>View</th>
+									<th class="w-1"></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var user in Model.Users)
+								{
+									<tr>
+										<td>@user.Id</td>
+										<td>@user.UserName</td>
+										<td class="text-secondary">
+											@user.Gender
+										</td>
+										<td>@user.Email</td>
+										<td>
+											<span class="post-state-badge @user.Id">
+												@if (user.State == false)
+												{
+													<span class="badge bg-success me-1"></span> <span>Activated</span>
+												}
+												else
+												{
+													<span class="badge bg-danger me-1"></span> <span>Suspended</span>
+												}
+											</span>
+										</td>
+										<td>
+											<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#userManagementModal" data-id="@user.Id">
+												View
+											</button>
+										</td>
+									</tr>
+								}
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<partial name="_PaginationPartial" model="Model" />
 	</div>
 	<div class="col-3">
-		<form class="card mb-4" asp-action="Index" asp-area="admin" asp-controller="MediaManagement" method="get">
-			<div class="card-header">
-				<h3 class="card-title">Basic form</h3>
-			</div>
-			<div class="card-body">
-				<div class="mb-3">
-					<div style="display: inline-block; margin-right: 10px;">
-						<div class="form-label">Search:</div>
-						<select class="form-select">
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
-						</select>
-					</div>
+		<form class="card mb-4" asp-action="Index" asp-area="admin" asp-controller="UserManagement" method="get">
+				<div class="card-header">
+					<h3 class="card-title">Basic form</h3>
 				</div>
-				<div class="mb-3">
-
-					<div style="display: inline-block; margin-right: 10px;">
-						<div class="form-label">Category:</div>
-						<input type="text" class="form-control" name="ss" value='' placeholder="Enter Email Search" />
+				<div class="card-body">
+					<div class="mb-3">
+						<div style="display: inline-block; margin-right: 10px;">
+							<div class="form-label">Search:</div>
+							<select class="form-select">
+							<option value="1">One</option>
+							<option value="2">Two</option>
+							<option value="3">Three</option>
+							</select>
+						</div>
 					</div>
+					<div class="mb-3">
+
+						<div style="display: inline-block; margin-right: 10px;">
+							<div class="form-label">Category:</div>
+						<input type="text" class="form-control" name="Search" value='@Model.paramss["Search"]' placeholder="Enter Email Search" />
+						</div>
+					</div>
+
 				</div>
-
-			</div>
-			<div class="card-footer text-end">
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</div>
-		</form>
-
-
-
+				<div class="card-footer text-end">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
 	</div>
 
 </div>
