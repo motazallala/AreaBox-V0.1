@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Data.Interface;
+﻿using AreaBox_V0._1.Areas.Admin.Models.QuestionPostDto.send;
+using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,53 @@ public class QAManagementController : Controller
         db = _db;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int id = 1 , int pageSize = 5 , int? Country=null , int? City = null ,
+        int? Category = null , string? Search = null) 
     {
+        int skip=pageSize*(id-1);
+        int take=pageSize;
+        int resultCount;
+        IEnumerable<QuestionPostsDto> result;
+        if (Search != null)
+        {
+            result = await db.QuestionPosts.FindAndFilter(e => e.Qptitle.Contains(Search), new[] { "Qpcategory", "Qpcity", "Qpuser" }, City, Category, Country, skip, take);
+            resultCount = await db.QuestionPosts.CountQuestionPosts(e => e.Qptitle.Contains(Search), City, Category, Country);
+        }
+        else
+        {
+            result = await db.QuestionPosts.FindAndFilter(e => true, new[] { "Qpcategory", "Qpcity", "Qpuser" }, City, Category, Country, skip, take);
+			resultCount = await db.QuestionPosts.CountQuestionPosts(e => true, City, Category, Country);
+		}
+        if(id <= 0)
+        {
+            id = 1;
+        }
 
-        var getAllQAPost = await db.QuestionPosts.GetAllAsync<QuestionPosts, QuestionPostsDto>(new[] { "Qpcategory", "Qpcity", "Qpuser" });
-        return View(getAllQAPost);
+        if(pageSize <= 0) 
+        {
+            pageSize = 5;
+        }
+
+        int pages = (int)Math.Ceiling((double)resultCount / pageSize);
+        var par = new Dictionary<string, string>();
+        par.Add("id", id.ToString());
+        par.Add("pageSize", pageSize.ToString());
+        par.Add("City", City.ToString());
+        par.Add("Category", Category.ToString());
+        par.Add("Country", Country.ToString());
+        par.Add("Search", Search);
+
+        var questionPostPaging = new QuestionPostIndexDto
+        {
+            Action = nameof(Index),
+            Controller = "QAManagement",
+            CurrentPage = id,
+            PagesCount = pages,
+            paramss = par,
+            questionPostDtos = result,
+
+        };
+            return View(questionPostPaging);
     }
 
     public async Task<IActionResult> Details(string id)
