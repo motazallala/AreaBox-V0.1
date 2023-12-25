@@ -13,7 +13,7 @@ public class UserManagementController : Controller
 	{
 		db = _db;
 	}
-	public async Task<IActionResult> Index(int id = 1, int pageSize = 5, string? Search = null)
+	public async Task<IActionResult> Index(int id = 1, int pageSize = 5, string? SearchType = null, string? Search = null)
 	{
 		int skip = pageSize * (id - 1);
 		int take = pageSize;
@@ -21,8 +21,24 @@ public class UserManagementController : Controller
 		int resultsCount;
 		if (Search != null)
 		{
-			result = await db.Users.FindAndFilter(x => x.UserName.Contains(Search), null, skip, take);
-			resultsCount = await db.Users.CountUser(x => x.UserName.Contains(Search));
+
+			if (SearchType == "phonenumber")
+			{
+				result = await db.Users.FindAndFilter(x => x.PhoneNumber.Contains(Search), null, skip, take);
+				resultsCount = await db.Users.CountUser(x => x.PhoneNumber.Contains(Search));
+
+			}
+			else if (SearchType == "email")
+			{
+				result = await db.Users.FindAndFilter(x => x.Email.Contains(Search), null, skip, take);
+				resultsCount = await db.Users.CountUser(x => x.Email.Contains(Search));
+			}
+			else
+			{
+				result = await db.Users.FindAndFilter(x => x.UserName.Contains(Search), null, skip, take);
+				resultsCount = await db.Users.CountUser(x => x.UserName.Contains(Search));
+			}
+
 		}
 		else
 		{
@@ -40,6 +56,7 @@ public class UserManagementController : Controller
 		par.Add("id", id.ToString());
 		par.Add("pageSize", pageSize.ToString());
 		par.Add("Search", Search);
+		par.Add("SearchType", SearchType);
 		var mediaPostPaged = new UserManagementIndexDto
 		{
 			Users = result,
