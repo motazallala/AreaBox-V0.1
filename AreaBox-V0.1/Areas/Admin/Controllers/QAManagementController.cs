@@ -16,8 +16,7 @@ public class QAManagementController : Controller
         db = _db;
     }
 
-    public async Task<IActionResult> Index(int id = 1 , int pageSize = 5 , int? Country=null , int? City = null ,
-        int? Category = null , string? Search = null) 
+    public async Task<IActionResult> Index(int id = 1 , int pageSize = 5 , int? Country = null,  int? City = null ,int? Category = null , string? Search = null) 
     {
         int skip=pageSize*(id-1);
         int take=pageSize;
@@ -25,12 +24,12 @@ public class QAManagementController : Controller
         IEnumerable<QuestionPostsDto> result;
         if (Search != null)
         {
-            result = await db.QuestionPosts.FindAndFilter(e => e.Qptitle.Contains(Search), new[] { "Qpcategory", "Qpcity", "Qpuser" }, City, Category, Country, skip, take);
+            result = await db.QuestionPosts.FindAndFilter(e => e.Qptitle.Contains(Search), new[] { "Qpcategory", "Qpcity", "Qpuser", "Qpcity.Country" }, City, Category, Country, skip, take);
             resultCount = await db.QuestionPosts.CountQuestionPosts(e => e.Qptitle.Contains(Search), City, Category, Country);
         }
         else
         {
-            result = await db.QuestionPosts.FindAndFilter(e => true, new[] { "Qpcategory", "Qpcity", "Qpuser" }, City, Category, Country, skip, take);
+            result = await db.QuestionPosts.FindAndFilter(e => true, new[] { "Qpcategory", "Qpcity", "Qpuser", "Qpcity.Country" }, City, Category, Country, skip, take);
 			resultCount = await db.QuestionPosts.CountQuestionPosts(e => true, City, Category, Country);
 		}
         if(id <= 0)
@@ -47,9 +46,9 @@ public class QAManagementController : Controller
         var par = new Dictionary<string, string>();
         par.Add("id", id.ToString());
         par.Add("pageSize", pageSize.ToString());
-        par.Add("City", City.ToString());
+		par.Add("Country", Country.ToString());
+		par.Add("City", City.ToString());
         par.Add("Category", Category.ToString());
-        par.Add("Country", Country.ToString());
         par.Add("Search", Search);
 
         var questionPostPaging = new QuestionPostIndexDto
