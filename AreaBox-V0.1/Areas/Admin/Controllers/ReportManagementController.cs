@@ -31,7 +31,11 @@ public class ReportManagementController : Controller
 	{
 		return View();
 	}
-	public async Task<IActionResult> Details(string id)
+    public async Task<IActionResult> QuestionPostsReports()
+    {
+        return View();
+    }
+    public async Task<IActionResult> Details(string id)
 	{
 		var getReport = await db.PostReports.GetByIdAsync(id);
 		return View(getReport);
