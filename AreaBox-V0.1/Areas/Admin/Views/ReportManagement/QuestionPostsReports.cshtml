@@ -1,15 +1,56 @@
-﻿
+﻿@model IEnumerable<AreaBox_V0._1.Models.Dto.QuestionPostsReportsDto>
 @{
-    Layout = null;
+    ViewData["Title"] = "QuestionPostsReports";
 }
+<h2>Question Post Reports :</h2>
+<div class="row">
+	<div class="col-12">
+		<div class="row row-cards">
+			<div class="col-12">
+				<div class="card">
+					<div class="table-responsive table-nowrap">
+						<table border="1" class="table table-vcenter card-table table-striped">
+							<thead>
+								<tr>
+									<th>User</th>
+									<th>Number Of Report</th>
+									<th>State</th>
+									<th>Control</th>
+									<th class="w-1"></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td>@item.User.UserName</td>
+										<td>@Model.Count()</td>
+										<td>
+											<span class="post-state-badge @item.QpostId">
+												@if (item.Qpost.State == false)
+												{
+													<span class="badge bg-success me-1"></span> <span>Published</span>
+												}
+												else
+												{
+													<span class="badge bg-danger me-1"></span> <span>Suspended</span>
+												}
+											</span>
+										</td>
+										<td>
+											<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaManagementModal" data-id="@item.QpostId">
+												View
+											</button>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			@*			<partial name="_PaginationPartial" model="Model" />*@
+		</div>
+	</div>
+</div>
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>QuestionPostsReports</title>
-</head>
-<body>
-</body>
-</html>

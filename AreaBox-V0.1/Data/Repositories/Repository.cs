@@ -107,5 +107,10 @@ namespace AreaBox_V0._1.Data.Repositories
 			var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
 			return viewModels;
 		}
-	}
+
+     public async Task<int> Count()
+      {
+        return await _db.Set<T>().CountAsync();
+      }
+    }
 }

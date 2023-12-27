@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel;
+﻿using AreaBox_V0._1.Areas.Admin.Models.Pages.ReportManagement.send;
+using AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
@@ -18,22 +19,31 @@ public class ReportManagementController : Controller
 
 	public async Task<IActionResult> Index()
 	{
-		var mediaPostsReports = await db.MediaPosts.GetAllAsync<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" });
-		var questionPostsReports = await db.QuestionPostsReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" });
-		var MpQpReports = new MediaQuestionPostsReportViewModel
+		var mediaPostCount = await db.MediaPosts.Count();
+        var mediaPostReportCount = await db.MediaPostReports.Count();
+        var questionPostCount = await db.QuestionPosts.Count();
+        var questionPostReportCount = await db.QuestionPostsReports.Count();
+
+  //      var mediaPostsReports = await db.MediaPostReports.GetAllAsync<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" });
+		//var questionPostsReports = await db.QuestionPostsReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" });
+		var MpQpReports = new ReportsStatisticDto
 		{
-			MediaPostsReports = mediaPostsReports,
-			QuestionPostsReports = questionPostsReports
-		};
+            MediaPostReportCount = mediaPostReportCount,
+			MediaPostReportPercentage =(double)((double)mediaPostReportCount / (double)mediaPostCount )*100.0,
+            QuestiomPostReportCount = questionPostReportCount,
+			QuestionPostReportPercentage=(double) ((double)questionPostReportCount / (double)questionPostCount)*100.0
+        };
 		return View(MpQpReports);
 	}
 	public async Task<IActionResult> MediaPostsReports()
 	{
-		return View();
+        var mediaPostsReports = await db.MediaPostReports.GetAllAsync<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" });
+        return View(mediaPostsReports);
 	}
     public async Task<IActionResult> QuestionPostsReports()
     {
-        return View();
+        var questionPostsReports = await db.QuestionPostsReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" });
+        return View(questionPostsReports);
     }
     public async Task<IActionResult> Details(string id)
 	{
