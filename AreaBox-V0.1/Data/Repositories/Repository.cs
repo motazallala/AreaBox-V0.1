@@ -1,4 +1,8 @@
-﻿using System.Linq.Expressions;
+﻿using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AreaBox_V0._1.Data.Repositories
 {
@@ -160,11 +164,11 @@ namespace AreaBox_V0._1.Data.Repositories
 			return await query.CountAsync();
 
 		}
-	}
 
-	public async Task<int> Count()
-	{
-		return await _db.Set<T>().CountAsync();
+
+		public async Task<int> Count()
+		{
+			return await _db.Set<T>().CountAsync();
+		}
 	}
-}
 }

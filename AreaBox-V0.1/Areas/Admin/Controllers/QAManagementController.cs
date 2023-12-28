@@ -1,4 +1,10 @@
-﻿namespace AreaBox_V0._1.Areas.Admin.Controllers;
+﻿using AreaBox_V0._1.Areas.Admin.Models.QuestionPostDto.send;
+using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models.Dto;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Area("Admin")]
 [Route("[controller]/[action]")]
 public class QAManagementController : Controller
