@@ -107,5 +107,62 @@ namespace AreaBox_V0._1.Data.Repositories
 			var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
 			return viewModels;
 		}
+
+		public async Task<IEnumerable<TViewModel>> FindAndFilter<TEntity, TViewModel>(string[] includes = null, int? skip = null, int? take = null, params Expression<Func<TEntity, bool>>[] match)
+			where TEntity : class
+			where TViewModel : class
+		{
+			IQueryable<TEntity> query = _db.Set<TEntity>();
+
+			if (includes != null)
+			{
+				foreach (var include in includes)
+				{
+					query = query.Include(include);
+				}
+			}
+			if (match != null)
+			{
+				foreach (var item in match)
+				{
+
+					query = query.Where(item);
+
+				}
+			}
+			if (skip != null)
+			{
+				int skipItem = skip.Value;
+				query = query.Skip(skipItem);
+			}
+
+			if (take != null)
+			{
+				int takeItem = take.Value;
+				query = query.Take(takeItem);
+			}
+			var entities = await query.ToListAsync();
+			var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
+			return viewModels;
+		}
+
+		public async Task<int> Count<TEntity>(params Expression<Func<TEntity, bool>>[] match) where TEntity : class
+		{
+			IQueryable<TEntity> query = _db.Set<TEntity>();
+
+			if (match != null)
+			{
+				foreach (var item in match)
+				{
+					if (item != null)
+					{
+						query = query.Where(item);
+					}
+				}
+			}
+
+			return await query.CountAsync();
+
+		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.UserManagementDto.send;
 using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,32 +20,14 @@ public class UserManagementController : Controller
 		int take = pageSize;
 		IEnumerable<ApplicationUserDto> result;
 		int resultsCount;
-		if (Search != null)
-		{
+		result = await db.Users.FindAndFilter<ApplicationUser, ApplicationUserDto>(null, skip, take,
+																					SearchType == "phonenumber" && Search != null ? x => x.PhoneNumber.Contains(Search) : x => true,
+																					SearchType == "email" && Search != null ? x => x.Email.Contains(Search) : x => true,
+																					SearchType == "username" && Search != null ? x => x.UserName.Contains(Search) : x => true);
 
-			if (SearchType == "phonenumber")
-			{
-				result = await db.Users.FindAndFilter(x => x.PhoneNumber.Contains(Search), null, skip, take);
-				resultsCount = await db.Users.CountUser(x => x.PhoneNumber.Contains(Search));
-
-			}
-			else if (SearchType == "email")
-			{
-				result = await db.Users.FindAndFilter(x => x.Email.Contains(Search), null, skip, take);
-				resultsCount = await db.Users.CountUser(x => x.Email.Contains(Search));
-			}
-			else
-			{
-				result = await db.Users.FindAndFilter(x => x.UserName.Contains(Search), null, skip, take);
-				resultsCount = await db.Users.CountUser(x => x.UserName.Contains(Search));
-			}
-
-		}
-		else
-		{
-			result = await db.Users.FindAndFilter(x => true, null, skip, take);
-			resultsCount = await db.Users.CountUser(x => true);
-		}
+		resultsCount = await db.Users.Count<ApplicationUser>(SearchType == "phonenumber" ? x => x.PhoneNumber.Contains(Search) : x => true,
+																					SearchType == "email" && Search != null ? x => x.Email.Contains(Search) : x => true,
+																					SearchType == "username" && Search != null ? x => x.UserName.Contains(Search) : x => true);
 
 		if (pageSize <= 0)
 		{

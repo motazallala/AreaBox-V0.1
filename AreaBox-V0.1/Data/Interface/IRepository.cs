@@ -24,6 +24,15 @@ namespace AreaBox_V0._1.Data.Interface
 		   where TEntity : class
 			where TViewModel : class;
 
+		public Task<IEnumerable<TViewModel>> FindAndFilter<TEntity, TViewModel>(string[] includes = null,
+																					int? skip = null,
+																					int? take = null,
+																					params Expression<Func<TEntity, bool>>[] match)
+			where TEntity : class
+			where TViewModel : class;
+
+		public Task<int> Count<TEntity>(params Expression<Func<TEntity, bool>>[] match) where TEntity : class;
+
 
 		void Add(T entity);
 

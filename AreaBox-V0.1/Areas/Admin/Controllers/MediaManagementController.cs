@@ -1,5 +1,6 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPost;
 using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,20 +22,18 @@ public class MediaManagementController : Controller
 		int take = pageSize;
 		IEnumerable<MediaPostsDto> getAllMediaPosts;
 		int resultsCount;
-		if (ss != null)
-		{
-			getAllMediaPosts = await db.MediaPosts.FindAndFilter(x => x.MplongDescription.Contains(ss),
-																	new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" },
-																	City, Category, Country, skip, take);
-			resultsCount = await db.MediaPosts.CountMediaPost(x => x.MplongDescription.Contains(ss), City, Category, Country);
-		}
-		else
-		{
-			getAllMediaPosts = await db.MediaPosts.FindAndFilter(x => true,
-												new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" },
-												City, Category, Country, skip, take);
-			resultsCount = await db.MediaPosts.CountMediaPost(x => true, City, Category, Country);
-		}
+
+		getAllMediaPosts = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take,
+																					ss != null ? e => e.MplongDescription.Contains(ss) : e => true,
+																					City != null ? e => e.MpcityId == City : e => true,
+																					Category != null ? e => e.MpcategoryId == Category : e => true,
+																					Country != null ? e => e.Mpcity.CountryId == Country : e => true);
+
+		resultsCount = await db.MediaPosts.Count<MediaPosts>(ss != null ? e => e.MplongDescription.Contains(ss) : e => true,
+																					City != null ? e => e.MpcityId == City : e => true,
+																					Category != null ? e => e.MpcategoryId == Category : e => true,
+																					Country != null ? e => e.Mpcity.CountryId == Country : e => true);
+
 
 		if (pageSize <= 0)
 		{
