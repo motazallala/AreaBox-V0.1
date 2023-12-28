@@ -1,0 +1,58 @@
+﻿@model IEnumerable<AreaBox_V0._1.Models.Dto.MediaPostsReportsDto>
+@{
+    ViewData["Title"] = "MediaPostsReports";
+}
+
+<h2>Media Post Reports :</h2>
+<div class="row">
+	<div class="col-12">
+		<div class="row row-cards">
+			<div class="col-12">
+				<div class="card">
+					<div class="table-responsive table-nowrap">
+						<table border="1" class="table table-vcenter card-table table-striped">
+							<thead>
+								<tr>
+									<th>User</th>
+									<th>Number Of Report</th>
+									<th>State</th>
+									<th>Control</th>
+									<th class="w-1"></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td>@item.User.UserName</td>
+										<td>@Model.Count()</td>
+										<td>
+											<span class="post-state-badge @item.MpostId">
+												@if (item.Mpost.State == false)
+												{
+													<span class="badge bg-success me-1"></span> <span>Published</span>
+												}
+												else
+												{
+													<span class="badge bg-danger me-1"></span> <span>Suspended</span>
+												}
+											</span>
+										</td>
+										<td>
+											<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaManagementModal" data-id="@item.MpostId">
+												View
+											</button>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+@*			<partial name="_PaginationPartial" model="Model" />*@
+		</div>
+	</div>
+</div>
+
+

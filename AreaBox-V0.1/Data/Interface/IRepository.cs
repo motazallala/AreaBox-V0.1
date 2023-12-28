@@ -39,7 +39,9 @@ namespace AreaBox_V0._1.Data.Interface
 		void Update(T entity);
 
 		void Remove(T entity);
+        Task<int> Count();
+        Task SaveChnagesAsync();
 
-		Task SaveChnagesAsync();
-	}
+
+    }
 }
