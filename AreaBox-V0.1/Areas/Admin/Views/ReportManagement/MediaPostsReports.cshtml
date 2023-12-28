@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AreaBox_V0._1.Models.Dto.MediaPostsReportsDto>
+﻿@model AreaBox_V0._1.Areas.Admin.Models.MediaPostReportsDto.send.MediaPostsReportIndexDto
 @{
     ViewData["Title"] = "MediaPostsReports";
 }
@@ -21,11 +21,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach (var item in Model)
+								@foreach (var item in Model.mediaPostReports)
 								{
 									<tr>
 										<td>@item.User.UserName</td>
-										<td>@Model.Count()</td>
+										<td>@Model.mediaPostReports.Count()</td>
 										<td>
 											<span class="post-state-badge @item.MpostId">
 												@if (item.Mpost.State == false)
@@ -50,7 +50,7 @@
 					</div>
 				</div>
 			</div>
-@*			<partial name="_PaginationPartial" model="Model" />*@
+			<partial name="_PaginationPartial" model="Model" />
 		</div>
 	</div>
 </div>

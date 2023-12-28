@@ -1,5 +1,6 @@
-﻿using AreaBox_V0._1.Areas.Admin.Models.Pages.ReportManagement.send;
-using AreaBox_V0._1.Areas.Admin.Models.ReportManagementViewModel;
+﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPostReportsDto.send;
+using AreaBox_V0._1.Areas.Admin.Models.Pages.ReportManagement.send;
+using AreaBox_V0._1.Areas.Admin.Models.QuestionPostReportsDto.send;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
@@ -20,32 +21,100 @@ public class ReportManagementController : Controller
 	public async Task<IActionResult> Index()
 	{
 		var mediaPostCount = await db.MediaPosts.Count();
-        var mediaPostReportCount = await db.MediaPostReports.Count();
-        var questionPostCount = await db.QuestionPosts.Count();
-        var questionPostReportCount = await db.QuestionPostsReports.Count();
+		var mediaPostReportCount = await db.MediaPostReports.Count();
+		var questionPostCount = await db.QuestionPosts.Count();
+		var questionPostReportCount = await db.QuestionPostsReports.Count();
 
-  //      var mediaPostsReports = await db.MediaPostReports.GetAllAsync<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" });
-		//var questionPostsReports = await db.QuestionPostsReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" });
 		var MpQpReports = new ReportsStatisticDto
 		{
-            MediaPostReportCount = mediaPostReportCount,
-			MediaPostReportPercentage =(double)((double)mediaPostReportCount / (double)mediaPostCount )*100.0,
-            QuestiomPostReportCount = questionPostReportCount,
-			QuestionPostReportPercentage=(double) ((double)questionPostReportCount / (double)questionPostCount)*100.0
-        };
+			MediaPostReportCount = mediaPostReportCount,
+			MediaPostReportPercentage = (double)((double)mediaPostReportCount / (double)mediaPostCount) * 100.0,
+			QuestiomPostReportCount = questionPostReportCount,
+			QuestionPostReportPercentage = (double)((double)questionPostReportCount / (double)questionPostCount) * 100.0
+		};
 		return View(MpQpReports);
 	}
-	public async Task<IActionResult> MediaPostsReports()
+	public async Task<IActionResult> MediaPostsReports(int id = 1, int pageSize = 5)
 	{
-        var mediaPostsReports = await db.MediaPostReports.GetAllAsync<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" });
-        return View(mediaPostsReports);
+
+		int skip = pageSize * (id - 1);
+		int take = pageSize;
+		var result = await db.MediaPostReports.FindAndFilter<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" }, skip, take);
+
+
+		int resultCount = await db.MediaPostReports.Count<MediaPostsReports>();
+
+
+		if (id <= 0)
+		{
+			id = 1;
+		}
+
+		if (pageSize <= 0)
+		{
+			pageSize = 5;
+		}
+
+		int pages = (int)Math.Ceiling((double)resultCount / pageSize);
+		var par = new Dictionary<string, string>();
+		par.Add("id", id.ToString());
+		par.Add("pageSize", pageSize.ToString());
+
+		var mediaPostsReportPaging = new MediaPostsReportIndexDto
+		{
+			Action = nameof(MediaPostsReports),
+			Controller = "ReportManagement",
+			CurrentPage = id,
+			PagesCount = pages,
+			paramss = par,
+			mediaPostReports = result,
+
+		};
+		return View(mediaPostsReportPaging);
 	}
-    public async Task<IActionResult> QuestionPostsReports()
-    {
-        var questionPostsReports = await db.QuestionPostsReports.GetAllAsync<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" });
-        return View(questionPostsReports);
-    }
-    public async Task<IActionResult> Details(string id)
+
+	public async Task<IActionResult> QuestionPostsReports(int id = 1, int pageSize = 5)
+	{
+		if (id <= 0)
+		{
+			id = 1;
+		}
+
+		if (pageSize <= 0)
+		{
+			pageSize = 5;
+		}
+		int skip = pageSize * (id - 1);
+		int take = pageSize;
+		var result = await db.MediaPostReports.FindAndFilter<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" }, skip, take);
+
+
+		int resultCount = await db.MediaPostReports.Count<MediaPostsReports>();
+
+
+		int pages = (int)Math.Ceiling((double)resultCount / pageSize);
+		if (id >= pages)
+		{
+			id = 1;
+		}
+		var par = new Dictionary<string, string>();
+		par.Add("id", id.ToString());
+		par.Add("pageSize", pageSize.ToString());
+
+		var questionPostsReportPaging = new QuestionPostsReportIndexDto
+		{
+			Action = nameof(QuestionPostsReports),
+			Controller = "ReportManagement",
+			CurrentPage = id,
+			PagesCount = pages,
+			paramss = par,
+			questionPostsReports = result,
+
+		};
+		return View(questionPostsReportPaging);
+
+	}
+	public async Task<IActionResult> Details(string id)
 	{
 		var getReport = await db.PostReports.GetByIdAsync(id);
 		return View(getReport);

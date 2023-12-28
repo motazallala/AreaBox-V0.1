@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AreaBox_V0._1.Models.Dto.QuestionPostsReportsDto>
+﻿@model AreaBox_V0._1.Areas.Admin.Models.QuestionPostReportsDto.send.QuestionPostsReportIndexDto
 @{
     ViewData["Title"] = "QuestionPostsReports";
 }
@@ -20,11 +20,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach (var item in Model)
+								@foreach (var item in Model.questionPostsReports)
 								{
 									<tr>
 										<td>@item.User.UserName</td>
-										<td>@Model.Count()</td>
+										<td>@Model.questionPostsReports.Count()</td>
 										<td>
 											<span class="post-state-badge @item.QpostId">
 												@if (item.Qpost.State == false)
@@ -49,7 +49,7 @@
 					</div>
 				</div>
 			</div>
-			@*			<partial name="_PaginationPartial" model="Model" />*@
+						<partial name="_PaginationPartial" model="Model" />
 		</div>
 	</div>
 </div>
