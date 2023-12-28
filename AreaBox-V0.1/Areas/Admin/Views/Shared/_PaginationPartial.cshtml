@@ -1,8 +1,7 @@
 ﻿@model AreaBox_V0._1.Areas.Admin.Models.Pagination.PageViewModel
 
 @{
-    var searchString = Context.Request.Query["search"].ToString();
-    var pageItems = Context.Request.Query["pageSize"].ToString();
+    var pageItems = Model.paramss["pageSize"];
 }
 <nav>
     <ul class="pagination justify-content-center" style="padding-top:30px; margin-bottom:0px;">
