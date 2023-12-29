@@ -1,0 +1,11 @@
+﻿@model AreaBox_V0._1.Models.Dto.MediaPostsDto;
+@{
+    ViewData["Title"] = "AddPost";
+}
+
+<form method="post" action="AddPost" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*" />
+    <input type="text" asp-for="@Model.ShortDescription" placeholder="Short Description" />
+    <textarea asp-for="@Model.LongDescription" placeholder="Long Description"></textarea>
+    <button type="submit">Add Post</button>
+</form>

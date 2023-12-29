@@ -1,17 +1,73 @@
-﻿@model AreaBox_V0._1.Models.Dto.MediaPostsDto;
+﻿@model AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostIndexDto
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
-<form method="post" action="AddPost" enctype="multipart/form-data">
-    <input type="file" name="file" accept="image/*" />
-    <input type="text" asp-for="@Model.ShortDescription" placeholder="Short Description" />
-    <textarea asp-for="@Model.LongDescription" placeholder="Long Description"></textarea>
-    <button type="submit">Add Post</button>
-</form>
 
 
 
-<a asp-area="User" asp-controller="Home" asp-action="Info">Info</a>
+
+<div class="row">
+    <div class="col-8 offset-2 d-flex flex-column align-items-center">
+        <div id="post-container">
+            @Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
+        </div>
+        <div id="loading-indicator" class="my-5" style="display: none;">
+            <div class="spinner-border text-primary"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script>
+    var page = 1; // Initialize the page number for lazy loading
+    var loading = false; // Flag to track if loading is in progress
+
+    $(window).scroll(function () {
+        if (
+            !loading &&
+            $(window).scrollTop() + $(window).height() >= $(document).height() - 100
+        ) {
+            loading = true; // Set loading flag to true
+            loadMorePosts();
+        }
+    });
+
+    function loadMorePosts() {
+        if (page <= @Model.PagesCount) {
+            console.log("Loading posts - Page " + page);
+            $('#loading-indicator').show();
+
+            $.ajax({
+                url: '/Home/GetMediaPostPartialList',
+                type: 'GET',
+                data: { page: page },
+                success: function (data) {
+                    // Append the new posts to the post container
+                    $('#post-container').append(data);
+                    page++; // Increment the page number for the next request
+                    loading = false; // Reset loading flag after successful load
+                    $('#loading-indicator').hide();
+                },
+                error: function () {
+                    console.log('Error loading posts.');
+                    $('#loading-indicator').hide();
+                    loading = false; // Reset loading flag even on error
+                }
+            });
+        } else {
+            console.log("All posts loaded");
+        }
+    }
+
+</script>
+
+
