@@ -23,7 +23,7 @@ public class QAManagementController : Controller
 		int take = pageSize;
 		int resultCount;
 		IEnumerable<QuestionPostsDto> result;
-		result = await db.QuestionPosts.FindAndFilter<QuestionPosts, QuestionPostsDto>(new[] { "Qpcategory", "Qpcity", "Qpuser" },
+		result = await db.QuestionPosts.FindAndFilter<QuestionPosts, QuestionPostsDto>(new[] { "Qpcategory", "Qpcity", "Qpuser", "Qpcity.Country" },
 																					   skip,
 																					   take,
 																					   Search != null ? e => e.Qptitle.Contains(Search) : e => true,

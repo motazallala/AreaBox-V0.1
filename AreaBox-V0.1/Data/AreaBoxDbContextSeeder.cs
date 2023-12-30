@@ -34,8 +34,10 @@ namespace AreaBox_V0._1.Data
                 new MediaPostCommentsSeeder(),
                 new QuestionPostsReportsSeeder(),
                 new QuestionPostCommentsSeeder(),
-                new MediaPostLikesSeeder()
-            };
+                new MediaPostLikesSeeder(),
+                new TechnicalReportsSeeder()
+
+			};
 
             foreach (var seeder in seeders)
             {
