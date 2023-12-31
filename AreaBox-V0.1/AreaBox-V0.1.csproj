@@ -42,6 +42,7 @@
     <Folder Include="Areas\Admin\Models\QuestionPostDto\input\" />
     <Folder Include="Areas\Admin\Models\QuestionPostReportsDto\input\" />
     <Folder Include="Areas\Admin\Models\ReportManagementViewModel\" />
+    <Folder Include="Areas\Admin\Models\TechnicalReportDto\input\" />
     <Folder Include="Areas\Admin\Models\UserManagementDto\input\" />
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Areas\User\Data\" />

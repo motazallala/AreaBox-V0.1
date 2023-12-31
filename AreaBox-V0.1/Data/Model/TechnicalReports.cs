@@ -1,6 +1,4 @@
 ﻿
-
-
 namespace AreaBox_V0._1.Data.Model;
 
 public class TechnicalReports
