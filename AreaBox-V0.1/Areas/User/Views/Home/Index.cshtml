@@ -3,14 +3,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+    .make-me-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+    }
+</style>
 
 
-
-
-
-<div class="row">
-    <div class="col-8 offset-2 d-flex flex-column align-items-center">
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6" >
         <div id="post-container">
             @Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
         </div>
@@ -18,8 +21,14 @@
             <div class="spinner-border text-primary"></div>
         </div>
     </div>
-</div>
+    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4" >
+        <div class="make-me-sticky">
 
+        <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+        </div>
+
+    </div>
+</div>
 
 
 
