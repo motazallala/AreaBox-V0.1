@@ -9,8 +9,9 @@
                 <div>
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <span class="avatar"
-                                  style="background-image: url(@post.User.ProfilePicture)"></span>
+                                <img src="@post.User.ProfilePicture" alt="" srcset="" class="avatar">
+
+
                         </div>
                         <div class="col">
                             <div class="card-title">@post.User.UserName</div>
@@ -41,7 +42,7 @@
                 </div>
             </div>
                 <div class="card-body p-0 text-center">
-                    <img src="data:image/png;base64,@post.Image" alt="" srcset="" class="w-100">
+                    <img src="@post.Image" alt="" srcset="" class="w-100">
             </div>
             <div class="card-footer text-start">
                 @post.ShortDescription
