@@ -78,7 +78,7 @@ public class HomeController : Controller
                 var mediaPost = new MediaPosts
                 {
                     MpuserId = userId,
-                    Mpimage = base64String,
+                    Mpimage = "data:image/jpeg;base64," + base64String,
                     Mpdate = DateTime.Now,
                     MpcityId = 1,
                     MpcategoryId = 1,
