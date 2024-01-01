@@ -37,7 +37,8 @@ public class HomeController : Controller
         var posts = new UMediaPostIndexDto
         {
             mediaPostsDtos = resalt,
-            PagesCount = pages
+            PagesCount = pages,
+
         };
 
 
