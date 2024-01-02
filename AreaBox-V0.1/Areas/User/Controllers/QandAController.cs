@@ -1,4 +1,4 @@
-﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+﻿using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
@@ -6,7 +6,6 @@ using AreaBox_V0._1.Models.Dto;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing.Printing;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
@@ -56,28 +55,29 @@ public class QandAController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> AddPost(QuestionPostsDto questionPostsDto)
+    public async Task<IActionResult> AddPost([FromBody] UQuestionPostInputDto questionPostInputDto)
     {
         var userId = _userManager.GetUserId(User);
 
         if (userId != null)
         {
 
-                var questionPost = new QuestionPosts
-                {
-                    QpuserId = userId,
-                    Qpdate = DateTime.Now,
-                    QpcityId = 1,
-                    QpcategoryId = 1,
-                    Qpdescription = questionPostsDto.Description,
-                    Qpstate = false
-                };
+            var questionPost = new QuestionPosts
+            {
+                QpuserId = userId,
+                Qpdate = DateTime.Now,
+                QpcityId = questionPostInputDto.CityId,
+                QpcategoryId = questionPostInputDto.CategoryId,
+                Qptitle = questionPostInputDto.Title,
+                Qpdescription = questionPostInputDto.Description,
+                Qpstate = false
+            };
 
-                db.QuestionPosts.Add(questionPost);
-                await db.Save();
+            db.QuestionPosts.Add(questionPost);
+            await db.Save();
 
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
+        }
         return Content("User not logged in or no file selected for upload.");
     }
 

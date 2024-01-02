@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
@@ -66,15 +67,15 @@ public class HomeController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> AddPost(MediaPostsDto mediaPostsDto, IFormFile file)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto postInputDto, IFormFile image)
     {
         var userId = _userManager.GetUserId(User);
 
         if (userId != null)
         {
-            if (file != null && file.Length > 0)
+            if (image != null && image.Length > 0)
             {
-                string base64String = ConvertToBase64(file);
+                string base64String = ConvertToBase64(image);
 
                 var mediaPost = new MediaPosts
                 {
@@ -83,8 +84,8 @@ public class HomeController : Controller
                     Mpdate = DateTime.Now,
                     MpcityId = 1,
                     MpcategoryId = 1,
-                    MpshortDescription = mediaPostsDto.ShortDescription,
-                    MplongDescription = mediaPostsDto.LongDescription,
+                    MpshortDescription = postInputDto.ShortDescription,
+                    MplongDescription = postInputDto.LongDescription,
                     Mpstate = false
                 };
 

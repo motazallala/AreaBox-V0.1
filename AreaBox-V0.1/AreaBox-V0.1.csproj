@@ -46,9 +46,12 @@
     <Folder Include="Areas\Admin\Models\UserManagementDto\input\" />
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Areas\User\Data\" />
-    <Folder Include="Areas\User\Models\UMediaPostDto\input\" />
-    <Folder Include="Areas\User\Models\UQuestionPostDto\Input\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\lib\webfont\fonts\tabler-icons.woff2" />
+    <None Include="wwwroot\lib\webfont\tabler-icons.scss" />
   </ItemGroup>
 
 </Project>

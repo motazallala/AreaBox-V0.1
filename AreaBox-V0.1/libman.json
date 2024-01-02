@@ -5,6 +5,11 @@
     {
       "library": "qrcodejs@1.0.0",
       "destination": "wwwroot/qrcodejs/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@tabler/icons-webfont@2.44.0",
+      "destination": "wwwroot/tabler/icons-webfont/"
     }
   ]
 }
