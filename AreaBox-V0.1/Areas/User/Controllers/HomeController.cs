@@ -1,3 +1,4 @@
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
@@ -76,7 +77,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPost(MediaPostsDto mediaPostsDto, IFormFile file)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto postInputDto, IFormFile file)
     {
         var userId = _userManager.GetUserId(User);
 
@@ -88,16 +89,6 @@ public class HomeController : Controller
         if (file == null || file.Length == 0)
         {
             ModelState.AddModelError("file", "Please select a Image.");
-        }
-        else
-        {
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".svg", ".ico" };
-
-            if (!allowedExtensions.Contains(fileExtension))
-            {
-                ModelState.AddModelError("file", "Only image files are allowed.");
-            }
         }
 
         try

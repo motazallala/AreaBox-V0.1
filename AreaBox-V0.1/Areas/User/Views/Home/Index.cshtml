@@ -9,22 +9,32 @@
         position: sticky;
         top: 0;
     }
+
 </style>
 
 
 <div class="row justify-content-center">
-    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6" >
+    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
         <div id="post-container">
             @Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
         </div>
-        <div id="loading-indicator" class="my-5" style="display: none;">
-            <div class="spinner-border text-primary"></div>
+        <div class="col text-center">
+            <div id="loading-indicator" class="my-5" style="display: none;">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        </div>
+        <div class="col text-center ">
+            <button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
+                <i class="ti ti-plus" style="font-size: 24px;"></i>
+                load more content
+            </button>
         </div>
     </div>
-    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4" >
+    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
         <div class="make-me-sticky">
 
-        <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+            <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+
         </div>
 
     </div>
@@ -33,33 +43,51 @@
 
 
 
-<div class="modal" id="mediaManagementModal" tabindex="-1">
-    <div class="modal-dialog" role="document">
+
+<div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Media Post Details</h5>
+                <h5 class="modal-title">Add a new team</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img id="mediaImage" src="" alt="Media Image" style="max-width: 100%; height: auto;">
-
-                <div id="mediaDetails">
+                <div class=" mb-3 align-items-end">
+                    <div class="dropzone" id="dropzone-default" action="./" autocomplete="off" novalidate>
+                        <div class="fallback">
+                            <input name="file" type="file" id="postImage" />
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="enablePostSwitch">
-                    <label class="form-check-label" for="enablePostSwitch">State</label>
+                <div class="mb-3">
+                    @*NOTE ---  this will take it from cookie  *@
+                    <input type="hidden" value="1" id="postInCity" />
+                    <label class="form-label">Media Post Title</label>
+                    <input type="text" class="form-control" id="mediaTitle" />
+                </div>
+                <div>
+                    <label class="form-label">Media Post Description</label>
+                    <textarea class="form-control" data-bs-toggle="autosize" id="mediaDescription" placeholder="Type something…"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Media Post Category</label>
+                    <select class="form-select" id="categoryDropdownModel" name="Category">
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="saveChanges()">Save changes</button>
+                <button type="button" class="btn btn-primary" id="SavePost" data-bs-dismiss="modal">Add Post</button>
             </div>
         </div>
+
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    
+
 
 
 <script>
@@ -80,6 +108,8 @@
         if (page <= @Model.PagesCount) {
             console.log("Loading posts - Page " + page);
             $('#loading-indicator').show();
+            $('#loadBut').hide();
+
 
             $.ajax({
                 url: '/Home/GetMediaPostPartialList',
@@ -90,18 +120,126 @@
                     page++;
                     loading = false;
                     $('#loading-indicator').hide();
+                    $('#loadBut').show();
+
                 },
                 error: function () {
                     console.log('Error loading posts.');
                     $('#loading-indicator').hide();
-                    loading = false;
+                    $('#loadBut').show();
+                    loading = false; // Reset loading flag even on error
                 }
             });
         } else {
             console.log("All posts loaded");
+            $('#loadBut').hide();
         }
     }
 
 </script>
 
 
+<script>
+    $(document).ready(function () {
+        $('#mediaManagementModal').on('show.bs.modal', function (event) {
+            $.ajax({
+                url: '/AdminApi/GetAllCategories',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var categoryDropdown = $('#categoryDropdownModel');
+                    categoryDropdown.empty();
+                    $.each(data, function (key, entry) {
+                        categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching category data:', error);
+                }
+            });
+        });
+
+
+    });
+</script>
+
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Dropzone
+            var myDropzone = new Dropzone("#dropzone-default", {
+                url: '/Home/AddPost',
+                uploadMultiple: false,
+                maxFiles: 1, // Set maximum number of files to 1
+                acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
+                maxFilesize: 10, // Set maximum file size to 10 MB
+                maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
+                autoProcessQueue: false, // Do not process the queue automatically
+                paramName: 'Image', // Set the parameter name for the file
+                addRemoveLinks: true, // Show remove link on preview
+                parallelUploads: 1, // Upload one file at a time
+                init: function () {
+                    var submitButton = document.querySelector("#SavePost");
+
+                    // Disable the submit button until the user adds a file
+                    submitButton.disabled = true;
+
+                    // Listen to the addedfile event to enable the submit button
+                    this.on("addedfile", function () {
+                        submitButton.disabled = false;
+                    });
+
+                    // Listen to the removedfile event to disable the submit button if no files are present
+                    this.on("removedfile", function () {
+                        if (this.files.length === 0) {
+                            submitButton.disabled = true;
+                        }
+                    });
+                }
+            });
+
+            // Handle the SavePost button click
+            $("#SavePost").click(function () {
+                // Get text data
+                var textData = {
+                    CategoryId: $('#categoryDropdownModel').val(),
+                    CityId: $('#postInCity').val(),
+                    ShortDescription: $('#mediaTitle').val(),
+                    LongDescription: $('#mediaDescription').val()
+                };
+
+                // Append text data to FormData
+                var formData = new FormData();
+                for (var key in textData) {
+                    formData.append(key, textData[key]);
+                }
+
+                // Append the file from Dropzone to FormData
+                var file = myDropzone.files[0];
+                if (file) {
+                    formData.append('Image', file);
+                }
+
+                console.log(formData);
+
+                $.ajax({
+                    url: '/Home/AddPost',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,  // Important: Don't process the data
+                    contentType: false,  // Important: Don't set content type to 'application/json'
+                    success: function (data) {
+                        // Handle success response if needed
+                        console.log(data);
+                    },
+                    error: function (error) {
+                        // Handle error response if needed
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+}
