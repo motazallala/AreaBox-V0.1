@@ -4,6 +4,8 @@
 }
 
 <form method="post" action="AddPost" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <span asp-validation-for="@Model.Image" class="text-danger"></span>
     <input type="file" name="file" accept="image/*" />
     <input type="text" asp-for="@Model.ShortDescription" placeholder="Short Description" />
     <textarea asp-for="@Model.LongDescription" placeholder="Long Description"></textarea>

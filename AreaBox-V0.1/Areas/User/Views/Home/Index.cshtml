@@ -63,15 +63,15 @@
 
 
 <script>
-    var page = 1; // Initialize the page number for lazy loading
-    var loading = false; // Flag to track if loading is in progress
+    var page = 1;
+    var loading = false;
 
     $(window).scroll(function () {
         if (
             !loading &&
             $(window).scrollTop() + $(window).height() >= $(document).height() - 100
         ) {
-            loading = true; // Set loading flag to true
+            loading = true;
             loadMorePosts();
         }
     });
@@ -86,16 +86,15 @@
                 type: 'GET',
                 data: { page: page },
                 success: function (data) {
-                    // Append the new posts to the post container
                     $('#post-container').append(data);
-                    page++; // Increment the page number for the next request
-                    loading = false; // Reset loading flag after successful load
+                    page++;
+                    loading = false;
                     $('#loading-indicator').hide();
                 },
                 error: function () {
                     console.log('Error loading posts.');
                     $('#loading-indicator').hide();
-                    loading = false; // Reset loading flag even on error
+                    loading = false;
                 }
             });
         } else {
