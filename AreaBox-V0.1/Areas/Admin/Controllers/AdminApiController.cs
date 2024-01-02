@@ -146,12 +146,36 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 				reportId = mediaPostReports.PostReportId,
 				userName = mediaPostReports.User.UserName,
 				userEmail = mediaPostReports.User.Email,
-				reportType = mediaPostReports.PostReport.ReportTypes.Type,
-				reportTypeDescription = mediaPostReports.PostReport.ReportTypes.Description
+                type = mediaPostReports.PostReport.ReportTypes.Type,
+                description = mediaPostReports.PostReport.ReportTypes.Description,
 
-			};
+            };
 
 			return Ok(mediaPostDetails);
+		}
+
+		[HttpGet("GetQPReportDetails/{id}")]
+		public async Task<IActionResult> GetQPReportDetails(int id)
+		{
+
+			var QPReports = db.QuestionPostsReports.Find<QuestionPostsReports, QuestionPostsReportsDto>
+				(x => x.PostReportId == id, new[] { "User", "Qpost", "PostReports", "PostReports.ReportTypes" });
+
+			if (QPReports == null)
+			{
+				return NotFound();
+			}
+
+			var QPDetails = new
+			{
+				reportId = QPReports.PostReportId,
+				userName = QPReports.User.UserName,
+				userEmail = QPReports.User.Email,
+				type = QPReports.PostReports.ReportTypes.Type,
+				description = QPReports.PostReports.ReportTypes.Description,
+			};
+
+			return Ok(QPDetails);
 		}
 
 		[HttpGet("GetUserDetails/{id}")]
@@ -177,6 +201,30 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 			};
 
 			return Ok(userDetails);
+		}
+
+		[HttpGet("GetTechnicalReportDetails/{id}")]
+		public async Task<IActionResult> GetTechnicalReportDetails(int id)
+		{
+			var technicalReport = db.TechnicalReports.Find<TechnicalReports, TechnicalReportsDto>
+							(x => x.TechnicalReportId == id, new[] { "User" });
+			if (technicalReport == null)
+			{
+				return NotFound();
+			}
+
+			var technicalReportDetails = new
+			{
+
+				technicalReportId = technicalReport.TechnicalReportId,
+				userId = technicalReport.UserId,
+				userName = technicalReport.User.UserName,
+				type = technicalReport.Type,
+				details = technicalReport.Details,
+				userEmail = technicalReport.UserEmail,
+			};
+
+			return Ok(technicalReportDetails);
 		}
 
 

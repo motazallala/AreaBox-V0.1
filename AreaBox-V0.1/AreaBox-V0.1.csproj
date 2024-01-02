@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Admin\Data\**" />
+    <Compile Remove="wwwroot\tabler\dist\**" />
     <Content Remove="Areas\Admin\Data\**" />
+    <Content Remove="wwwroot\tabler\dist\**" />
     <EmbeddedResource Remove="Areas\Admin\Data\**" />
+    <EmbeddedResource Remove="wwwroot\tabler\dist\**" />
     <None Remove="Areas\Admin\Data\**" />
+    <None Remove="wwwroot\tabler\dist\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,7 +51,6 @@
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Models\UMediaPostDto\input\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

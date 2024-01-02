@@ -2,6 +2,7 @@ using AreaBox_V0._1.Common;
 using AreaBox_V0._1.Data;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Services;
 using AreaBox_V0._1.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 

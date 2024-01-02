@@ -7,6 +7,7 @@ public class MediaPostsReports
     public int PostReportId { get; set; }
 
     public string MpostId { get; set; }
+
     public string UserId { get; set; }
 
     public ApplicationUser User { get; set; }
