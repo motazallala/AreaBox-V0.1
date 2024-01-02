@@ -16,7 +16,15 @@
 
 
 <div class="row justify-content-center">
-    <div class="col-lg-9 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+        <div class="make-me-sticky">
+
+            @Html.Partial("_FilteringandUserControlPartial")
+
+        </div>
+
+    </div>
+    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
         <div id="post-container">
             @Html.Partial("_QuestionPostListPartial", Model.questionPostsDtos)
         </div>
@@ -30,13 +38,6 @@
             load more content
         </button>
         </div>
-    </div>
-    <div class="col-lg-3 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
-        <div class="make-me-sticky">
-
-            <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
-        </div>
-
     </div>
 </div>
 

@@ -3,12 +3,10 @@ using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
+using AreaBox_V0._1.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing.Imaging;
-using System.Drawing;
-using AreaBox_V0._1.Services;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
@@ -77,7 +75,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto postInputDto, IFormFile file)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile file)
     {
         var userId = _userManager.GetUserId(User);
 
@@ -110,7 +108,7 @@ public class HomeController : Controller
             db.MediaPosts.Add(mediaPost);
             await db.Save();
 
-            return RedirectToAction("Index");
+            return Ok();
         }
         catch (Exception ex)
         {
