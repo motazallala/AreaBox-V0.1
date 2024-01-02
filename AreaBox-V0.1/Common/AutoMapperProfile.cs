@@ -61,7 +61,7 @@ namespace AreaBox_V0._1.Common
 			CreateMap<Cities, CitiesDtoForApi>();
 			CreateMap<PostReports, PostReportsDto>();
 			CreateMap<TechnicalReports, TechnicalReportsDto>();
-
+			CreateMap<ReportTypes, ReportTypesDto>();
 
         }
 	}

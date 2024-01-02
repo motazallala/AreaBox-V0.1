@@ -115,24 +115,47 @@
 </div>
 
 
-<!-- ... your other HTML code ... -->
-
 <div class="modal" id="mediaManagementModal" tabindex="-1">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Media Post Details</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<img id="mediaImage" src="" alt="Media Image" style="max-width: 100%; height: auto;">
-
-				<div id="mediaDetails">
+				<div id="loadingPlaceholder" style="display: block;">
+					<div class="col-12">
+						<div class="card placeholder-glow">
+							<div class="ratio ratio-21x9 card-img-top placeholder"></div>
+							<div class="card-body">
+								<div class="placeholder col-9 mb-3"></div>
+								<div class="placeholder placeholder-xs col-10"></div>
+								<div class="placeholder placeholder-xs col-11"></div>
+								<div class="mt-3">
+									<a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-4" aria-hidden="true"></a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
-				<div class="form-check form-switch">
-					<input class="form-check-input" type="checkbox" id="enablePostSwitch">
-					<label class="form-check-label" for="enablePostSwitch">State</label>
+				<div id="actualContent" style="display: none;" class="row">
+					<div class="col-md-5">
+						<img id="mediaImage" src="" alt="Media Image" class="img-fluid">
+					</div>
+
+					<div class="col-md-1 d-flex align-items-center justify-content-center">
+						<div class="border-left border-2" style="height: 100%;"></div>
+					</div>
+
+					<div class="col-md-6">
+						<div id="mediaDetails">
+						</div>
+						<div class="form-check form-switch mt-3">
+							<input class="form-check-input" type="checkbox" id="enablePostSwitch">
+							<label class="form-check-label" for="enablePostSwitch">State</label>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -143,6 +166,7 @@
 	</div>
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
@@ -150,44 +174,53 @@
 		$('#mediaManagementModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget);
 			var postId = button.data('id');
-
 			$('#enablePostSwitch').data('postId', postId);
+
+
+			$('#loadingPlaceholder').show();
+			$('#actualContent').hide();
 
 			$.ajax({
 				url: `/AdminApi/GetMediaPostDetails/${postId}`,
 				type: 'GET',
 				data: { id: postId },
 				success: function (data) {
+					$('#loadingPlaceholder').hide();
+					$('#actualContent').show();
+
 					$('#mediaImage').attr('src', 'data:image/png;base64,' + data.imageSrc);
 					$('#mediaDetails').html(`
-						<p>Name Publisher: ${data.name}</p>
-						<p>Email: ${data.email}</p>
-						<p>City: ${data.city}</p>
-						<p>Country: ${data.country}</p>
-						<p>Category: ${data.category}</p>
-						<p>Description: ${data.description}</p>
-						<p>Date: ${data.date}</p>
-					`);
+								<p>Name Publisher: ${data.name}</p>
+								<p>Email: ${data.email}</p>
+								<p>City: ${data.city}</p>
+								<p>Country: ${data.country}</p>
+								<p>Category: ${data.category}</p>
+								<p>Description: ${data.description}</p>
+								<p>Date: ${data.date}</p>
+
+							`);
+
 
 					var enablePostSwitch = $('#enablePostSwitch');
-					enablePostSwitch.prop('checked', !button.closest('tr').find('td:nth-child(4) span').hasClass('bg-danger'));
+					enablePostSwitch.prop('checked', data.state === false);
 					updateSwitchLabel(enablePostSwitch.prop('checked'));
 				},
 				error: function (error) {
 					console.error('Error fetching media details:', error);
+
+					$('#loadingPlaceholder').hide();
 				}
 			});
 		});
 
 		function updateSwitchLabel(isChecked) {
 			var label = $('#enablePostSwitch').next('.form-check-label');
-			label.text(isChecked ? 'Active' : 'Inactive');
+			label.text(isChecked ? 'Activated' : 'Suspended');
 		}
 
 		$('#enablePostSwitch').on('change', function () {
 			updateSwitchLabel($(this).prop('checked'));
 		});
-
 	});
 </script>
 
@@ -210,9 +243,9 @@
 			}
 		});
 	}
-	function updateBadge(postId, isChecked) {
-		var badge = $('.post-state-badge.' + postId + ' .badge');
-		var text = $('.post-state-badge.' + postId + ' span:last-child');
+	function updateBadge(userId, isChecked) {
+		var badge = $('.post-state-badge.' + userId + ' .badge');
+		var text = $('.post-state-badge.' + userId + ' span:last-child');
 
 		if (isChecked) {
 			badge.removeClass('bg-danger').addClass('bg-success');
@@ -223,6 +256,7 @@
 		}
 	}
 </script>
+
 <script>
 	$(document).ready(function () {
 		$.ajax({
