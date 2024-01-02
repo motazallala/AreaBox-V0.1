@@ -75,7 +75,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile file)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile Image)
     {
         var userId = _userManager.GetUserId(User);
 
@@ -84,19 +84,19 @@ public class HomeController : Controller
             ModelState.AddModelError(string.Empty, "User is not logged in.");
         }
 
-        if (file == null || file.Length == 0)
+        if (Image == null || Image.Length == 0)
         {
             ModelState.AddModelError("file", "Please select a Image.");
         }
 
         try
         {
-            string base64String = await _imageService.UploadImage(file);
+            string base64String = await _imageService.UploadImage(Image);
 
             var mediaPost = new MediaPosts
             {
                 MpuserId = userId,
-                Mpimage = base64String,
+                Mpimage = "data:image/jpeg;base64," + base64String,
                 Mpdate = DateTime.Now,
                 MpcityId = 1,
                 MpcategoryId = 1,
@@ -108,7 +108,7 @@ public class HomeController : Controller
             db.MediaPosts.Add(mediaPost);
             await db.Save();
 
-            return Ok();
+            return RedirectToAction("Index");
         }
         catch (Exception ex)
         {

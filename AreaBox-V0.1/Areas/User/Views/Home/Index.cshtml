@@ -170,7 +170,6 @@
         $(document).ready(function () {
             // Initialize Dropzone
             var myDropzone = new Dropzone("#dropzone-default", {
-                url: '/Home/AddPost',
                 uploadMultiple: false,
                 maxFiles: 1, // Set maximum number of files to 1
                 acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
@@ -236,6 +235,7 @@
                     },
                     error: function (error) {
                         // Handle error response if needed
+                        console.log("here is error")
                         console.error(error);
                     }
                 });
