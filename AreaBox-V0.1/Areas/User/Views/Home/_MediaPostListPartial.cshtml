@@ -3,18 +3,19 @@
 @foreach (var post in Model)
 {
 <div class="row">
-    <div class="col my-4">
-            <div class="card" style="width:50%">
+    <div class="col mb-4">
+        <div class="card">
             <div class="card-header">
                 <div>
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <span class="avatar"
-                                  style="background-image: url(./static/avatars/003m.jpg)"></span>
+                                <img src="@post.User.ProfilePicture" alt="" srcset="" class="avatar">
+
+
                         </div>
                         <div class="col">
                             <div class="card-title">@post.User.UserName</div>
-                            <div class="card-subtitle">@post.User.Email</div>
+                            <div class="card-subtitle">@post.City.Country.CountryName-@post.City.CityName / @post.Category.CategoryName</div>
                         </div>
                     </div>
                 </div>
@@ -34,15 +35,14 @@
                             </svg>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">Edit user</a>
-                            <a class="dropdown-item" href="#">Change permissions</a>
-                            <a class="dropdown-item text-danger" href="#">Delete user</a>
+                            <a class="dropdown-item" href="#">Report The Post</a>
+                            <a class="dropdown-item" href="#">Save Post</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-body p-0">
-                    <img src="@post.Image"  alt="" srcset="">
+                <div class="card-body p-0 text-center">
+                    <img src="@post.Image" alt="" srcset="" class="w-100">
             </div>
             <div class="card-footer text-start">
                 @post.ShortDescription

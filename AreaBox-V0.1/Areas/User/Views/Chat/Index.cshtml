@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-9 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6" >
+        <div id="post-container">
+            @Html.Partial("_ChatPartial")
+        </div>
+        <div id="loading-indicator" class="my-5" style="display: none;">
+            <div class="spinner-border text-primary"></div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4" >
+        <div class="make-me-sticky">
+
+        <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+        </div>
+
+    </div>
+</div>
