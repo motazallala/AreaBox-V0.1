@@ -75,44 +75,37 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile Image)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile image)
     {
         var userId = _userManager.GetUserId(User);
 
-        if (userId == null)
+        if (userId != null)
         {
-            ModelState.AddModelError(string.Empty, "User is not logged in.");
-        }
-
-        if (Image == null || Image.Length == 0)
-        {
-            ModelState.AddModelError("file", "Please select a Image.");
-        }
-
-        try
-        {
-            string base64String = await _imageService.UploadImage(Image);
-
-            var mediaPost = new MediaPosts
+            if (image != null && image.Length > 0)
             {
-                MpuserId = userId,
-                Mpimage = "data:image/jpeg;base64," + base64String,
-                Mpdate = DateTime.Now,
-                MpcityId = 1,
-                MpcategoryId = 1,
-                MpshortDescription = mediaPostsDto.ShortDescription,
-                MplongDescription = mediaPostsDto.LongDescription,
-                Mpstate = false
-            };
 
-            db.MediaPosts.Add(mediaPost);
-            await db.Save();
+                string base64String = await _imageService.UploadImage(image);
 
-            return RedirectToAction("Index");
+
+                var mediaPost = new MediaPosts
+                {
+                    MpuserId = userId,
+                    Mpimage = "data:image/jpeg;base64," + base64String,
+                    Mpdate = DateTime.Now,
+                    MpcityId = 1,
+                    MpcategoryId = 1,
+                    MpshortDescription = mediaPostsDto.ShortDescription,
+                    MplongDescription = mediaPostsDto.LongDescription,
+                    Mpstate = false
+                };
+
+                db.MediaPosts.Add(mediaPost);
+                await db.Save();
+
+                return RedirectToAction("Index");
+            }
         }
-        catch (Exception ex)
-        {
-            return Content($"An error occurred: {ex.Message}");
-        }
+        return Content("User not logged in or no file selected for upload.");
+
     }
 }
