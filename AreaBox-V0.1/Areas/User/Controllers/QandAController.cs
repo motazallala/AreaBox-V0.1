@@ -55,12 +55,16 @@ public class QandAController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromBody] UQuestionPostInputDto questionPostInputDto)
+    public async Task<IActionResult> AddPost([FromForm] UQuestionPostInputDto questionPostInputDto)
     {
         var userId = _userManager.GetUserId(User);
 
         if (userId != null)
         {
+            if (questionPostInputDto.CategoryId == null || questionPostInputDto.CityId == null || questionPostInputDto.Title == null || questionPostInputDto.Description == null)
+            {
+                return BadRequest("Fill the information !!");
+            }
 
             var questionPost = new QuestionPosts
             {
@@ -76,9 +80,9 @@ public class QandAController : Controller
             db.QuestionPosts.Add(questionPost);
             await db.Save();
 
-            return RedirectToAction("Index");
+            return Ok("Post Added Successful!!!");
         }
-        return Content("User not logged in or no file selected for upload.");
+        return BadRequest("User not logged in or no file selected for upload.");
     }
 
 }
