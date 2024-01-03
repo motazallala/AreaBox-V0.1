@@ -1,6 +1,11 @@
-﻿
-using System.Drawing.Imaging;
-using System.Drawing;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Bmp;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Tiff;
+using SixLabors.ImageSharp.Processing;
 
 namespace AreaBox_V0._1.Services
 {
@@ -8,35 +13,64 @@ namespace AreaBox_V0._1.Services
     {
         public async Task<string> UploadImage(IFormFile file)
         {
+            var format = DetermineImageFormat(file.ContentType);
+            using var image = await Image.LoadAsync(file.OpenReadStream());
 
-			if (file.Length > 10 * 1024 * 1024)
+            double percentage = PercentageBasedOnSize(file.Length);
+
+            if (file.Length > 0.25 * 1024 * 1024)
             {
-                using var image = Image.FromStream(file.OpenReadStream());
-                var newWidth = (int)(image.Width * 0.5);
-                var newHeight = (int)(image.Height * 0.5);
-
-                using var resizedImage = new Bitmap(newWidth, newHeight);
-                using var graphics = Graphics.FromImage(resizedImage);
-
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-
-                var outputStream = new MemoryStream();
-                resizedImage.Save(outputStream, ImageFormat.Jpeg);
-                outputStream.Position = 0;
-                file = new FormFile(outputStream, 0, outputStream.Length, "image", file.FileName);
+                int newWidth = (int)(image.Width * percentage);
+                int newHeight = (int)(image.Height * percentage);
+                image.Mutate(x => x.Resize(newWidth, newHeight));
             }
 
-            return await ConvertToBase64(file);
+            return GenerateBase64DataUri(image, format);
         }
 
-        private async Task<string> ConvertToBase64(IFormFile file)
+        private IImageEncoder DetermineImageFormat(string contentType)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            return contentType switch
             {
-                await file.CopyToAsync(memoryStream);
-                byte[] bytes = memoryStream.ToArray();
-                return Convert.ToBase64String(bytes);
-            }
+                "image/jpeg" or "image/jpg" => new JpegEncoder(),
+                "image/png" => new PngEncoder(),
+                "image/gif" => new GifEncoder(),
+                "image/bmp" => new BmpEncoder(),
+                "image/tiff" => new TiffEncoder(),
+                _ => new PngEncoder(),
+            };
+        }
+
+        private double PercentageBasedOnSize(long fileSize)
+        {
+            return fileSize switch
+            {
+                long size when size > 25 * 1024 * 1024 => 0.10,
+                long size when size > 10 * 1024 * 1024 => 0.15,
+                long size when size > 5 * 1024 * 1024 => 0.20,
+                long size when size > 1 * 1024 * 1024 => 0.25,
+                long size when size > 0.5 * 1024 * 1024 => 0.75,
+                long size when size > 0.25 * 1024 * 1024 => 0.90,
+                _ => 1.0
+            };
+        }
+
+        private string GenerateBase64DataUri(Image image, IImageEncoder encoder)
+        {
+            using var outputStream = new MemoryStream();
+            image.Save(outputStream, encoder);
+
+            var mimeType = encoder switch
+            {
+                JpegEncoder _ => "image/jpeg",
+                PngEncoder _ => "image/png",
+                GifEncoder _ => "image/gif",
+                BmpEncoder _ => "image/bmp",
+                TiffEncoder _ => "image/tiff",
+                _ => "image/png"
+            };
+
+            return $"data:{mimeType};base64,{Convert.ToBase64String(outputStream.ToArray())}";
         }
     }
 }
