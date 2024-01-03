@@ -8,15 +8,8 @@ namespace AreaBox_V0._1.Services
     {
         public async Task<string> UploadImage(IFormFile file)
         {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".svg", ".ico" };
-            var fileExtension = Path.GetExtension(file.FileName)?.ToLower();
 
-            if (string.IsNullOrEmpty(fileExtension) || !allowedExtensions.Contains(fileExtension))
-            {
-                throw new InvalidOperationException("Only image files are allowed.");
-            }
-
-            if (file.Length > 10 * 1024 * 1024)
+			if (file.Length > 10 * 1024 * 1024)
             {
                 using var image = Image.FromStream(file.OpenReadStream());
                 var newWidth = (int)(image.Width * 0.5);

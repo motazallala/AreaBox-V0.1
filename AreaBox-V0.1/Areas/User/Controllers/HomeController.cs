@@ -111,7 +111,7 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile file)
     {
-        var userId = _userManager.GetUserId(User);
+		var userId = _userManager.GetUserId(User);
 
         if (userId == null)
         {

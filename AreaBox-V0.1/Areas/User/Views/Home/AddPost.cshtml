@@ -2,7 +2,20 @@
 @{
     ViewData["Title"] = "AddPost";
 }
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
 <form method="post" action="AddPost" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <span asp-validation-for="@Model.Image" class="text-danger"></span>
