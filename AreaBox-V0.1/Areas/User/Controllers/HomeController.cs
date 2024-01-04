@@ -77,7 +77,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto postInputDto, IFormFile file)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile file)
     {
         var userId = _userManager.GetUserId(User);
 

@@ -33,14 +33,12 @@
     <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
         <div class="make-me-sticky">
 
-            <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+            @Html.Partial("_FilteringandUserControlPartial")
 
         </div>
 
     </div>
 </div>
-
-
 
 
 
@@ -231,11 +229,11 @@
                     processData: false,  // Important: Don't process the data
                     contentType: false,  // Important: Don't set content type to 'application/json'
                     success: function (data) {
-                        // Handle success response if needed
+                        
                         console.log(data);
                     },
                     error: function (error) {
-                        // Handle error response if needed
+                        debugger
                         console.error(error);
                     }
                 });
