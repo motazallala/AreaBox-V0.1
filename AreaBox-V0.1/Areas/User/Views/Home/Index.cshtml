@@ -10,37 +10,43 @@
         top: 0;
     }
 
+    .alertPos {
+        position: fixed;
+        top: 10vh;
+        right: 16vh;
+        z-index: 1000;
+        width: 350px;
+    }
+
 </style>
 
-
-<div class="row justify-content-center">
-    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
-        <div id="post-container">
-            @Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
+<div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
+    <div class="d-flex">
+        <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l5 5l10 -10" /></svg>
         </div>
-        <div class="col text-center">
-            <div id="loading-indicator" class="my-5" style="display: none;">
-                <div class="spinner-border text-primary"></div>
-            </div>
-        </div>
-        <div class="col text-center ">
-            <button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
-                <i class="ti ti-plus" style="font-size: 24px;"></i>
-                load more content
-            </button>
+        <div id="success-body">
+            Wow! Everything worked!
         </div>
     </div>
-    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
-        <div class="make-me-sticky">
-
-            @Html.Partial("_FilteringandUserControlPartial")
-
-        </div>
-
-    </div>
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
 </div>
 
 
+
+<div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
+    <div class="d-flex">
+        <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
+        </div>
+        <div id="error-body">
+            I'm so sorry…
+        </div>
+    </div>
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+</div>
 
 <div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -82,22 +88,59 @@
     </div>
 </div>
 
+
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+        <div class="make-me-sticky">
+
+            @Html.Partial("_FilteringandUserControlPartial")
+
+        </div>
+
+    </div>
+    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+        <div id="post-container">
+            @Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
+        </div>
+        <div class="col text-center">
+            <div id="loading-indicator" class="my-5" style="display: none;">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        </div>
+        <div class="col text-center ">
+            <button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
+                <i class="ti ti-plus" style="font-size: 24px;"></i>
+                load more content
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    
+
 
 
 
 <script>
-    var page = 1;
-    var loading = false;
+    var page = 2; // Initialize the page number for lazy loading
+    var loading = false; // Flag to track if loading is in progress
 
     $(window).scroll(function () {
         if (
             !loading &&
             $(window).scrollTop() + $(window).height() >= $(document).height() - 100
         ) {
-            loading = true;
+            loading = true; // Set loading flag to true
             loadMorePosts();
         }
     });
@@ -114,9 +157,10 @@
                 type: 'GET',
                 data: { page: page },
                 success: function (data) {
+                    // Append the new posts to the post container
                     $('#post-container').append(data);
-                    page++;
-                    loading = false;
+                    page++; // Increment the page number for the next request
+                    loading = false; // Reset loading flag after successful load
                     $('#loading-indicator').hide();
                     $('#loadBut').show();
 
@@ -139,16 +183,32 @@
 
 <script>
     $(document).ready(function () {
+        $.ajax({
+            url: '/AdminApi/GetAllCategories',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var categoryDropdownFilter = $('#categoryDropdown');
+                $.each(data, function (key, entry) {
+                    categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching category data:', error);
+            }
+        });
         $('#mediaManagementModal').on('show.bs.modal', function (event) {
             $.ajax({
                 url: '/AdminApi/GetAllCategories',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    var categoryDropdown = $('#categoryDropdownModel');
+                        var categoryDropdown = $('#categoryDropdownModel');
+                        var categoryDropdownFilter = $('#categoryDropdown');
                     categoryDropdown.empty();
                     $.each(data, function (key, entry) {
-                        categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                            categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                            categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
                     });
                 },
                 error: function (error) {
@@ -159,11 +219,11 @@
 
 
     });
+
+
 </script>
 
-
-@section Scripts {
-
+    
     <script>
         $(document).ready(function () {
             // Initialize Dropzone
@@ -229,12 +289,23 @@
                     processData: false,  // Important: Don't process the data
                     contentType: false,  // Important: Don't set content type to 'application/json'
                     success: function (data) {
-                        
-                        console.log(data);
+                        $('#post-container').empty();
+                        loadMorePosts();
+                        // Handle success response if needed
+                        $('#success-body').text(data);
+                        $('#alertSuccess').show();
+                        setTimeout(function () {
+                            $('#alertSuccess').hide();
+                        }, 3000);
+
                     },
                     error: function (error) {
-                        debugger
-                        console.error(error);
+                        // Handle error response if needed
+                        $('#error-body').text(error.responseText);
+                        $('#alertDanger').show();
+                        setTimeout(function () {
+                            $('#alertDanger').hide();
+                        }, 3000);
                     }
                 });
             });

@@ -9,243 +9,243 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers
 {
-	[Route("AdminApi")]
-	[ApiController]
-	public class AdminApiController : ControllerBase
-	{
+    [Route("AdminApi")]
+    [ApiController]
+    public class AdminApiController : ControllerBase
+    {
 
-		private readonly IUnitOfWork db;
+        private readonly IUnitOfWork db;
 
-		public AdminApiController(IUnitOfWork _db)
-		{
-			db = _db;
-		}
+        public AdminApiController(IUnitOfWork _db)
+        {
+            db = _db;
+        }
 
-		[HttpPost("DisableMediaPost")]
-		public async Task<IActionResult> DisableMediaPost([FromForm] string id, [FromForm] string newState)
-		{
-			bool state = bool.Parse(newState);
-			await db.MediaPosts.Disable(id, state);
-			await db.Save();
+        [HttpPost("DisableMediaPost")]
+        public async Task<IActionResult> DisableMediaPost([FromForm] string id, [FromForm] string newState)
+        {
+            bool state = bool.Parse(newState);
+            await db.MediaPosts.Disable(id, state);
+            await db.Save();
 
-			if (state)
-			{
-				return Ok(new { Message = $"MediaPost has been successfully Published" });
-			}
-			else
-			{
-				return Ok(new { Message = $"MediaPost has been successfully Suspended" });
-			}
+            if (state)
+            {
+                return Ok(new { Message = $"MediaPost has been successfully Published" });
+            }
+            else
+            {
+                return Ok(new { Message = $"MediaPost has been successfully Suspended" });
+            }
 
-		}
+        }
 
-		[HttpGet("GetMediaPostDetails/{id}")]
-		public async Task<IActionResult> GetMediaPostDetails(string id)
-		{
+        [HttpGet("GetMediaPostDetails/{id}")]
+        public async Task<IActionResult> GetMediaPostDetails(string id)
+        {
 
-			var mediaPost = db.MediaPosts.Find<MediaPosts, MediaPostsDto>
-				(x => x.MpostId == id, new[] { "Mpcity", "Mpcategory", "Mpcity.Country", "Mpuser" });
+            var mediaPost = await db.MediaPosts.Find<MediaPosts, MediaPostsDto>
+                (x => x.MpostId == id, new[] { "Mpcity", "Mpcategory", "Mpcity.Country", "Mpuser" });
 
-			if (mediaPost == null)
-			{
-				return NotFound();
-			}
+            if (mediaPost == null)
+            {
+                return NotFound();
+            }
 
-			var mediaDetails = new
-			{
-				imageSrc = mediaPost.Image,
-				name = mediaPost.User.UserName,
-				email = mediaPost.User.Email,
-				city = mediaPost.City.CityName,
-				country = mediaPost.City.Country.CountryName,
-				category = mediaPost.Category.CategoryName,
-				description = mediaPost.LongDescription,
-				date = mediaPost.Date,
-				state = mediaPost.State
-			};
+            var mediaDetails = new
+            {
+                imageSrc = mediaPost.Image,
+                name = mediaPost.User.UserName,
+                email = mediaPost.User.Email,
+                city = mediaPost.City.CityName,
+                country = mediaPost.City.Country.CountryName,
+                category = mediaPost.Category.CategoryName,
+                description = mediaPost.LongDescription,
+                date = mediaPost.Date,
+                state = mediaPost.State
+            };
 
-			return Ok(mediaDetails);
-		}
+            return Ok(mediaDetails);
+        }
 
-		[HttpPost("DisableQAPost")]
-		public async Task<IActionResult> DisableQAPost([FromForm] string id, [FromForm] string newState)
-		{
-			bool state = bool.Parse(newState);
-			await db.QuestionPosts.Disable(id, state);
-			await db.Save();
+        [HttpPost("DisableQAPost")]
+        public async Task<IActionResult> DisableQAPost([FromForm] string id, [FromForm] string newState)
+        {
+            bool state = bool.Parse(newState);
+            await db.QuestionPosts.Disable(id, state);
+            await db.Save();
 
-			if (state)
-			{
-				return Ok(new { Message = $"QAPost has been successfully Published" });
-			}
-			else
-			{
-				return Ok(new { Message = $"QAPost has been successfully Suspended" });
-			}
-		}
+            if (state)
+            {
+                return Ok(new { Message = $"QAPost has been successfully Published" });
+            }
+            else
+            {
+                return Ok(new { Message = $"QAPost has been successfully Suspended" });
+            }
+        }
 
-		[HttpGet("GetQAPostDetails/{id}")]
-		public async Task<IActionResult> GetQAPostDetails(string id)
-		{
+        [HttpGet("GetQAPostDetails/{id}")]
+        public async Task<IActionResult> GetQAPostDetails(string id)
+        {
 
-			var qAPost = db.QuestionPosts.Find<QuestionPosts, QuestionPostsDto>
-				(x => x.QpostId == id, new[] { "Qpcity", "Qpcategory", "Qpcity.Country", "Qpuser" });
+            var qAPost = await db.QuestionPosts.Find<QuestionPosts, QuestionPostsDto>
+                (x => x.QpostId == id, new[] { "Qpcity", "Qpcategory", "Qpcity.Country", "Qpuser" });
 
-			if (qAPost == null)
-			{
-				return NotFound();
-			}
+            if (qAPost == null)
+            {
+                return NotFound();
+            }
 
-			var mediaDetails = new
-			{
-				name = qAPost.User.UserName,
-				email = qAPost.User.Email,
-				city = qAPost.City.CityName,
-				country = qAPost.City.Country.CountryName,
-				category = qAPost.Category.CategoryName,
-				description = qAPost.Description,
-				date = qAPost.Date,
-				state = qAPost.State
-			};
+            var mediaDetails = new
+            {
+                name = qAPost.User.UserName,
+                email = qAPost.User.Email,
+                city = qAPost.City.CityName,
+                country = qAPost.City.Country.CountryName,
+                category = qAPost.Category.CategoryName,
+                description = qAPost.Description,
+                date = qAPost.Date,
+                state = qAPost.State
+            };
 
-			return Ok(mediaDetails);
-		}
-		[HttpGet("GetAllCountryAndCities")]
-		public async Task<IActionResult> GetAllCountryAndCities()
-		{
-			var countryList = await db.Countries.GetAllAsync<Countries, CountriesDtoForApi>(new[] { "Cities" });
-
-
-			return Ok(countryList);
-		}
-
-		[HttpGet("GetAllCategories")]
-		public async Task<IActionResult> GetAllCategories()
-		{
-			var categoriesList = await db.Countries.GetAllAsync<Categories, CategoriesDto>();
+            return Ok(mediaDetails);
+        }
+        [HttpGet("GetAllCountryAndCities")]
+        public async Task<IActionResult> GetAllCountryAndCities()
+        {
+            var countryList = await db.Countries.GetAllAsync<Countries, CountriesDtoForApi>(new[] { "Cities" });
 
 
-			return Ok(categoriesList);
-		}
+            return Ok(countryList);
+        }
+
+        [HttpGet("GetAllCategories")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var categoriesList = await db.Countries.GetAllAsync<Categories, CategoriesDto>();
 
 
-		[HttpGet("GetMediaPostReportDetails/{id}")]
-		public async Task<IActionResult> GetMediaPostReportDetails(int id)
-		{
+            return Ok(categoriesList);
+        }
 
-			var mediaPostReports = db.MediaPostReports.Find<MediaPostsReports, MediaPostsReportsDto>
-				(x => x.PostReportId == id, new[] { "User", "Mpost", "PostReport", "PostReport.ReportTypes" });
 
-			if (mediaPostReports == null)
-			{
-				return NotFound();
-			}
+        [HttpGet("GetMediaPostReportDetails/{id}")]
+        public async Task<IActionResult> GetMediaPostReportDetails(int id)
+        {
 
-			var mediaPostDetails = new
-			{
-				reportId = mediaPostReports.PostReportId,
-				userName = mediaPostReports.User.UserName,
-				userEmail = mediaPostReports.User.Email,
+            var mediaPostReports = await db.MediaPostReports.Find<MediaPostsReports, MediaPostsReportsDto>
+                (x => x.PostReportId == id, new[] { "User", "Mpost", "PostReport", "PostReport.ReportTypes" });
+
+            if (mediaPostReports == null)
+            {
+                return NotFound();
+            }
+
+            var mediaPostDetails = new
+            {
+                reportId = mediaPostReports.PostReportId,
+                userName = mediaPostReports.User.UserName,
+                userEmail = mediaPostReports.User.Email,
                 type = mediaPostReports.PostReport.ReportTypes.Type,
                 description = mediaPostReports.PostReport.ReportTypes.Description,
 
             };
 
-			return Ok(mediaPostDetails);
-		}
+            return Ok(mediaPostDetails);
+        }
 
-		[HttpGet("GetQPReportDetails/{id}")]
-		public async Task<IActionResult> GetQPReportDetails(int id)
-		{
+        [HttpGet("GetQPReportDetails/{id}")]
+        public async Task<IActionResult> GetQPReportDetails(int id)
+        {
 
-			var QPReports = db.QuestionPostsReports.Find<QuestionPostsReports, QuestionPostsReportsDto>
-				(x => x.PostReportId == id, new[] { "User", "Qpost", "PostReports", "PostReports.ReportTypes" });
+            var QPReports = await db.QuestionPostsReports.Find<QuestionPostsReports, QuestionPostsReportsDto>
+                (x => x.PostReportId == id, new[] { "User", "Qpost", "PostReports", "PostReports.ReportTypes" });
 
-			if (QPReports == null)
-			{
-				return NotFound();
-			}
+            if (QPReports == null)
+            {
+                return NotFound();
+            }
 
-			var QPDetails = new
-			{
-				reportId = QPReports.PostReportId,
-				userName = QPReports.User.UserName,
-				userEmail = QPReports.User.Email,
-				type = QPReports.PostReports.ReportTypes.Type,
-				description = QPReports.PostReports.ReportTypes.Description,
-			};
+            var QPDetails = new
+            {
+                reportId = QPReports.PostReportId,
+                userName = QPReports.User.UserName,
+                userEmail = QPReports.User.Email,
+                type = QPReports.PostReports.ReportTypes.Type,
+                description = QPReports.PostReports.ReportTypes.Description,
+            };
 
-			return Ok(QPDetails);
-		}
+            return Ok(QPDetails);
+        }
 
-		[HttpGet("GetUserDetails/{id}")]
-		public async Task<IActionResult> GetUserDetails(string id)
-		{
-			var user = await db.Users.GetByIdAsync(id);
+        [HttpGet("GetUserDetails/{id}")]
+        public async Task<IActionResult> GetUserDetails(string id)
+        {
+            var user = await db.Users.GetByIdAsync(id);
 
-			if (user == null)
-			{
-				return NotFound();
-			}
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-			var userDetails = new
-			{
-				userID = user.Id,
-				userName = user.UserName,
-				email = user.Email,
-				bio = user.Bio,
-				dob = user.DOB,
-				gender = user.Gender,
-				profilePicture = user.ProfilePicture,
-				state = user.State,
-			};
+            var userDetails = new
+            {
+                userID = user.Id,
+                userName = user.UserName,
+                email = user.Email,
+                bio = user.Bio,
+                dob = user.DOB,
+                gender = user.Gender,
+                profilePicture = user.ProfilePicture,
+                state = user.State,
+            };
 
-			return Ok(userDetails);
-		}
+            return Ok(userDetails);
+        }
 
-		[HttpGet("GetTechnicalReportDetails/{id}")]
-		public async Task<IActionResult> GetTechnicalReportDetails(int id)
-		{
-			var technicalReport = db.TechnicalReports.Find<TechnicalReports, TechnicalReportsDto>
-							(x => x.TechnicalReportId == id, new[] { "User" });
-			if (technicalReport == null)
-			{
-				return NotFound();
-			}
+        [HttpGet("GetTechnicalReportDetails/{id}")]
+        public async Task<IActionResult> GetTechnicalReportDetails(int id)
+        {
+            var technicalReport = await db.TechnicalReports.Find<TechnicalReports, TechnicalReportsDto>
+                            (x => x.TechnicalReportId == id, new[] { "User" });
+            if (technicalReport == null)
+            {
+                return NotFound();
+            }
 
-			var technicalReportDetails = new
-			{
+            var technicalReportDetails = new
+            {
 
-				technicalReportId = technicalReport.TechnicalReportId,
-				userId = technicalReport.UserId,
-				userName = technicalReport.User.UserName,
-				type = technicalReport.Type,
-				details = technicalReport.Details,
-				userEmail = technicalReport.UserEmail,
-			};
+                technicalReportId = technicalReport.TechnicalReportId,
+                userId = technicalReport.UserId,
+                userName = technicalReport.User.UserName,
+                type = technicalReport.Type,
+                details = technicalReport.Details,
+                userEmail = technicalReport.UserEmail,
+            };
 
-			return Ok(technicalReportDetails);
-		}
+            return Ok(technicalReportDetails);
+        }
 
 
-		[HttpPost("DisableUser")]
-		public async Task<IActionResult> DisableUser([FromForm] string id, [FromForm] string newState)
-		{
-			bool state = bool.Parse(newState);
-			await db.Users.Disable(id, state);
-			await db.Save();
+        [HttpPost("DisableUser")]
+        public async Task<IActionResult> DisableUser([FromForm] string id, [FromForm] string newState)
+        {
+            bool state = bool.Parse(newState);
+            await db.Users.Disable(id, state);
+            await db.Save();
 
-			if (state)
-			{
-				return Ok(new { Message = $"User has been successfully Activated" });
-			}
-			else
-			{
-				return Ok(new { Message = $"User has been successfully Suspended" });
-			}
-		}
+            if (state)
+            {
+                return Ok(new { Message = $"User has been successfully Activated" });
+            }
+            else
+            {
+                return Ok(new { Message = $"User has been successfully Suspended" });
+            }
+        }
 
-		/*        [HttpGet("GetQAPostReportDetails/{id}")]
+        /*        [HttpGet("GetQAPostReportDetails/{id}")]
                 public async Task<IActionResult> GetQAPostReportDetails(int id)
                 {
 
@@ -268,5 +268,5 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
                     return Ok(qAPostDetails);
                 }*/
-	}
+    }
 }

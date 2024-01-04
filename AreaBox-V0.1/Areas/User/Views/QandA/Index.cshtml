@@ -11,35 +11,15 @@
         top: 0;
     }
 
+    .alertPos {
+        position: fixed;
+        top: 10vh;
+        right: 16vh;
+        z-index: 1000;
+        width: 350px;
+    }
 
 </style>
-
-
-<div class="row justify-content-center">
-    <div class="col-lg-9 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
-        <div id="post-container">
-            @Html.Partial("_QuestionPostListPartial", Model.questionPostsDtos)
-        </div>
-        <div class="col text-center">
-            <div id="loading-indicator" class="my-5" style="display: none;">
-                <div class="spinner-border text-primary"></div>
-            </div>
-        </div>
-        <div class="col text-center ">
-            <button type="button" class="btn btn-purple mt-5 " id="loadBut"  onclick="loadMorePosts()">
-            load more content
-        </button>
-        </div>
-    </div>
-    <div class="col-lg-3 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
-        <div class="make-me-sticky">
-
-            <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
-        </div>
-
-    </div>
-</div>
-
 
 <div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -76,6 +56,63 @@
 
     </div>
 </div>
+
+
+<div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
+    <div class="d-flex">
+        <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l5 5l10 -10" /></svg>
+        </div>
+        <div id="success-body">
+            Wow! Everything worked!
+        </div>
+    </div>
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+</div>
+
+
+
+<div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
+    <div class="d-flex">
+        <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
+        </div>
+        <div id="error-body">
+            I'm so sorry…
+        </div>
+    </div>
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+        <div class="make-me-sticky">
+
+            @Html.Partial("_FilteringandUserControlPartial")
+
+        </div>
+
+    </div>
+    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+        <div id="post-container">
+            @Html.Partial("_QuestionPostListPartial", Model.questionPostsDtos)
+        </div>
+        <div class="col text-center">
+            <div id="loading-indicator" class="my-5" style="display: none;">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        </div>
+        <div class="col text-center ">
+            <button type="button" class="btn btn-purple mt-5 " id="loadBut"  onclick="loadMorePosts()">
+            load more content
+        </button>
+        </div>
+    </div>
+</div>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -114,6 +151,20 @@
 
 <script>
     $(document).ready(function () {
+        $.ajax({
+            url: '/AdminApi/GetAllCategories',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var categoryDropdownFilter = $('#categoryDropdown');
+                $.each(data, function (key, entry) {
+                    categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching category data:', error);
+            }
+        });
         $('#mediaManagementModal').on('show.bs.modal', function (event) {
             $.ajax({
                 url: '/AdminApi/GetAllCategories',
@@ -146,20 +197,38 @@
                 Title: $('#questionTitle').val(),
                 Description: $('#questionDescription').val()
             };
+
+
+            // Append text data to FormData
+            var formData = new FormData();
+            for (var key in postData) {
+                formData.append(key, postData[key]);
+            }
             console.log(postData);
             $.ajax({
                 url: '/QandA/AddPost',
                 type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(postData),
+                data: formData,
+                processData: false, 
+                contentType: false,
                 success: function (data) {
+                    $('#post-container').empty();
+                    page = 1;
+                    loadMorePosts();
                     // Handle success response if needed
-                    console.log(data);
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 3000);
                   
                 },
                 error: function (error) {
-                    // Handle error response if needed
-                    console.error(error);
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
                 }
             });
         });
@@ -169,7 +238,7 @@
 
 
 <script>
-    var page = 1; // Initialize the page number for lazy loading
+    var page = 2; // Initialize the page number for lazy loading
     var loading = false; // Flag to track if loading is in progress
 
     $(window).scroll(function () {
