@@ -4,9 +4,6 @@ namespace AreaBox_V0._1.Data.Interface
 {
     public interface IRepository<T> where T : class
     {
-        Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>()
-             where TEntity : class
-             where TViewModel : class;
 
 
         Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>(string[] includes = null)

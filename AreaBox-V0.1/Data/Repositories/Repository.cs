@@ -17,14 +17,6 @@ namespace AreaBox_V0._1.Data.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>()
-            where TEntity : class
-            where TViewModel : class
-        {
-            var entities = await _db.Set<TEntity>().ToListAsync();
-            var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
-            return viewModels;
-        }
 
         public async Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>(string[] includes = null)
             where TEntity : class

@@ -1,6 +1,7 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.CitiesModel.send;
 using AreaBox_V0._1.Areas.Admin.Models.Countries.send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using AutoMapper;
@@ -74,6 +75,17 @@ namespace AreaBox_V0._1.Common
                 .ForMember(dest => dest.ProfilePicture, src => src.MapFrom(src => src.User.ProfilePicture))
                 ;
 
+
+            CreateMap<QuestionPostComments, UQuestionPostCommentsOutputDto>()
+                .ForMember(dest => dest.CommentId, src => src.MapFrom(src => src.QpcommentId))
+                .ForMember(dest => dest.CommentContent, src => src.MapFrom(src => src.QpcommentContent))
+                .ForMember(dest => dest.CommentDate, src => src.MapFrom(src => src.QpcommentDate))
+                .ForMember(dest => dest.UserId, src => src.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.PostId, src => src.MapFrom(src => src.QpostId))
+                .ForMember(dest => dest.FirstName, src => src.MapFrom(src => src.User.FirstName))
+                .ForMember(dest => dest.LastName, src => src.MapFrom(src => src.User.LastName))
+                .ForMember(dest => dest.ProfilePicture, src => src.MapFrom(src => src.User.ProfilePicture))
+                ;
 
 
         }

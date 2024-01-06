@@ -56,15 +56,6 @@ public class HomeController : Controller
         return View(posts);
     }
 
-    public async Task<ActionResult> GetMediaPostPartialList(int page = 1)
-    {
-        // Retrieve posts from your data source based on the page number
-        int skip = PageSize * (page - 1);
-        int take = PageSize;
-        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take);
-
-        return PartialView("_MediaPostListPartial", resalt);
-    }
 
 
     public IActionResult Info()
@@ -78,6 +69,209 @@ public class HomeController : Controller
     }
 
 
+
+
+    #region Posts Fun
+    public async Task<ActionResult> GetMediaPostPartialList(int page = 1)
+    {
+        // Retrieve posts from your data source based on the page number
+        int skip = PageSize * (page - 1);
+        int take = PageSize;
+        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take);
+
+        return PartialView("_MediaPostListPartial", resalt);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile image)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (userId == null)
+        {
+            return BadRequest("User is not logged in.");
+        }
+
+        if (image == null || image.Length == 0)
+        {
+            return BadRequest("Please select an Image.");
+        }
+        else
+        {
+            var fileExtension = Path.GetExtension(image.FileName).ToLower();
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".ico" };
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Only image files are allowed.");
+            }
+        }
+        if (mediaPostsDto.CategoryId == null || mediaPostsDto.CityId == null || mediaPostsDto.ShortDescription == null || mediaPostsDto.LongDescription == null)
+        {
+            return BadRequest("Fill the information !!");
+        }
+        try
+        {
+            string base64String = await _imageService.UploadImage(image);
+
+            var mediaPost = new MediaPosts
+            {
+                MpuserId = userId,
+                Mpimage = base64String,
+                Mpdate = DateTime.Now,
+                MpcityId = 1,
+                MpcategoryId = 1,
+                MpshortDescription = mediaPostsDto.ShortDescription,
+                MplongDescription = mediaPostsDto.LongDescription,
+                Mpstate = false
+            };
+
+            db.MediaPosts.Add(mediaPost);
+            await db.Save();
+
+            return Ok("Post has been added");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"An error occurred: {ex.Message}");
+        }
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteMediaPost([FromForm] string mediaPostId)
+    {
+        if (mediaPostId == null)
+        {
+            return BadRequest("Choose post to delete");
+        }
+        var isExist = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
+        if (isExist == false)
+        {
+            return NotFound("the post not Found");
+        }
+        var itemToDelete = await db.MediaPosts.GetByIdAsync(mediaPostId);
+        db.MediaPosts.Remove(itemToDelete);
+        await db.Save();
+        return Ok("the post is deleted!");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddLikeToMediaPost([FromForm] UMediaPostLikeInputDto input)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+        {
+            return BadRequest("Log in to report the post");
+        }
+        if (input.MpostId == null)
+        {
+            return BadRequest("Choose Post to like ");
+        }
+
+        var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.MpostId);
+        if (mediapost == false)
+        {
+            return BadRequest("the post not Exists");
+        }
+        var resalt = await db.MediaPostLikes.CheckItemExistence<MediaPostLikes>(e => e.MpostId == input.MpostId);
+        var newPostLike = new MediaPostLikes
+        {
+            MpostId = input.MpostId,
+            UserId = userId
+        };
+
+        if (resalt == false)
+        {
+            db.MediaPostLikes.Add(newPostLike);
+            await db.Save();
+            return Ok("Post Liked");
+        }
+        else
+        {
+            db.MediaPostLikes.Remove(newPostLike);
+            await db.Save();
+            return Ok("Post Liked Removed");
+        }
+    }
+
+    #endregion
+
+
+
+    #region Category Fun
+    [HttpPost]
+    public async Task<IActionResult> AddUserCategory([FromForm] UUserCategoriesInputDto input)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+        {
+            return BadRequest("Log in to report the post");
+        }
+
+        if (input.CategoryId == null)
+        {
+            return BadRequest("Fill the information !!");
+        }
+
+        var category = await db.Categories.CheckItemExistence<Categories>(e => e.CategoryId == input.CategoryId);
+        if (category == false)
+        {
+            return BadRequest("the category not Exists");
+        }
+        var usercategory = await db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == input.CategoryId);
+        if (usercategory == true)
+        {
+            return BadRequest("the usercategory Exists");
+        }
+        var newUserCategory = new UserCategories
+        {
+            UserId = userId,
+            CategoryId = input.CategoryId
+
+        };
+
+        db.UserCategories.Add(newUserCategory);
+        await db.Save();
+
+        return Ok("Category has been added");
+
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUserCategory([FromForm] int categoryId)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+        {
+            return BadRequest("Log in to report the post");
+        }
+        if (categoryId == null)
+        {
+            return BadRequest("send the user category id");
+        }
+        var isExist = await db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
+        if (isExist == false)
+        {
+            return Ok("the category is not exist for this user");
+        }
+        var itemToRemove = await db.UserCategories.Find<UserCategories, UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
+        if (itemToRemove == null)
+        {
+            return Ok("the category is not exist for this user");
+        }
+        else
+        {
+            return Ok("the category removed Successfully");
+
+        }
+
+
+    }
+
+    #endregion
+
+
+    #region Comments Fun
     [HttpGet]
     public async Task<IActionResult> GetMediaPostComments([FromForm] string mediaPostId, [FromForm] int page = 1)
     {
@@ -107,60 +301,9 @@ public class HomeController : Controller
         return Ok(resalt);
     }
 
+    #endregion
 
-    [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile file)
-    {
-		var userId = _userManager.GetUserId(User);
-
-        if (userId == null)
-        {
-            return BadRequest("User is not logged in.");
-        }
-
-        if (file == null || file.Length == 0)
-        {
-            return BadRequest("Please select an Image.");
-        }
-        else
-        {
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".ico" };
-
-            if (!allowedExtensions.Contains(fileExtension))
-            {
-                return BadRequest("Only image files are allowed.");
-            }
-        }
-
-        try
-        {
-            string base64String = await _imageService.UploadImage(file);
-
-            var mediaPost = new MediaPosts
-            {
-                MpuserId = userId,
-                Mpimage = base64String,
-                Mpdate = DateTime.Now,
-                MpcityId = 1,
-                MpcategoryId = 1,
-                MpshortDescription = mediaPostsDto.ShortDescription,
-                MplongDescription = mediaPostsDto.LongDescription,
-                Mpstate = false
-            };
-
-            db.MediaPosts.Add(mediaPost);
-            await db.Save();
-
-            return Ok("Post has been added");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"An error occurred: {ex.Message}");
-        }
-    }
-
-
+    #region Report Fun
     [HttpPost]
     public async Task<IActionResult> AddReportInMediaPost([FromForm] UMediaPostReportInputDto inputReport)
     {
@@ -205,80 +348,6 @@ public class HomeController : Controller
         return Ok("post reported");
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddUserCategory([FromForm] UUserCategoriesInputDto input)
-    {
-        var userId = _userManager.GetUserId(User);
-        if (userId == null)
-        {
-            return BadRequest("Log in to report the post");
-        }
+    #endregion
 
-        if (input.CategoryId == null)
-        {
-            return BadRequest("Fill the information !!");
-        }
-
-        var category = await db.Categories.CheckItemExistence<Categories>(e => e.CategoryId == input.CategoryId);
-        if (category == false)
-        {
-            return BadRequest("the category not Exists");
-        }
-        var usercategory = await db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == input.CategoryId);
-        if (usercategory == true)
-        {
-            return BadRequest("the usercategory Exists");
-        }
-        var newUserCategory = new UserCategories
-        {
-            UserId = userId,
-            CategoryId = input.CategoryId
-
-        };
-
-        db.UserCategories.Add(newUserCategory);
-        await db.Save();
-
-        return Ok("Category has been added");
-
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddLikeToMediaPost([FromForm] UMediaPostLikeInputDto input)
-    {
-        var userId = _userManager.GetUserId(User);
-        if (userId == null)
-        {
-            return BadRequest("Log in to report the post");
-        }
-        if (input.MpostId == null)
-        {
-            return BadRequest("Choose Post to like ");
-        }
-
-        var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.MpostId);
-        if (mediapost == false)
-        {
-            return BadRequest("the post not Exists");
-        }
-        var resalt = await db.MediaPostLikes.CheckItemExistence<MediaPostLikes>(e => e.MpostId == input.MpostId);
-        var newPostLike = new MediaPostLikes
-        {
-            MpostId = input.MpostId,
-            UserId = userId
-        };
-
-        if (resalt == false)
-        {
-            db.MediaPostLikes.Add(newPostLike);
-            await db.Save();
-            return Ok("Post Liked");
-        }
-        else
-        {
-            db.MediaPostLikes.Remove(newPostLike);
-            await db.Save();
-            return Ok("Post Liked Removed");
-        }
-    }
 }
