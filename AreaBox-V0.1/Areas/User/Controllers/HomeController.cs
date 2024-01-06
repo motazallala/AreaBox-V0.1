@@ -1,3 +1,22 @@
+using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostLikeDto.Input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportDto.input;
+using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.input;
+using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models.Dto;
+using AreaBox_V0._1.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Buffers.Text;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
 [Route("[controller]/[action]")]
@@ -68,7 +87,26 @@ public class HomeController : Controller
         return PartialView("_MediaPostListPartial", resalt);
     }
 
-    [HttpPost]
+
+	[HttpGet]
+	public async Task<IActionResult> GetMediaPostReportTypes(string mediaPostId)
+	{
+		if (mediaPostId == null)
+		{
+			return BadRequest("Choose post to report");
+		}
+
+		var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
+		if (mediapost == false)
+		{
+			return BadRequest("the post not Exists");
+		}
+		var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>(new[] { "PostReports" });
+		return Ok(resalt);
+	}
+
+
+	[HttpPost]
     public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile image)
     {
         var userId = _userManager.GetUserId(User);
@@ -151,13 +189,13 @@ public class HomeController : Controller
         }
         if (input.MpostId == null)
         {
-            return BadRequest("Choose Post to like ");
+            return BadRequest("Plesae fill the information!");
         }
 
         var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.MpostId);
         if (mediapost == false)
         {
-            return BadRequest("the post not Exists");
+            return Conflict("The report exists");
         }
         var resalt = await db.MediaPostLikes.CheckItemExistence<MediaPostLikes>(e => e.MpostId == input.MpostId);
         var newPostLike = new MediaPostLikes

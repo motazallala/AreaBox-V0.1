@@ -1,339 +1,410 @@
 ﻿@model AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostIndexDto
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <style>
-    .make-me-sticky {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-    }
+	.make-me-sticky {
+		position: -webkit-sticky;
+		position: sticky;
+		top: 0;
+	}
 
-    .alertPos {
-        position: fixed;
-        top: 10vh;
-        right: 16vh;
-        z-index: 1000;
-        width: 350px;
-    }
+	.alertPos {
+		position: fixed;
+		top: 10vh;
+		right: 16vh;
+		z-index: 1000;
+		width: 350px;
+	}
 
 </style>
 
 <div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
-    <div class="d-flex">
-        <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l5 5l10 -10" /></svg>
-        </div>
-        <div id="success-body">
-            Wow! Everything worked!
-        </div>
-    </div>
-    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+	<div class="d-flex">
+		<div class="me-2">
+			<!-- Download SVG icon from http://tabler-icons.io/i/check -->
+			<i style="font-size:24px" class="ti ti-check"></i>
+		</div>
+		<div id="success-body">
+			Wow! Everything worked!
+		</div>
+	</div>
+	<a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
 </div>
 
 
 
 <div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
-    <div class="d-flex">
-        <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
-        </div>
-        <div id="error-body">
-            I'm so sorry…
-        </div>
-    </div>
-    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+	<div class="d-flex">
+		<div class="me-2">
+			<!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+			<i style="font-size:24px" class="ti ti-alert-circle"></i>
+		</div>
+		<div id="error-body">
+			I'm so sorry…
+		</div>
+	</div>
+	<a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+</div>
+
+<div class="alert alert-important alert-warning alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
+	<div class="d-flex">
+		<div class="me-2">
+			<!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+			<i style="font-size:24px" class="ti ti-alert-triangle"></i>
+		</div>
+		<div id="error-body">
+			Uh oh, something went wrong
+		</div>
+	</div>
+	<a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
 </div>
 
 <div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add a new team</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class=" mb-3 align-items-end">
-                    <div class="dropzone" id="dropzone-default" action="./" autocomplete="off" novalidate>
-                        <div class="fallback">
-                            <input name="file" type="file" id="postImage" />
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    @*NOTE ---  this will take it from cookie  *@
-                    <input type="hidden" value="1" id="postInCity" />
-                    <label class="form-label">Media Post Title</label>
-                    <input type="text" class="form-control" id="mediaTitle" />
-                </div>
-                <div>
-                    <label class="form-label">Media Post Description</label>
-                    <textarea class="form-control" data-bs-toggle="autosize" id="mediaDescription" placeholder="Type something…"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Media Post Category</label>
-                    <select class="form-select" id="categoryDropdownModel" name="Category">
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="SavePost" data-bs-dismiss="modal">Add Post</button>
-            </div>
-        </div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add a new team</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class=" mb-3 align-items-end">
+					<div class="dropzone" id="dropzone-default" action="./" autocomplete="off" novalidate>
+						<div class="fallback">
+							<input name="file" type="file" id="postImage" />
+						</div>
+					</div>
+				</div>
+				<div class="mb-3">
+					@*NOTE ---  this will take it from cookie  *@
+					<input type="hidden" value="1" id="postInCity" />
+					<label class="form-label">Media Post Title</label>
+					<input type="text" class="form-control" id="mediaTitle" />
+				</div>
+				<div>
+					<label class="form-label">Media Post Description</label>
+					<textarea class="form-control" data-bs-toggle="autosize" id="mediaDescription" placeholder="Type something…"></textarea>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Media Post Category</label>
+					<select class="form-select" id="categoryDropdownModel" name="Category">
+					</select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="SavePost" data-bs-dismiss="modal">Add Post</button>
+			</div>
+		</div>
 
-    </div>
+	</div>
+</div>
+
+
+<div class="modal modal-blur" id="reportPostModal" data-bs-backdrop="static" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Report this post</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label for="reportReason" class="form-label">Select a reason for reporting:</label>
+					<select class="form-select" id="reportReason" aria-label="Report Reason">
+						<!-- Options will be populated here -->
+					</select>
+				</div>
+				<div class="mb-3">
+					<label for="reportDescription" class="form-label">Description:</label>
+					<textarea class="form-control" id="descriptionDisplay" rows="3" disabled></textarea>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="reportButton" data-bs-dismiss="modal" onclick="reportMediaPost()">Report</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <div class="row justify-content-center">
-    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
-        <div class="make-me-sticky">
-            @Html.Partial("_FilteringandUserControlPartial")
-        </div>
+	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+		<div class="make-me-sticky">
+			@Html.Partial("_FilteringandUserControlPartial")
+		</div>
 
-    </div>
-    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
-        <div id="post-container">
-            @Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
-        </div>
-        <div class="col text-center">
-            <div id="loading-indicator" class="my-5" style="display: none;">
-                <div class="spinner-border text-primary"></div>
-            </div>
-        </div>
-        <div class="col text-center ">
-            <button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
-                <i class="ti ti-plus" style="font-size: 24px;"></i>
-                load more content
-            </button>
-        </div>
-    </div>
+	</div>
+	<div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+		<div id="post-container">
+			@Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
+		</div>
+		<div class="col text-center">
+			<div id="loading-indicator" class="my-5" style="display: none;">
+				<div class="spinner-border text-primary"></div>
+			</div>
+		</div>
+		<div class="col text-center ">
+			<button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
+				<i class="ti ti-plus" style="font-size: 24px;"></i>
+				load more content
+			</button>
+		</div>
+	</div>
 </div>
-
-
-
-
-
 
 
 
 @section Scripts {
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+	<script>
+		var page = 2; // Initialize the page number for lazy loading
+		var loading = false; // Flag to track if loading is in progress
+
+		$(window).scroll(function () {
+			if (
+				!loading &&
+				$(window).scrollTop() + $(window).height() >= $(document).height() - 100
+			) {
+				loading = true; // Set loading flag to true
+				loadMorePosts();
+			}
+		});
+
+		function loadMorePosts() {
+			if (page <= @Model.PagesCount) {
+				console.log("Loading posts - Page " + page);
+				$('#loading-indicator').show();
+				$('#loadBut').hide();
 
 
+				$.ajax({
+					url: '/Home/GetMediaPostPartialList',
+					type: 'GET',
+					data: { page: page },
+					success: function (data) {
+						// Append the new posts to the post container
+						$('#post-container').append(data);
+						page++; // Increment the page number for the next request
+						loading = false; // Reset loading flag after successful load
+						$('#loading-indicator').hide();
+						$('#loadBut').show();
 
-<script>
-    $(document).ready(function () {
+					},
+					error: function () {
+						console.log('Error loading posts.');
+						$('#loading-indicator').hide();
+						$('#loadBut').show();
+						loading = false; // Reset loading flag even on error
+					}
+				});
+			} else {
+				console.log("All posts loaded");
+				$('#loadBut').hide();
+			}
+		}
 
-    })
-
-    function likeButton() {
-            $.ajax({
-                url: '/Home/AddLikeToMediaPost',
-                type: 'POST',
-                data: formData,
-                success: function (data) {
-                    // Append the new posts to the post container
-                    $('#post-container').append(data);
-                    page++; // Increment the page number for the next request
-                    loading = false; // Reset loading flag after successful load
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
-
-                },
-                error: function () {
-                    console.log('Error loading posts.');
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
-                    loading = false; // Reset loading flag even on error
-                }
-            });
-    }
-</script>
-
-<script>
-    var page = 2; // Initialize the page number for lazy loading
-    var loading = false; // Flag to track if loading is in progress
-
-    $(window).scroll(function () {
-        if (
-            !loading &&
-            $(window).scrollTop() + $(window).height() >= $(document).height() - 100
-        ) {
-            loading = true; // Set loading flag to true
-            loadMorePosts();
-        }
-    });
-
-    function loadMorePosts() {
-        if (page <= @Model.PagesCount) {
-            console.log("Loading posts - Page " + page);
-            $('#loading-indicator').show();
-            $('#loadBut').hide();
+	</script>
 
 
-            $.ajax({
-                url: '/Home/GetMediaPostPartialList',
-                type: 'GET',
-                data: { page: page },
-                success: function (data) {
-                    // Append the new posts to the post container
-                    $('#post-container').append(data);
-                    page++; // Increment the page number for the next request
-                    loading = false; // Reset loading flag after successful load
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
+	<script>
+		$(document).ready(function () {
+			$.ajax({
+				url: '/AdminApi/GetAllCategories',
+				type: 'GET',
+				dataType: 'json',
+				success: function (data) {
+					var categoryDropdownFilter = $('#categoryDropdown');
+					$.each(data, function (key, entry) {
+						categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+					});
+				},
+				error: function (error) {
+					console.error('Error fetching category data:', error);
+				}
+			});
+			$('#mediaManagementModal').on('show.bs.modal', function (event) {
+				$.ajax({
+					url: '/AdminApi/GetAllCategories',
+					type: 'GET',
+					dataType: 'json',
+					success: function (data) {
+						var categoryDropdown = $('#categoryDropdownModel');
+						var categoryDropdownFilter = $('#categoryDropdown');
+						categoryDropdown.empty();
+						$.each(data, function (key, entry) {
+							categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+							categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+						});
+					},
+					error: function (error) {
+						console.error('Error fetching category data:', error);
+					}
+				});
+			});
+		});
 
-                },
-                error: function () {
-                    console.log('Error loading posts.');
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
-                    loading = false; // Reset loading flag even on error
-                }
-            });
-        } else {
-            console.log("All posts loaded");
-            $('#loadBut').hide();
-        }
-    }
-
-</script>
-
-
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/AdminApi/GetAllCategories',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var categoryDropdownFilter = $('#categoryDropdown');
-                $.each(data, function (key, entry) {
-                    categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-                });
-            },
-            error: function (error) {
-                console.error('Error fetching category data:', error);
-            }
-        });
-        $('#mediaManagementModal').on('show.bs.modal', function (event) {
-            $.ajax({
-                url: '/AdminApi/GetAllCategories',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                        var categoryDropdown = $('#categoryDropdownModel');
-                        var categoryDropdownFilter = $('#categoryDropdown');
-                    categoryDropdown.empty();
-                    $.each(data, function (key, entry) {
-                            categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-                            categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-                    });
-                },
-                error: function (error) {
-                    console.error('Error fetching category data:', error);
-                }
-            });
-        });
+	</script>
 
 
-    });
+	<script>
+		$(document).ready(function () {
+			// Initialize Dropzone
+			var myDropzone = new Dropzone("#dropzone-default", {
+				url: '/Home/AddPost',
+				uploadMultiple: false,
+				maxFiles: 1, // Set maximum number of files to 1
+				acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
+				maxFilesize: 10, // Set maximum file size to 10 MB
+				maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
+				autoProcessQueue: false, // Do not process the queue automatically
+				paramName: 'Image', // Set the parameter name for the file
+				addRemoveLinks: true, // Show remove link on preview
+				parallelUploads: 1, // Upload one file at a time
+				init: function () {
+					var submitButton = document.querySelector("#SavePost");
 
+					// Disable the submit button until the user adds a file
+					submitButton.disabled = true;
 
-</script>
+					// Listen to the addedfile event to enable the submit button
+					this.on("addedfile", function () {
+						submitButton.disabled = false;
+					});
 
-    
-    <script>
-        $(document).ready(function () {
-            // Initialize Dropzone
-            var myDropzone = new Dropzone("#dropzone-default", {
-                url: '/Home/AddPost',
-                uploadMultiple: false,
-                maxFiles: 1, // Set maximum number of files to 1
-                acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
-                maxFilesize: 10, // Set maximum file size to 10 MB
-                maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
-                autoProcessQueue: false, // Do not process the queue automatically
-                paramName: 'Image', // Set the parameter name for the file
-                addRemoveLinks: true, // Show remove link on preview
-                parallelUploads: 1, // Upload one file at a time
-                init: function () {
-                    var submitButton = document.querySelector("#SavePost");
+					// Listen to the removedfile event to disable the submit button if no files are present
+					this.on("removedfile", function () {
+						if (this.files.length === 0) {
+							submitButton.disabled = true;
+						}
+					});
+				}
+			});
 
-                    // Disable the submit button until the user adds a file
-                    submitButton.disabled = true;
+			myDropzone.on("uploadprogress", function (file, progress) {
+				// Update the progress bar or any other UI indicator here
+				console.log("Upload progress: " + progress + "%");
+			});
 
-                    // Listen to the addedfile event to enable the submit button
-                    this.on("addedfile", function () {
-                        submitButton.disabled = false;
-                    });
+			// Handle the SavePost button click
+			$("#SavePost").click(function () {
+				// Get text data
+				var textData = {
+					CategoryId: $('#categoryDropdownModel').val(),
+					CityId: $('#postInCity').val(),
+					ShortDescription: $('#mediaTitle').val(),
+					LongDescription: $('#mediaDescription').val()
+				};
 
-                    // Listen to the removedfile event to disable the submit button if no files are present
-                    this.on("removedfile", function () {
-                        if (this.files.length === 0) {
-                            submitButton.disabled = true;
-                        }
-                    });
-                }
-            });
+				// Append text data to FormData
+				var formData = new FormData();
+				for (var key in textData) {
+					formData.append(key, textData[key]);
+				}
 
-            // Handle the SavePost button click
-            $("#SavePost").click(function () {
-                // Get text data
-                var textData = {
-                    CategoryId: $('#categoryDropdownModel').val(),
-                    CityId: $('#postInCity').val(),
-                    ShortDescription: $('#mediaTitle').val(),
-                    LongDescription: $('#mediaDescription').val()
-                };
+				// Append the file from Dropzone to FormData
+				var file = myDropzone.files[0];
+				if (file) {
+					formData.append('Image', file);
+				}
 
-                // Append text data to FormData
-                var formData = new FormData();
-                for (var key in textData) {
-                    formData.append(key, textData[key]);
-                }
+				console.log(formData);
 
-                // Append the file from Dropzone to FormData
-                var file = myDropzone.files[0];
-                if (file) {
-                    formData.append('Image', file);
-                }
+				$.ajax({
+					url: '/Home/AddPost',
+					type: 'POST',
+					data: formData,
+					processData: false,  // Important: Don't process the data
+					contentType: false,  // Important: Don't set content type to 'application/json'
+					success: function (data) {
+						$('#post-container').empty();
+						loadMorePosts();
+						// Handle success response if needed
+						$('#success-body').text(data);
+						$('#alertSuccess').show();
+						setTimeout(function () {
+							$('#alertSuccess').hide();
+						}, 3000);
 
-                console.log(formData);
+					},
+					error: function (error) {
+						// Handle error response if needed
+						$('#error-body').text(error.responseText);
+						$('#alertDanger').show();
+						setTimeout(function () {
+							$('#alertDanger').hide();
+						}, 3000);
+					}
+				});
+			});
+		});
+	</script>
 
-                $.ajax({
-                    url: '/Home/AddPost',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,  // Important: Don't process the data
-                    contentType: false,  // Important: Don't set content type to 'application/json'
-                    success: function (data) {
-                        $('#post-container').empty();
-                        loadMorePosts();
-                        // Handle success response if needed
-                        $('#success-body').text(data);
-                        $('#alertSuccess').show();
-                        setTimeout(function () {
-                            $('#alertSuccess').hide();
-                        }, 3000);
+	<script>
+		$('#reportPostModal').on('show.bs.modal', function (event) {
+			var modal = $(this);
+			var mediaPostId = $(event.relatedTarget).data('id');
+			$('#mpostIdInput').val(mediaPostId);
 
-                    },
-                    error: function (error) {
-                        // Handle error response if needed
-                        $('#error-body').text(error.responseText);
-                        $('#alertDanger').show();
-                        setTimeout(function () {
-                            $('#alertDanger').hide();
-                        }, 3000);
-                    }
-                });
-            });
-        });
-    </script>
+			$.ajax({
+				url: '/Home/GetMediaPostReportTypes',
+				type: 'GET',
+				data: { mediaPostId: mediaPostId },
+				success: function (response) {
+					var options = '';
+
+					response.forEach(function (reason) {
+						options += `<option value="${reason.reportTypeId}" data-description="${reason.description}" data-mpostid="${mediaPostId}">${reason.type}</option>`;
+					});
+
+					$('#reportReason').html(options);
+
+					$('#reportReason').on('change', function () {
+						var selectedDescription = $(this).find(':selected').data('description');
+						var selectedMpostId = $(this).find(':selected').data('mpostid');
+						$('#descriptionDisplay').val(selectedDescription);
+					}).trigger('change');
+				},
+				error: function (error) {
+					console.error('Error fetching report types:', error);
+				}
+			});
+		});
+
+		$('#reportButton').on('click', function () {
+			var selectedMpostId = $('#reportReason').find(':selected').data('mpostid');
+			var selectedReportTypeId = $('#reportReason').val();
+
+			var formData = new FormData();
+			formData.append('ReportTypeId', selectedReportTypeId);
+			formData.append('MpostId', selectedMpostId);
+
+			$.ajax({
+				url: '/Home/AddReportInMediaPost',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					$('#success-body').text(data);
+					$('#alertSuccess').show();
+					setTimeout(function () {
+						$('#alertSuccess').hide();
+					}, 3000);
+				},
+				error: function (error) {
+					$('#error-body').text(error.responseText);
+					$('#alertDanger').show();
+					setTimeout(function () {
+						$('#alertDanger').hide();
+					}, 3000);
+				}
+			});
+		});
+	</script>
+
 }

@@ -188,7 +188,7 @@
 					$('#loadingPlaceholder').hide();
 					$('#actualContent').show();
 
-					$('#mediaImage').attr('src', 'data:image/png;base64,' + data.imageSrc);
+					$('#mediaImage').attr('src', data.imageSrc);
 					$('#mediaDetails').html(`
 								<p>Name Publisher: ${data.name}</p>
 								<p>Email: ${data.email}</p>
