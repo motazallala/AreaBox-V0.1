@@ -61,13 +61,14 @@ public class QandAController : Controller
     {
         var userId = _userManager.GetUserId(User);
 
-        if (userId != null)
+        if (userId == null)
         {
             return BadRequest("User not logged in or no file selected for upload.");
         }
+
         if (questionPostInputDto.CategoryId == null || questionPostInputDto.CityId == null || questionPostInputDto.Title == null || questionPostInputDto.Description == null)
         {
-            return BadRequest("Fill the information !!");
+            return BadRequest("Fill the information!");
         }
 
         var questionPost = new QuestionPosts
@@ -84,7 +85,7 @@ public class QandAController : Controller
         db.QuestionPosts.Add(questionPost);
         await db.Save();
 
-        return Ok("Post Added Successful!!!");
+        return Ok("Post Added Successful!");
     }
 
     [HttpDelete]

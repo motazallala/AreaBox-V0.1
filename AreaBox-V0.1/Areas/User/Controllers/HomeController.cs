@@ -1,3 +1,22 @@
+using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostLikeDto.Input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportDto.input;
+using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.input;
+using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models.Dto;
+using AreaBox_V0._1.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Buffers.Text;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
 [Route("[controller]/[action]")]
@@ -25,14 +44,13 @@ public class HomeController : Controller
 
 	public async Task<ActionResult> Index(int page = 1)
 	{
-		var userId = _userManager.GetUserId(User);
+
 
 		int resultCount = await db.MediaPosts.Count<MediaPosts>();
 		int pages = (int)Math.Ceiling((double)resultCount / PageSize);
 		int skip = PageSize * (page - 1);
 		int take = PageSize;
-		var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take);
-
+		var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take);
 		var posts = new UMediaPostIndexDto
 		{
 			mediaPostsDtos = resalt,
@@ -64,7 +82,7 @@ public class HomeController : Controller
 		// Retrieve posts from your data source based on the page number
 		int skip = PageSize * (page - 1);
 		int take = PageSize;
-		var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take);
+		var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take);
 
 		return PartialView("_MediaPostListPartial", resalt);
 	}
@@ -171,13 +189,13 @@ public class HomeController : Controller
 		}
 		if (input.MpostId == null)
 		{
-			return BadRequest("Choose Post to like ");
+			return BadRequest("Plesae fill the information!");
 		}
 
 		var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.MpostId);
 		if (mediapost == false)
 		{
-			return BadRequest("the post not Exists");
+			return Conflict("The report exists");
 		}
 		var resalt = await db.MediaPostLikes.CheckItemExistence<MediaPostLikes>(e => e.MpostId == input.MpostId);
 		var newPostLike = new MediaPostLikes
@@ -309,31 +327,31 @@ public class HomeController : Controller
 
 	#endregion
 
-    #region Report Fun
-    [HttpPost]
-    public async Task<IActionResult> AddReportInMediaPost([FromForm] UMediaPostReportInputDto inputReport)
-    {
-        var userId = _userManager.GetUserId(User);
-        if (userId == null)
-        {
-            return BadRequest("Please log in to report the post.");
-        }
+	#region Report Fun
+	[HttpPost]
+	public async Task<IActionResult> AddReportInMediaPost([FromForm] UMediaPostReportInputDto inputReport)
+	{
+		var userId = _userManager.GetUserId(User);
+		if (userId == null)
+		{
+			return BadRequest("Log in to report the post");
+		}
 
-        if (inputReport.MpostId == null || inputReport.ReportTypeId == null)
-        {
-            return BadRequest("Please provide complete report details.");
-        }
-        var mediaPostReport = await db.MediaPostReports.CheckItemExistence<MediaPostsReports>(e => e.UserId == userId && e.MpostId == inputReport.MpostId);
-        if (mediaPostReport == true)
-        {
-            return BadRequest("You have already reported this post.");
-        }
-        var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "MediaPost");
-        var newReport = new PostReports
-        {
-            ReportTypeId = inputReport.ReportTypeId,
-            PostTypeId = postType.PostTypeId
-        };
+		if (inputReport.MpostId == null || inputReport.ReportTypeId == null)
+		{
+			return BadRequest("Fill the information !!");
+		}
+		var mediaPostReport = await db.MediaPostReports.CheckItemExistence<MediaPostsReports>(e => e.UserId == userId && e.MpostId == inputReport.MpostId);
+		if (mediaPostReport == true)
+		{
+			return BadRequest("the report Exists");
+		}
+		var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "MediaPost");
+		var newReport = new PostReports
+		{
+			ReportTypeId = inputReport.ReportTypeId,
+			PostTypeId = postType.PostTypeId
+		};
 
 
 		db.PostReports.Add(newReport);
@@ -351,8 +369,8 @@ public class HomeController : Controller
 		db.MediaPostReports.Add(newMediaReport);
 		await db.Save();
 
-        return Ok("Post has been successfully reported.");
-    }
+		return Ok("post reported");
+	}
 
 	#endregion
 

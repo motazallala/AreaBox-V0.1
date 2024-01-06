@@ -161,50 +161,9 @@
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-
-
-    <script>
-        $(document).on('click', '.likeBtn', function () {
-            console.log('Button clicked!');
-
-            var button = $(this);
-            var postId = button.data('mpid');
-            console.log('postId:', postId);
-
-            var formData = new FormData();
-            formData.append('MpostId', postId);
-
-            $.ajax({
-                url: '/Home/AddLikeToMediaPost', // Update the URL to match your endpoint
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (data, textStatus, xhr) {
-                    if (xhr.status === 200) {
-                        if (data === "Post Liked") {
-
-                            button.addClass('active');
-                            console.log("like");
-                        } else if (data === "Post Liked Removed") {
-                            console.log("unlike");
-                            button.removeClass('active');
- 
-                        }
-                    } else {
-                        // Handle other status codes or error cases
-                    }
-                },
-                error: function (error) {
-                    console.error('AJAX error:', error);
-                }
-            });
-        });
-    </script>
-
-<script>
-    var page = 2; // Initialize the page number for lazy loading
-    var loading = false; // Flag to track if loading is in progress
+	<script>
+		var page = 2; // Initialize the page number for lazy loading
+		var loading = false; // Flag to track if loading is in progress
 
 		$(window).scroll(function () {
 			if (

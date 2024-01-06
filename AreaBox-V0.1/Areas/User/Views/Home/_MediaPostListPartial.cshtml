@@ -1,8 +1,4 @@
-﻿@inject UserManager<ApplicationUser> userManager;
-@model List<AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostOutputDto>
-@{
-	var currentUserId = (await userManager.GetUserAsync(User))?.Id;
-}
+﻿@model List<AreaBox_V0._1.Models.Dto.MediaPostsDto>
 
 @foreach (var post in Model)
 {
@@ -13,12 +9,11 @@
 					<div>
 						<div class="row align-items-center">
 							<div class="col-auto">
-								<img src="@post.UserProfilePicture" alt="" srcset="" class="avatar">
+								<img src="@post.User.ProfilePicture" alt="" srcset="" class="avatar">
 							</div>
 							<div class="col">
-								<input type="hidden" value="@post.Id" id="PostId"/>
-								<div class="card-title">@post.UserName</div>
-								<div class="card-subtitle">@post.CountryName-@post.CityName / @post.CategoryName</div>
+								<div class="card-title">@post.User.UserName</div>
+								<div class="card-subtitle">@post.City.Country.CountryName-@post.City.CityName / @post.Category.CategoryName</div>
 							</div>
 						</div>
 					</div>
@@ -45,7 +40,7 @@
 					</div>
 				</div>
 				<div class="card-body p-0 text-center">
-						<img src="@post.Image" alt="" srcset="" class="w-100">
+					<img src="@post.Image" alt="" srcset="" class="w-100">
 				</div>
 				<div class="card-footer text-start">
 					@post.ShortDescription
@@ -54,13 +49,10 @@
 					@post.LongDescription
 				</div>
 				<div class="card-footer text-end">
-					<button class="switch-icon likeBtn @(post.MediaPostsLikes.Any(x => x.UserId == currentUserId) ? "active" : "")" data-mpid="@post.Id">
-						<span class="switch-icon-a text-secondary">
-							<i class="ti ti-heart"></i>
-							</span>
-						<span class="switch-icon-b text-red">
-							<i class="ti ti-heart-filled"></i>
-							</span>
+					<button class="switch-icon" data-bs-toggle="switch-icon">
+						<span id="likeButtonSwitch">
+
+						</span>
 					</button>
 
 					<button type="submit" class="btn btn-primary">Submit</button>

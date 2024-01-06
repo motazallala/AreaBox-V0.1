@@ -1,4 +1,15 @@
-﻿namespace AreaBox_V0._1.Common
+﻿using AreaBox_V0._1.Areas.Admin.Models.CitiesModel.send;
+using AreaBox_V0._1.Areas.Admin.Models.Countries.send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportDto.input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
+using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models.Dto;
+using AutoMapper;
+
+namespace AreaBox_V0._1.Common
 {
 	public class AutoMapperProfile : Profile
 	{
@@ -80,7 +91,7 @@
 				.ForMember(dest => dest.LastName, src => src.MapFrom(src => src.User.LastName))
 				.ForMember(dest => dest.ProfilePicture, src => src.MapFrom(src => src.User.ProfilePicture))
 				;
-
+			CreateMap<ReportTypes, UReportTypeOutPutDto>();
 			CreateMap<MediaPostLikes, UMediaPostOutputDto>();
 			CreateMap<MediaPosts, UMediaPostOutputDto>()
 				.ForMember(dest => dest.Id, src => src.MapFrom(src => src.MpostId))
