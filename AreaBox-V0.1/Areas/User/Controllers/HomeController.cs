@@ -1,17 +1,3 @@
-using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
-using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.input;
-using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
-using AreaBox_V0._1.Areas.User.Models.UMediaPostLikeDto.Input;
-using AreaBox_V0._1.Areas.User.Models.UMediaPostReportDto.input;
-using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.input;
-using AreaBox_V0._1.Data.Interface;
-using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Models.Dto;
-using AreaBox_V0._1.Services;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
 [Route("[controller]/[action]")]
@@ -23,7 +9,7 @@ public class HomeController : Controller
     private readonly IMapper _mapper;
     private readonly IUnitOfWork db;
 
-    private readonly int PageSize = 7;
+    private readonly int PageSize = 5;
     public HomeController(
         IMapper mapper,
         UserManager<ApplicationUser> userManager,

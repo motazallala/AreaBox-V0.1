@@ -2,25 +2,25 @@
 @{
     ViewData["Title"] = "AddPost";
 }
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    <li>@error.ErrorMessage</li>
-                }
-            }
-        </ul>
-    </div>
-}
-<form method="post" action="AddPost" enctype="multipart/form-data">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <span asp-validation-for="@Model.Image" class="text-danger"></span>
-    <input type="file" name="file" accept="image/*" />
-    <input type="text" asp-for="@Model.ShortDescription" placeholder="Short Description" />
-    <textarea asp-for="@Model.LongDescription" placeholder="Long Description"></textarea>
-    <button type="submit">Add Post</button>
-</form>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <h1>@ViewData["Title"]</h1>
+
+    <form method="post" enctype="multipart/form-data" action="/Home/UploadVideo">
+        <div>
+            <label for="videoFile">Upload Video File:</label>
+            <input type="file" id="videoFile" name="videoFile" accept="video/*" required />
+        </div>
+        <div>
+            <button type="submit">Upload</button>
+        </div>
+    </form>
+
+</body>
+</html>
+

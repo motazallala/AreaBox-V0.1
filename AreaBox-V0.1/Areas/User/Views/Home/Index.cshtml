@@ -92,9 +92,7 @@
 <div class="row justify-content-center">
     <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
         <div class="make-me-sticky">
-
             @Html.Partial("_FilteringandUserControlPartial")
-
         </div>
 
     </div>
@@ -129,7 +127,34 @@
 
 
 
+<script>
+    $(document).ready(function () {
 
+    })
+
+    function likeButton() {
+            $.ajax({
+                url: '/Home/AddLikeToMediaPost',
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    // Append the new posts to the post container
+                    $('#post-container').append(data);
+                    page++; // Increment the page number for the next request
+                    loading = false; // Reset loading flag after successful load
+                    $('#loading-indicator').hide();
+                    $('#loadBut').show();
+
+                },
+                error: function () {
+                    console.log('Error loading posts.');
+                    $('#loading-indicator').hide();
+                    $('#loadBut').show();
+                    loading = false; // Reset loading flag even on error
+                }
+            });
+    }
+</script>
 
 <script>
     var page = 2; // Initialize the page number for lazy loading

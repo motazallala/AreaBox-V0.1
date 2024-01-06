@@ -1,23 +1,125 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+	ViewData["Title"] = "Index";
 }
 
 
 <div class="row justify-content-center">
-    <div class="col-lg-9 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6" >
-        <div id="post-container">
-            @Html.Partial("_ChatPartial")
-        </div>
-        <div id="loading-indicator" class="my-5" style="display: none;">
-            <div class="spinner-border text-primary"></div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4" >
-        <div class="make-me-sticky">
+	<div class="col-lg-9 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+		<div id="post-container">
+			@Html.Partial("_ChatPartial")
+		</div>
+		<div id="loading-indicator" class="my-5" style="display: none;">
+			<div class="spinner-border text-primary"></div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+		<div class="make-me-sticky">
+			s
+			<partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+		</div>
 
-        <partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
-        </div>
-
-    </div>
+	</div>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function (position) {
+				const latitude = position.coords.latitude;
+				const longitude = position.coords.longitude;
+
+				$.ajax({
+					url: `/Chat/GetGeolocation`,
+					type: 'GET',
+					data: { latitude, longitude },
+					success: function (cityId) {
+						const hiddenInput = document.createElement("input");
+						hiddenInput.type = "hidden";
+						hiddenInput.id = "hiddenCityID";
+						hiddenInput.value = cityId;
+						document.body.appendChild(hiddenInput);
+					},
+					error: function (error) {
+						console.error('Error fetching geolocation details:', error);
+						$('#loadingPlaceholder').hide();
+					}
+				});
+			});
+		} else {
+			console.error("Geolocation is not supported by this browser.");
+		}
+	});
+
+</script>
+
+<script>
+	const connection = new signalR.HubConnectionBuilder()
+		.withUrl("/chathub")
+		.build();
+
+	connection.on("ReceiveMessage", (userId, message, time) => {
+		const chatBubbles = document.querySelector(".chat-bubbles");
+
+		const chatItem = document.createElement("div");
+		chatItem.className = "chat-item";
+
+		const chatBubble = `
+					<div class="row align-items-end">
+						<div class="col-auto">
+							<span class="avatar"></span>
+						</div>
+						<div class="col col-lg-6">
+							<div class="chat-bubble">
+								<div class="chat-bubble-title">
+									<div class="row">
+										<div class="col chat-bubble-author">${userId}</div>
+										<div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
+									</div>
+								</div>
+								<div class="chat-bubble-body">
+									<p>${message}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				`;
+
+		chatItem.innerHTML = chatBubble;
+		chatBubbles.appendChild(chatItem);
+	});
+
+
+	connection.start().catch(err => console.error(err));
+
+	function sendMessage() {
+		const cityInput = document.getElementById('hiddenCityID');
+		const messageInput = document.getElementById("messageInput");
+		const city = cityInput.value;
+		const message = messageInput.value;
+		const time = Date.now();
+
+		connection.invoke("JoinCityGroup", city).catch(err => console.error(err));
+
+		connection.invoke("SendMessage", message, city, time).catch(err => console.error(err));
+
+		messageInput.value = "";
+	}
+
+	function handleEnter(event) {
+		if (event.keyCode === 13) {
+			sendMessage();
+		}
+	}
+
+	window.addEventListener('beforeunload', () => {
+		const cityInput = document.getElementById('hiddenCityID');
+		const city = cityInput.value;
+
+		connection.invoke("LeaveCityGroup", city).catch(err => console.error(err));
+	});
+</script>

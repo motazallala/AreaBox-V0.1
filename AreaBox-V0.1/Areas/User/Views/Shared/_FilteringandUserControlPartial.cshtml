@@ -1,7 +1,12 @@
-﻿
+﻿@inject UserManager<ApplicationUser> user
+
+@{
+	var userData = await user.GetUserAsync(User);
+}
+
 	<form class="card" asp-action="Index" asp-area="admin" asp-controller="MediaManagement" method="get">
 		<div class="card-header">
-			<h3 class="card-title">Basic form</h3>
+		<h3 class="card-title">@userData.UserName</h3>
 		</div>
 		<div class="card-body">
 			<div class="mb-3">
