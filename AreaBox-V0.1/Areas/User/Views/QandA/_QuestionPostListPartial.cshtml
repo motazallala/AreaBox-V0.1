@@ -10,11 +10,31 @@
                         <img src="@post.User.ProfilePicture" class="w-100 h-100 object-cover card-img-start">
                     </div>
                     <div class="col">
+                        <div class="card-header d-flex justify-content-between">
+                            <div>
+                                <p>
+                                    @post.User.UserName : @post.Title
+                                </p>
+                            </div>
+                            <div class="card-actions">
+                                <div class="dropdown">
+                                    <a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                            <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                            <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                        </svg>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportQPostModal" data-id="@post.Id">Report The Post</a>
+                                        <a class="dropdown-item" style="cursor: pointer;">Save Post</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
-                            <p>
-                                @post.User.UserName : @post.Title
-                            </p>
-                            <div class="hr-text"></div>
                             <p>
                                 @post.Description
                             </p>

@@ -309,31 +309,31 @@ public class HomeController : Controller
 
 	#endregion
 
-	#region Report Fun
-	[HttpPost]
-	public async Task<IActionResult> AddReportInMediaPost([FromForm] UMediaPostReportInputDto inputReport)
-	{
-		var userId = _userManager.GetUserId(User);
-		if (userId == null)
-		{
-			return BadRequest("Log in to report the post");
-		}
+    #region Report Fun
+    [HttpPost]
+    public async Task<IActionResult> AddReportInMediaPost([FromForm] UMediaPostReportInputDto inputReport)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+        {
+            return BadRequest("Please log in to report the post.");
+        }
 
-		if (inputReport.MpostId == null || inputReport.ReportTypeId == null)
-		{
-			return BadRequest("Fill the information !!");
-		}
-		var mediaPostReport = await db.MediaPostReports.CheckItemExistence<MediaPostsReports>(e => e.UserId == userId && e.MpostId == inputReport.MpostId);
-		if (mediaPostReport == true)
-		{
-			return BadRequest("the report Exists");
-		}
-		var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "MediaPost");
-		var newReport = new PostReports
-		{
-			ReportTypeId = inputReport.ReportTypeId,
-			PostTypeId = postType.PostTypeId
-		};
+        if (inputReport.MpostId == null || inputReport.ReportTypeId == null)
+        {
+            return BadRequest("Please provide complete report details.");
+        }
+        var mediaPostReport = await db.MediaPostReports.CheckItemExistence<MediaPostsReports>(e => e.UserId == userId && e.MpostId == inputReport.MpostId);
+        if (mediaPostReport == true)
+        {
+            return BadRequest("You have already reported this post.");
+        }
+        var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "MediaPost");
+        var newReport = new PostReports
+        {
+            ReportTypeId = inputReport.ReportTypeId,
+            PostTypeId = postType.PostTypeId
+        };
 
 
 		db.PostReports.Add(newReport);
@@ -351,8 +351,8 @@ public class HomeController : Controller
 		db.MediaPostReports.Add(newMediaReport);
 		await db.Save();
 
-		return Ok("post reported");
-	}
+        return Ok("Post has been successfully reported.");
+    }
 
 	#endregion
 
