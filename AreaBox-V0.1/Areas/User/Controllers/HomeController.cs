@@ -11,6 +11,10 @@ using AreaBox_V0._1.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Buffers.Text;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
@@ -23,7 +27,7 @@ public class HomeController : Controller
     private readonly IMapper _mapper;
     private readonly IUnitOfWork db;
 
-    private readonly int PageSize = 7;
+    private readonly int PageSize = 5;
     public HomeController(
         IMapper mapper,
         UserManager<ApplicationUser> userManager,
@@ -109,7 +113,7 @@ public class HomeController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile file)
+    public async Task<IActionResult> AddPost([FromForm] UMediaPostInputDto mediaPostsDto, IFormFile image)
     {
 		var userId = _userManager.GetUserId(User);
 
@@ -118,13 +122,13 @@ public class HomeController : Controller
             return BadRequest("User is not logged in.");
         }
 
-        if (file == null || file.Length == 0)
+        if (image == null || image.Length == 0)
         {
             return BadRequest("Please select an Image.");
         }
         else
         {
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            var fileExtension = Path.GetExtension(image.FileName).ToLower();
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".ico" };
 
             if (!allowedExtensions.Contains(fileExtension))
@@ -135,7 +139,7 @@ public class HomeController : Controller
 
         try
         {
-            string base64String = await _imageService.UploadImage(file);
+            string base64String = await _imageService.UploadImage(image);
 
             var mediaPost = new MediaPosts
             {
@@ -281,4 +285,48 @@ public class HomeController : Controller
             return Ok("Post Liked Removed");
         }
     }
+
+	/*[HttpPost]
+    public async Task<IActionResult> UploadVideoAsync(IFormFile videoFile)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (videoFile == null || videoFile.Length == 0)
+        {
+            ViewBag.Message = "Please select a video file.";
+            return View("UploadVideo");
+        }
+
+        try
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                videoFile.CopyTo(memoryStream);
+                byte[] videoBytes = memoryStream.ToArray(); 
+                string base64String = Convert.ToBase64String(videoBytes);
+
+
+                var mediaPost = new MediaPosts
+                {
+                    MpuserId = userId,
+                    Mpimage = "data:video/mp4;base64," + base64String,
+                    Mpdate = DateTime.Now,
+                    MpcityId = 1,
+                    MpcategoryId = 1,
+                    MpshortDescription = "dsa",
+                    MplongDescription = "das",
+                    Mpstate = false
+                };
+                db.MediaPosts.Add(mediaPost);
+                await db.Save();
+            }
+
+            ViewBag.Message = "Video uploaded successfully!";
+            return View("UploadVideo");
+        }
+        catch (Exception ex)
+        {
+            ViewBag.Message = $"An error occurred: {ex.Message}";
+            return View("UploadVideo");
+        }
+    }*/
 }

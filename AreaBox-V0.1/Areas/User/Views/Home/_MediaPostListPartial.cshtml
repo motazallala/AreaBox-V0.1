@@ -2,58 +2,62 @@
 
 @foreach (var post in Model)
 {
-<div class="row">
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                                <img src="@post.User.ProfilePicture" alt="" srcset="" class="avatar">
+	<div class="row">
+		<div class="col mb-4">
+			<div class="card">
+				<div class="card-header">
+					<div>
+						<div class="row align-items-center">
+							<div class="col-auto">
+								<img src="@post.User.ProfilePicture" alt="" srcset="" class="avatar">
+							</div>
+							<div class="col">
+								<div class="card-title">@post.User.UserName</div>
+								<div class="card-subtitle">@post.City.Country.CountryName-@post.City.CityName / @post.Category.CategoryName</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-actions">
+						<div class="dropdown">
+							<a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown"
+							   aria-haspopup="true"
+							   aria-expanded="false">
+								<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+									 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+									 stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+									<path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+									<path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+									<path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+								</svg>
+							</a>
+							<div class="dropdown-menu dropdown-menu-end">
+								<a class="dropdown-item" href="#">Report The Post</a>
+								<a class="dropdown-item" href="#">Save Post</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-body p-0 text-center">
+						<img src="@post.Image" alt="" srcset="" class="w-100">
+				</div>
+				<div class="card-footer text-start">
+					@post.ShortDescription
+					<br>
+					<br>
+					@post.LongDescription
+				</div>
+				<div class="card-footer text-end">
+					<button class="switch-icon" data-bs-toggle="switch-icon">
+						<span id="likeButtonSwitch">
+							
+						</span>
+					</button>
 
-
-                        </div>
-                        <div class="col">
-                            <div class="card-title">@post.User.UserName</div>
-                            <div class="card-subtitle">@post.City.Country.CountryName-@post.City.CityName / @post.Category.CategoryName</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <div class="dropdown">
-                        <a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                            </svg>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">Report The Post</a>
-                            <a class="dropdown-item" href="#">Save Post</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                <div class="card-body p-0 text-center">
-                    <img src="@post.Image" alt="" srcset="" class="w-100">
-            </div>
-            <div class="card-footer text-start">
-                @post.ShortDescription
-                    <br>
-                    <br>
-                @post.LongDescription
-            </div>
-            <div class="card-footer text-end">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
 }

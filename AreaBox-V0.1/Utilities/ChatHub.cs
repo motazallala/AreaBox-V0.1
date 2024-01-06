@@ -12,7 +12,7 @@ namespace AreaBox_V0._1.Utilities
 
         public async Task SendMessage(string message, string city, long time)
         {
-            await Clients.Group(city).SendAsync("ReceiveMessage", Context.ConnectionId, $"{Context.User.Identity.Name}: {message}", time);
+            await Clients.Group(city).SendAsync("ReceiveMessage", Context.User.Identity.Name, $"{message}", time);
         }
 
         public async Task LeaveCityGroup(string city)

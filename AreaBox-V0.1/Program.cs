@@ -25,7 +25,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddTransient<ILocationService, LocationService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+builder.Services.Configure<Dictionary<string, string>>(builder.Configuration.GetSection("ApiMap"));
+builder.Services.AddHttpClient();
 
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
