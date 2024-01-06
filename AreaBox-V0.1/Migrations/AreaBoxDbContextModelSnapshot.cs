@@ -224,6 +224,12 @@ namespace AreaBox_V0._1.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("UserID");
 
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.HasKey("MpostId", "UserId");
 
                     b.HasIndex("UserId");

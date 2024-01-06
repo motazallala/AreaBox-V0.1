@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AreaBox_V0._1.Migrations
 {
     /// <inheritdoc />
-    public partial class newMig : Migration
+    public partial class initMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -377,6 +377,7 @@ namespace AreaBox_V0._1.Migrations
                 {
                     MPCommentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MPCommnetDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     MPCommentContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -388,6 +389,11 @@ namespace AreaBox_V0._1.Migrations
                         column: x => x.MPostID,
                         principalTable: "MediaPosts",
                         principalColumn: "MPostID");
+                    table.ForeignKey(
+                        name: "FK_MediaPostComments_Users",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -446,6 +452,7 @@ namespace AreaBox_V0._1.Migrations
                 {
                     QPCommentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     QPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     QPCommentDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     QPCommentContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -457,6 +464,11 @@ namespace AreaBox_V0._1.Migrations
                         column: x => x.QPostID,
                         principalTable: "QuestionPosts",
                         principalColumn: "QPostID");
+                    table.ForeignKey(
+                        name: "FK_QuestionPostComments_Users",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -485,48 +497,6 @@ namespace AreaBox_V0._1.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersMediaPostComments",
-                columns: table => new
-                {
-                    MPCommentID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK_UsersMediaPostComments_AspNetUsers",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UsersMediaPostComments_MediaPostComments",
-                        column: x => x.MPCommentID,
-                        principalTable: "MediaPostComments",
-                        principalColumn: "MPCommentID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersQusetionPostComments",
-                columns: table => new
-                {
-                    QPCommentID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK_UsersQusetionPostComments_AspNetUsers",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UsersQusetionPostComments_QuestionPostComments",
-                        column: x => x.QPCommentID,
-                        principalTable: "QuestionPostComments",
-                        principalColumn: "QPCommentID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -579,6 +549,11 @@ namespace AreaBox_V0._1.Migrations
                 column: "MPostID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MediaPostComments_UserId",
+                table: "MediaPostComments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MediaPostLikes_UserID",
                 table: "MediaPostLikes",
                 column: "UserID");
@@ -629,6 +604,11 @@ namespace AreaBox_V0._1.Migrations
                 column: "QPostID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_QuestionPostComments_UserId",
+                table: "QuestionPostComments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_QuestionPosts_QPCategoryID",
                 table: "QuestionPosts",
                 column: "QPCategoryID");
@@ -662,26 +642,6 @@ namespace AreaBox_V0._1.Migrations
                 name: "IX_UserCategories_CategoryId",
                 table: "UserCategories",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersMediaPostComments_MPCommentID",
-                table: "UsersMediaPostComments",
-                column: "MPCommentID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersMediaPostComments_UserID",
-                table: "UsersMediaPostComments",
-                column: "UserID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersQusetionPostComments_QPCommentID",
-                table: "UsersQusetionPostComments",
-                column: "QPCommentID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersQusetionPostComments_UserID",
-                table: "UsersQusetionPostComments",
-                column: "UserID");
         }
 
         /// <inheritdoc />
@@ -703,10 +663,16 @@ namespace AreaBox_V0._1.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "MediaPostComments");
+
+            migrationBuilder.DropTable(
                 name: "MediaPostLikes");
 
             migrationBuilder.DropTable(
                 name: "MediaPostsReports");
+
+            migrationBuilder.DropTable(
+                name: "QuestionPostComments");
 
             migrationBuilder.DropTable(
                 name: "QuestionPostsReports");
@@ -718,34 +684,22 @@ namespace AreaBox_V0._1.Migrations
                 name: "UserCategories");
 
             migrationBuilder.DropTable(
-                name: "UsersMediaPostComments");
-
-            migrationBuilder.DropTable(
-                name: "UsersQusetionPostComments");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "MediaPosts");
 
             migrationBuilder.DropTable(
                 name: "PostReports");
 
             migrationBuilder.DropTable(
-                name: "MediaPostComments");
-
-            migrationBuilder.DropTable(
-                name: "QuestionPostComments");
+                name: "QuestionPosts");
 
             migrationBuilder.DropTable(
                 name: "PostTypes");
 
             migrationBuilder.DropTable(
                 name: "ReportTypes");
-
-            migrationBuilder.DropTable(
-                name: "MediaPosts");
-
-            migrationBuilder.DropTable(
-                name: "QuestionPosts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

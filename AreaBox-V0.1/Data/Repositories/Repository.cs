@@ -58,10 +58,7 @@ namespace AreaBox_V0._1.Data.Repositories
             _db.Set<T>().Update(entity);
         }
 
-        public async Task SaveChnagesAsync()
-        {
-            await _db.SaveChangesAsync();
-        }
+
 
 
         public async Task<TViewModel> Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
@@ -166,8 +163,14 @@ namespace AreaBox_V0._1.Data.Repositories
         public async Task<bool> CheckItemExistence<TEntity>(Expression<Func<TEntity, bool>> match) where TEntity : class
         {
             IQueryable<TEntity> query = _db.Set<TEntity>();
-            return await query.Where(match).AnyAsync();
+            return await query.Where(match).AsNoTracking().AnyAsync();
         }
+
+        public void Attach(T entity)
+        {
+            _db.Attach(entity);
+        }
+
 
     }
 }
