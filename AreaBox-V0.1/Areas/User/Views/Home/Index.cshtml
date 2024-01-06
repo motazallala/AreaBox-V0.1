@@ -127,34 +127,44 @@
 
 
 
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).on('click', '.likeBtn', function () {
+            console.log('Button clicked!');
 
-    })
+            var button = $(this);
+            var postId = button.data('mpid');
+            console.log('postId:', postId);
 
-    function likeButton() {
+            var formData = new FormData();
+            formData.append('MpostId', postId);
+
             $.ajax({
-                url: '/Home/AddLikeToMediaPost',
+                url: '/Home/AddLikeToMediaPost', // Update the URL to match your endpoint
                 type: 'POST',
                 data: formData,
-                success: function (data) {
-                    // Append the new posts to the post container
-                    $('#post-container').append(data);
-                    page++; // Increment the page number for the next request
-                    loading = false; // Reset loading flag after successful load
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
+                processData: false,
+                contentType: false,
+                success: function (data, textStatus, xhr) {
+                    if (xhr.status === 200) {
+                        if (data === "Post Liked") {
 
+                            button.addClass('active');
+                            console.log("like");
+                        } else if (data === "Post Liked Removed") {
+                            console.log("unlike");
+                            button.removeClass('active');
+ 
+                        }
+                    } else {
+                        // Handle other status codes or error cases
+                    }
                 },
-                error: function () {
-                    console.log('Error loading posts.');
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
-                    loading = false; // Reset loading flag even on error
+                error: function (error) {
+                    console.error('AJAX error:', error);
                 }
             });
-    }
-</script>
+        });
+    </script>
 
 <script>
     var page = 2; // Initialize the page number for lazy loading
