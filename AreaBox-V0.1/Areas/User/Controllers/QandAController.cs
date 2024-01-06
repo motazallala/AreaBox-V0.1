@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
+﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostReportDto.Input;
@@ -135,27 +136,45 @@ public class QandAController : Controller
 		var resalt = await db.QuestionPostComments.FindAndFilter<QuestionPostComments, UQuestionPostCommentsOutputDto>(new[] { "User" }, skip, take, e => e.QpostId == questionPostId);
 		return Ok(resalt);
 	}
-
 	#endregion
+
+	[HttpGet]
+	public async Task<IActionResult> GetQuestionPostReportTypes(string questionPostId)
+	{
+		if (questionPostId == null)
+		{
+			return BadRequest("Choose post to report");
+		}
+
+		var questionPost = await db.QuestionPosts.CheckItemExistence<QuestionPosts>(e => e.QpostId == questionPostId);
+
+		if (questionPost == false)
+		{
+			return BadRequest("The post not exists");
+		}
+
+		var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>(new[] { "PostReports" });
+		return Ok(resalt);
+	}
 
 	#region Report Fun
 	[HttpPost]
-	public async Task<IActionResult> AddReportInMediaPost([FromForm] UQuestionPostReportInputDto inputReport)
+	public async Task<IActionResult> AddReportInQuestionPost([FromForm] UQuestionPostReportInputDto inputReport)
 	{
 		var userId = _userManager.GetUserId(User);
 		if (userId == null)
 		{
-			return BadRequest("Log in to report the post");
+			return BadRequest("Please log in to report the post.");
 		}
 
 		if (inputReport.QpostId == null || inputReport.ReportTypeId == null)
 		{
-			return BadRequest("Fill the information !!");
+			return BadRequest("Please provide complete report details.");
 		}
 		var questionPostReport = await db.QuestionPostsReports.CheckItemExistence<QuestionPostsReports>(e => e.UserId == userId && e.QpostId == inputReport.QpostId);
 		if (questionPostReport == true)
 		{
-			return BadRequest("the report Exists");
+			return BadRequest("You have already reported this post.");
 		}
 		var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "QAPost");
 		var newReport = new PostReports
@@ -180,7 +199,7 @@ public class QandAController : Controller
 		db.QuestionPostsReports.Add(newQuestionReport);
 		await db.Save();
 
-		return Ok("post reported");
+		return Ok("Post has been successfully reported.");
 	}
 
 	#endregion

@@ -21,6 +21,35 @@
 
 </style>
 
+
+<div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
+    <div class="d-flex">
+        <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l5 5l10 -10" /></svg>
+        </div>
+        <div id="success-body">
+            Wow! Everything worked!
+        </div>
+    </div>
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+</div>
+
+
+
+<div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
+    <div class="d-flex">
+        <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
+        </div>
+        <div id="error-body">
+            I'm so sorry…
+        </div>
+    </div>
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+</div>
+
 <div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -58,33 +87,33 @@
 </div>
 
 
-<div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
-    <div class="d-flex">
-        <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l5 5l10 -10" /></svg>
-        </div>
-        <div id="success-body">
-            Wow! Everything worked!
+<div class="modal modal-blur" id="reportQPostModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report this post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="reportReason" class="form-label">Select a reason for reporting:</label>
+                    <select class="form-select" id="reportReason" aria-label="Report Reason">
+                        <!-- Options will be populated here -->
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="reportDescription" class="form-label">Description:</label>
+                    <textarea class="form-control" id="descriptionDisplay" rows="3" disabled></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="reportButton" data-bs-dismiss="modal" onclick="reportMediaPost()">Report</button>
+            </div>
         </div>
     </div>
-    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
 </div>
 
-
-
-<div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
-    <div class="d-flex">
-        <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
-        </div>
-        <div id="error-body">
-            I'm so sorry…
-        </div>
-    </div>
-    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
-</div>
 
 <div class="row justify-content-center">
     <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
@@ -284,6 +313,69 @@
         }
     }
 
+</script>
+
+<script>
+    $('#reportQPostModal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var questionPostId = $(event.relatedTarget).data('id');
+        $('#mpostIdInput').val(questionPostId);
+
+        $.ajax({
+            url: '/QandA/GetQuestionPostReportTypes',
+            type: 'GET',
+            data: { questionPostId: questionPostId },
+            success: function (response) {
+                var options = '';
+
+                response.forEach(function (reason) {
+                    options += `<option value="${reason.reportTypeId}" data-description="${reason.description}" data-qpostid="${questionPostId}">${reason.type}</option>`;
+                });
+
+                $('#reportReason').html(options);
+
+                $('#reportReason').on('change', function () {
+                    var selectedDescription = $(this).find(':selected').data('description');
+                    var selectedMpostId = $(this).find(':selected').data('qpostid');
+                    $('#descriptionDisplay').val(selectedDescription);
+                }).trigger('change');
+            },
+            error: function (error) {
+                console.error('Error fetching report types:', error);
+            }
+        });
+    });
+
+    $('#reportButton').on('click', function () {
+        var selectedQpostId = $('#reportReason').find(':selected').data('qpostid');
+        var selectedReportTypeId = $('#reportReason').val();
+
+        var formData = new FormData();
+        formData.append('ReportTypeId', selectedReportTypeId);
+        formData.append('QpostId', selectedQpostId);
+
+        $.ajax({
+            url: '/QandA/AddReportInQuestionPost',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $('#success-body').text(data);
+                $('#alertSuccess').show();
+                setTimeout(function () {
+                    $('#alertSuccess').hide();
+                }, 3000);
+            },
+            error: function (error) {
+                $('#error-body').text(error.responseText);
+                $('#alertDanger').show();
+                setTimeout(function () {
+                    $('#alertDanger').hide();
+                }, 3000);
+            }
+        });
+    });
 </script>
 
 

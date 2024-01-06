@@ -17,7 +17,6 @@ namespace AreaBox_V0._1.Data.Repositories
             _mapper = mapper;
         }
 
-
         public async Task<IEnumerable<TViewModel>> GetAllAsync<TEntity, TViewModel>(string[] includes = null)
             where TEntity : class
             where TViewModel : class
