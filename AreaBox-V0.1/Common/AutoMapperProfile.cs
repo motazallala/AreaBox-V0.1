@@ -1,12 +1,4 @@
-﻿using AreaBox_V0._1.Areas.Admin.Models.CitiesModel.send;
-using AreaBox_V0._1.Areas.Admin.Models.Countries.send;
-using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
-using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
-using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
-using AreaBox_V0._1.Data.Model;
-using AreaBox_V0._1.Models.Dto;
-using AutoMapper;
-namespace AreaBox_V0._1.Common
+﻿namespace AreaBox_V0._1.Common
 {
 	public class AutoMapperProfile : Profile
 	{
