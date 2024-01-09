@@ -2,7 +2,22 @@
 @{
 	ViewData["Title"] = "Index";
 }
+<style>
+	.user-title {
+		font-size: 18px;
+	}
 
+	.formattedDate {
+		font-size: 14px;
+		color: #888;
+	}
+
+	.card-footer.border-bottom {
+		border-color: #ccc;
+		border-style: dashed;
+		border-width: 1px;
+	}
+</style>
 <style>
 	.make-me-sticky {
 		position: -webkit-sticky;
@@ -137,7 +152,7 @@
 		</div>
 
 	</div>
-	<div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+	<div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-8">
 		<div id="post-container">
 			@Html.Partial("_MediaPostListPartial", Model.mediaPostsDtos)
 		</div>
@@ -170,7 +185,7 @@
 		var button = $(this);
 		var postId = button.data('mpid');
 		var likeCountElement = button.siblings('.count-post-like');
-
+			button.prop('disabled', true);
 		console.log('postId:', postId);
 
 		var formData = new FormData();
@@ -186,6 +201,7 @@
 				var currentLikeCount = parseInt(likeCountElement.text(), 10);
 				if (xhr.status === 200) {
 					if (data === "Post Liked") {
+						button.prop('disabled', false);
 						button.addClass('active');
 						console.log("like");
 
@@ -193,6 +209,8 @@
 							
 						likeCountElement.text(currentLikeCount + 1);
 					} else if (data === "Post Liked Removed") {
+							button.prop('disabled', false);
+
 						console.log("unlike");
 						button.removeClass('active');
 						likeCountElement.text(currentLikeCount - 1);
@@ -381,10 +399,8 @@
 					dataType: 'json',
 					success: function (data) {
 						var categoryDropdown = $('#categoryDropdownModel');
-						var categoryDropdownFilter = $('#categoryDropdown');
 						categoryDropdown.empty();
 						$.each(data, function (key, entry) {
-							categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
 							categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
 						});
 					},

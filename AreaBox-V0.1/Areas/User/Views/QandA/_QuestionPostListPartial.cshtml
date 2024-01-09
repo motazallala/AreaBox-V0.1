@@ -3,41 +3,49 @@
 @foreach (var post in Model)
 {
     <div class="row">
-        <div class="col-md-12 col-lg-12 mb-3">
+        <div class="col mb-3">
             <div class="card">
                 <div class="row row-0">
-                    <div class="col-3">
-                        <img src="@post.User.ProfilePicture" class="w-100 h-100 object-cover card-img-start">
+                    <div class="col-4">
+                        <img src="@post.User.ProfilePicture" class=" rounded">
                     </div>
                     <div class="col">
-                        <div class="card-header d-flex justify-content-between">
-                            <div>
-                                <p>
-                                    @post.User.UserName : @post.Title
-                                </p>
-                            </div>
-                            <div class="card-actions">
-                                <div class="dropdown">
-                                    <a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                            <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                            <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                        </svg>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportQPostModal" data-id="@post.Id">Report The Post</a>
-                                        <a class="dropdown-item" style="cursor: pointer;">Save Post</a>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>@post.User.UserName Have a Question</h3>
+
+                                    
+                                </div>
+                                <div class="col text-end">
+                                    <div class="card-actions">
+                                        <div class="dropdown">
+                                            <a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                                    <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                                    <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                                </svg>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportQPostModal" data-id="@post.Id">Report The Post</a>
+                                                <a class="dropdown-item" style="cursor: pointer;">Save Post</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <p>
-                                @post.Description
-                            </p>
+                           
+                            <div class="row">
+                                
+                                <div class="col-md-6 markdown">
+                                    <h3>@post.Title</h3>
+                                    <p>@post.Description</p>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="d-flex">
                             <a href="#" class="card-btn">

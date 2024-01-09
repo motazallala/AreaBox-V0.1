@@ -4,21 +4,7 @@
     var currentUserId = (await userManager.GetUserAsync(User))?.Id;
 
 }
-<style>
-    .user-title {
-        font-size: 18px;
-    }
 
-    .formattedDate {
-        font-size: 14px;
-        color: #888;
-    }
-        .card-footer.border-bottom {
-        border-color: #ccc;
-        border-style: dashed;
-        border-width: 1px;
-    }
-</style>
 
 
 @foreach (var post in Model)
@@ -41,25 +27,28 @@
 
                                             if (timeDifference.TotalDays >= 365)
                                             {
-                                                @((int)(timeDifference.TotalDays / 365)+"y") 
+                                                @((int)(timeDifference.TotalDays / 365) + " y")
                                             }
                                             else if (timeDifference.TotalDays >= 30)
                                             {
-                                                @((int)(timeDifference.TotalDays / 30) + "mon")
+                                                @((int)(timeDifference.TotalDays / 30) + " mon")
+                                            }
+                                            else if (timeDifference.TotalHours >= 24)
+                                            {
+                                                @((int)(timeDifference.TotalDays) + " day")
                                             }
                                             else if (timeDifference.TotalHours >= 1)
                                             {
-                                                @((int)(timeDifference.TotalHours) + "hr")      
+                                                @((int)(timeDifference.TotalHours) + " hr")
                                             }
-
                                             else if (timeDifference.TotalMinutes >= 1)
 
                                             {
-                                                @((int)(timeDifference.TotalMinutes) + "min")
+                                                @((int)(timeDifference.TotalMinutes) + " min")
                                             }
                                             else
                                             {
-                                                @((int)(timeDifference.TotalSeconds)+ "s")
+                                                @((int)(timeDifference.TotalSeconds) + " s")
                                             }
 
                                         }
@@ -72,7 +61,7 @@
                     </div>
                     <div class="card-actions">
                         <div class="dropdown">
-                            <a href="#" class="btn-action dropdown-toggle" data-bs-toggle="dropdown"
+                            <a class="btn-action dropdown-toggle" data-bs-toggle="dropdown"
                                aria-haspopup="true"
                                aria-expanded="false">
                                 <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
@@ -96,27 +85,35 @@
                 <div class="card-body p-0 text-center">
                     <img src="@post.Image" alt="" srcset="" class="w-100 rounded">
                 </div>
-                <div class="card-footer text-start border-bottom">
+                <div class="card-footer text-start">
                     <div class="accordion-item">
                         <div class="accordion-header" role="tab">
 
                             <div class="row">
                                 <div class="col">
-                                    <span class="h2 display-4">@post.ShortDescription</span>
+                                    <span class="text-wrap fs-2 text-capitalize"><strong>Description :</strong> @post.ShortDescription</span>
                                 </div>
                             </div>
-                            <div class="hr-text">Description</div>
-                            <div class="row text-center">
-                                <div class="col" data-bs-toggle="collapse" data-bs-target="#faq-2-1-@post.Id">
-                                    <i class="ti ti-arrow-down" style="font-size:24px"></i>
+                            <div class="row text-center pt-2">
+                                <div class="col switch-icon w-100" data-bs-toggle="switch-icon">
+                                    <div class="" data-bs-toggle="collapse" data-bs-target="#faq-2-1-@post.Id">
+
+                                        <div class="switch-icon-a">
+                                            <i class="ti ti-arrow-down" style="font-size:24px"></i>
+                                        </div>
+                                        <div class="switch-icon-b">
+                                            <i class="ti ti-arrow-up" style="font-size:24px"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
+                        <div class="hr-text"><strong>Long Description</strong></div>
                         <div id="faq-2-1-@post.Id" class="accordion-collapse collapse" role="tabpanel" data-bs-parent="#faq-2">
-                            <div class="accordion-body pt-0">
+                            <div class="accordion-body ps-3 ">
                                 <div>
-                                    <p>@post.LongDescription</p>
+                                    <p class="text-capitalize fs-3 text-break">@post.LongDescription</p>
                                 </div>
                             </div>
                         </div>
@@ -125,30 +122,33 @@
                 <div class="card-footer ">
                     <div class="row">
 
-                        <div class="col-1 pt-2">
+                        <div class="col-auto me-auto pt-2">
 
                             <button class="switch-icon likeBtn me-2 @(post.MediaPostsLikes.Any(x => x.UserId == currentUserId) ? "active" : "")" data-mpid="@post.Id">
-                                <span class="switch-icon-a text-secondary">
+                                <span class="switch-icon-a">
                                     <i class="ti ti-heart" style="font-size:24px"></i>
                                 </span>
                                 <span class="switch-icon-b text-red">
                                     <i class="ti ti-heart-filled" style="font-size:24px"></i>
                                 </span>
                             </button>
-                            <span class="count-post-like" data-mpid="@post.Id">@post.CountPostLike</span>
+                            <span class="count-post-like" data-mpid="@post.Id">@post.CountPostLike</span> <span>Likes</span>
                         </div>
-                        <div class="col pt-2">
+                        <div class="col-auto me-auto pt-2">
                             <button class="switch-icon me-2">
-                            <i class="ti ti-messages " style="font-size:24px"></i>
+                                <i class="ti ti-messages " style="font-size:24px"></i>
 
                             </button>
 
-                            @post.CountMediaPostComments
+                            @post.CountMediaPostComments <span>Comments</span>
 
                         </div>
-                        <div class="col text-end">
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Add New Comment" />
+                        </div>
+                        <div class="col-auto">
 
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Comment</button>
                         </div>
                     </div>
 
