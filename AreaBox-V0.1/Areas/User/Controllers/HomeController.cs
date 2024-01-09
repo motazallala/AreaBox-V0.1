@@ -1,3 +1,4 @@
+using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
@@ -181,7 +182,7 @@ public class HomeController : Controller
 		var userId = _userManager.GetUserId(User);
 		if (userId == null)
 		{
-			return BadRequest("Log in to report the post");
+			return Unauthorized("User is not authenticated. Log in to comment on this post!");
 		}
 		if (input.MpostId == null)
 		{
@@ -189,9 +190,10 @@ public class HomeController : Controller
 		}
 
 		var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.MpostId);
+
 		if (mediapost == false)
 		{
-			return BadRequest("the post not Exists");
+			return NotFound("the post not Exists");
 		}
 		var resalt = await db.MediaPostLikes.CheckItemExistence<MediaPostLikes>(e => e.MpostId == input.MpostId && e.UserId == userId);
 
@@ -220,8 +222,42 @@ public class HomeController : Controller
 		}
 	}
 
-	#endregion
+	[HttpPost]
+	public async Task<IActionResult> AddCommentToMediaPost([FromForm] UMediaPostCommentsInputDto input)
+	{
+		var userId = _userManager.GetUserId(User);
 
+		if (userId == null)
+		{
+			return BadRequest("Log in to comment on this post!");
+		}
+
+		if (input.PostId == null)
+		{
+			return BadRequest("Choose Post to comment.");
+		}
+
+		var mediaPost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.PostId);
+
+		if (mediaPost == false)
+		{
+			return BadRequest("The post not exists!");
+		}
+
+		var newPostLike = new MediaPostComments
+		{
+			MpostId = input.PostId,
+			UserId = userId,
+			MpcommentContent = input.CommentContent,
+			MpcommnetDate = DateTime.Now
+		};
+
+		db.MediaPostComments.Add(newPostLike);
+		await db.Save();
+		return Ok("Comment has been added");
+	}
+
+	#endregion
 
 
 	#region Category Fun
@@ -299,7 +335,7 @@ public class HomeController : Controller
 
 	#region Comments Fun
 	[HttpGet]
-	public async Task<IActionResult> GetMediaPostComments([FromForm] string mediaPostId, [FromForm] int page = 1)
+	public async Task<IActionResult> GetMediaPostComments(string mediaPostId, int page = 1)
 	{
 		if (page < 1)
 		{
@@ -323,7 +359,7 @@ public class HomeController : Controller
 		}
 		int skip = PageSize * (page - 1);
 		int take = PageSize;
-		var resalt = await db.MediaPostComments.FindAndFilter<MediaPostComments, UMediaPostCommentsOutputDto>(new[] { "User" }, skip, take, e => e.MpostId == mediaPostId);
+		var resalt = await db.MediaPostComments.FindAndFilter<MediaPostComments, UMediaPostCommentsOutputDto>(new[] { "User", "Mpost" }, skip, take, e => e.MpostId == mediaPostId);
 		return Ok(resalt);
 	}
 
