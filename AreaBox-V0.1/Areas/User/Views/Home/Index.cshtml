@@ -35,6 +35,10 @@
 
 </style>
 
+<audio controls="controls" id="likeSound" hidden>
+	<source src="~/sound_effects/like.mp3" type="audio/mpeg" />
+</audio>
+
 <div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
 	<div class="d-flex">
 		<div class="me-2">
@@ -144,6 +148,59 @@
 	</div>
 </div>
 
+<div class="modal" id="commentsModal" data-bs-backdrop="static" tabindex="-1">
+	<div class="modal-dialog modal-xl modal-dialog-centered">
+		<div class="modal-content">
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h5 class="modal-title">Comments</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<!-- Modal body -->
+			<div class="modal-body">
+				<div class="row">
+					<!-- Left side for Image -->
+					<div class="col-md-6">
+						<img src="path/to/image.jpg" alt="Post Image" class="img-fluid">
+					</div>
+
+					<!-- Right side for Comments -->
+					<div class="col-md-6">
+						<div class="page-body">
+							<div class="container-xl">
+								<div class="card">
+									<div class="card-body" style="height: 60vh; overflow-y: auto;">
+										<div class="chat">
+											<div id="commentsContainer">
+												<!-- Comments will be appended here -->
+											</div>
+											<div id="commentPager">
+												<button class="btn btn-primary mt-5" id="loadMoreComments">Load More</button>
+											</div>
+											<div id="loading-indicator2" class="my-5" style="display: none;">
+												<div class="spinner-border text-primary"></div>
+											</div>
+										</div>
+									</div>
+									<div class="card-footer">
+										<input type="text" class="form-control mb-2" id="commentContentInput" placeholder="Add a comment...">
+										<button class="btn btn-primary" id="addCommentButton">Add Comment</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
 
 <div class="row justify-content-center">
 	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
@@ -174,13 +231,13 @@
 
 @section Scripts {
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
 
-<script>
-	$(document).on('click', '.likeBtn', function () {
-		console.log('Button clicked!');
+	<script>
+		$(document).on('click', '.likeBtn', function () {
+			console.log('Button clicked!');
 
 		var button = $(this);
 		var postId = button.data('mpid');
@@ -188,8 +245,8 @@
 			button.prop('disabled', true);
 		console.log('postId:', postId);
 
-		var formData = new FormData();
-		formData.append('MpostId', postId);
+			var formData = new FormData();
+			formData.append('MpostId', postId);
 
 		$.ajax({
 			url: '/Home/AddLikeToMediaPost', // Update the URL to match your endpoint
@@ -201,6 +258,7 @@
 				var currentLikeCount = parseInt(likeCountElement.text(), 10);
 				if (xhr.status === 200) {
 					if (data === "Post Liked") {
+						document.getElementById('likeSound').play();
 						button.prop('disabled', false);
 						button.addClass('active');
 						console.log("like");
@@ -215,113 +273,113 @@
 						button.removeClass('active');
 						likeCountElement.text(currentLikeCount - 1);
 
-						// You may decrement the like count here if needed
+							// You may decrement the like count here if needed
+						}
+					} else {
+						// Handle other status codes or error cases
 					}
-				} else {
-					// Handle other status codes or error cases
-				}
-			},
-			error: function (error) {
-				console.error('AJAX error:', error);
-			}
-		});
-	});
-
-</script>
-
-
-<script>
-	$(document).ready(function () {
-		// Initialize Dropzone
-		var myDropzone = new Dropzone("#dropzone-default", {
-			url: '/Home/AddPost',
-			uploadMultiple: false,
-			maxFiles: 1, // Set maximum number of files to 1
-			acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
-			maxFilesize: 10, // Set maximum file size to 10 MB
-			maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
-			autoProcessQueue: false, // Do not process the queue automatically
-			paramName: 'Image', // Set the parameter name for the file
-			addRemoveLinks: true, // Show remove link on preview
-			parallelUploads: 1, // Upload one file at a time
-			init: function () {
-				var submitButton = document.querySelector("#SavePost");
-
-				// Disable the submit button until the user adds a file
-				submitButton.disabled = true;
-
-				// Listen to the addedfile event to enable the submit button
-				this.on("addedfile", function () {
-					submitButton.disabled = false;
-				});
-
-				// Listen to the removedfile event to disable the submit button if no files are present
-				this.on("removedfile", function () {
-					if (this.files.length === 0) {
-						submitButton.disabled = true;
-					}
-				});
-			}
-		});
-
-		myDropzone.on("uploadprogress", function (file, progress) {
-			// Update the progress bar or any other UI indicator here
-			console.log("Upload progress: " + progress + "%");
-		});
-
-		// Handle the SavePost button click
-		$("#SavePost").click(function () {
-			// Get text data
-			var textData = {
-				CategoryId: $('#categoryDropdownModel').val(),
-				CityId: $('#postInCity').val(),
-				ShortDescription: $('#mediaTitle').val(),
-				LongDescription: $('#mediaDescription').val()
-			};
-
-			// Append text data to FormData
-			var formData = new FormData();
-			for (var key in textData) {
-				formData.append(key, textData[key]);
-			}
-
-			// Append the file from Dropzone to FormData
-			var file = myDropzone.files[0];
-			if (file) {
-				formData.append('Image', file);
-			}
-
-			console.log(formData);
-
-			$.ajax({
-				url: '/Home/AddPost',
-				type: 'POST',
-				data: formData,
-				processData: false,  // Important: Don't process the data
-				contentType: false,  // Important: Don't set content type to 'application/json'
-				success: function (data) {
-					$('#post-container').empty();
-					page = 1;
-					loadMorePosts();
-					// Handle success response if needed
-					$('#success-body').text(data);
-					$('#alertSuccess').show();
-					setTimeout(function () {
-						$('#alertSuccess').hide();
-					}, 3000);
-
 				},
 				error: function (error) {
-					// Handle error response if needed
-					$('#error-body').text(error.responseText);
-					$('#alertDanger').show();
-					setTimeout(function () {
-						$('#alertDanger').hide();
-					}, 3000);
+					console.error('AJAX error:', error);
 				}
 			});
 		});
-	});
+
+	</script>
+
+
+	<script>
+		$(document).ready(function () {
+			// Initialize Dropzone
+			var myDropzone = new Dropzone("#dropzone-default", {
+				url: '/Home/AddPost',
+				uploadMultiple: false,
+				maxFiles: 1, // Set maximum number of files to 1
+				acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
+				maxFilesize: 10, // Set maximum file size to 10 MB
+				maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
+				autoProcessQueue: false, // Do not process the queue automatically
+				paramName: 'Image', // Set the parameter name for the file
+				addRemoveLinks: true, // Show remove link on preview
+				parallelUploads: 1, // Upload one file at a time
+				init: function () {
+					var submitButton = document.querySelector("#SavePost");
+
+					// Disable the submit button until the user adds a file
+					submitButton.disabled = true;
+
+					// Listen to the addedfile event to enable the submit button
+					this.on("addedfile", function () {
+						submitButton.disabled = false;
+					});
+
+					// Listen to the removedfile event to disable the submit button if no files are present
+					this.on("removedfile", function () {
+						if (this.files.length === 0) {
+							submitButton.disabled = true;
+						}
+					});
+				}
+			});
+
+			myDropzone.on("uploadprogress", function (file, progress) {
+				// Update the progress bar or any other UI indicator here
+				console.log("Upload progress: " + progress + "%");
+			});
+
+			// Handle the SavePost button click
+			$("#SavePost").click(function () {
+				// Get text data
+				var textData = {
+					CategoryId: $('#categoryDropdownModel').val(),
+					CityId: $('#postInCity').val(),
+					ShortDescription: $('#mediaTitle').val(),
+					LongDescription: $('#mediaDescription').val()
+				};
+
+				// Append text data to FormData
+				var formData = new FormData();
+				for (var key in textData) {
+					formData.append(key, textData[key]);
+				}
+
+				// Append the file from Dropzone to FormData
+				var file = myDropzone.files[0];
+				if (file) {
+					formData.append('Image', file);
+				}
+
+				console.log(formData);
+
+				$.ajax({
+					url: '/Home/AddPost',
+					type: 'POST',
+					data: formData,
+					processData: false,  // Important: Don't process the data
+					contentType: false,  // Important: Don't set content type to 'application/json'
+					success: function (data) {
+						$('#post-container').empty();
+						page = 1;
+						loadMorePosts();
+						// Handle success response if needed
+						$('#success-body').text(data);
+						$('#alertSuccess').show();
+						setTimeout(function () {
+							$('#alertSuccess').hide();
+						}, 3000);
+
+					},
+					error: function (error) {
+						// Handle error response if needed
+						$('#error-body').text(error.responseText);
+						$('#alertDanger').show();
+						setTimeout(function () {
+							$('#alertDanger').hide();
+						}, 3000);
+					}
+				});
+			});
+		});
 
 
 		function loadMorePosts() {
@@ -356,10 +414,10 @@
 				$('#loadBut').hide();
 			}
 		}
-</script>
-<script>
-    var page = 2; // Initialize the page number for lazy loading
-    var loading = false; // Flag to track if loading is in progress
+	</script>
+	<script>
+		var page = 2; // Initialize the page number for lazy loading
+		var loading = false; // Flag to track if loading is in progress
 
 		$(window).scroll(function () {
 			if (
@@ -412,8 +470,6 @@
 		});
 
 	</script>
-
-
 
 
 	<script>
@@ -478,5 +534,122 @@
 			});
 		});
 	</script>
+
+
+	<script>
+		$(document).ready(function () {
+			let currentPage = 1;
+			let mediaPostId;
+
+
+			$('#commentsModal').on('show.bs.modal', function (event) {
+				mediaPostId = $(event.relatedTarget).data('id');
+				$(window).scroll(function () {
+					if (
+						!commentLoading &&
+						$(window).scrollTop() + $(window).height() >= $(document).height() - 100
+					) {
+						commentLoading = true;
+						loadMoreComments();
+					}
+				});
+
+				console.log($(window).height())
+				console.log($(document).height())
+				loadMoreComments();
+			});
+
+			$('#commentsModal').on('hide.bs.modal', function () {
+				currentPage = 1;
+				$('#commentsContainer').empty();
+				$('#commentPager').show();
+			});
+
+			function displayComments(comments) {
+				let commentsHtml = '';
+				comments.forEach(function (comment) {
+					commentsHtml += `
+						<div class="row align-items-end">
+							<div class="col-auto">
+								<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+							</div>
+							<div class="col col-lg-10 mt-3">
+								<div class="chat-bubble">
+									<div class="chat-bubble-title">
+										<div class="row">
+											<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+											<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+										</div>
+									</div>
+									<div class="chat-bubble-body">
+										<!-- Displaying the comment content -->
+										<p>${comment.commentContent}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						`;
+				});
+				$('#commentsContainer').append(commentsHtml);
+			}
+
+			function loadMoreComments() {
+				$.ajax({
+					url: `/Home/GetMediaPostComments`,
+					type: 'GET',
+					data: { mediaPostId: mediaPostId, page: currentPage },
+					success: function (response) {
+						if (response.length > 0) {
+							if (response.length < 5) {
+								$('#commentPager').hide();
+							}
+							displayComments(response);
+							currentPage++;
+							commentLoading = false;
+							$('#commentsModal').scrollTop($('#commentsModal')[0].scrollHeight);
+						}
+						else {
+							commentLoading = false;
+							$('#commentPager').hide();
+						}
+					},
+					error: function (error) {
+						console.error('Error loading more comments:', error);
+					}
+				});
+			}
+
+			$('#loadMoreComments').on('click', function () {
+				loadMoreComments();
+			});
+
+			$('#addCommentButton').on('click', function () {
+				var commentContent = $('#commentContentInput').val();
+				var formData = new FormData();
+				formData.append('PostId', mediaPostId);
+				formData.append('CommentContent', commentContent);
+
+				$.ajax({
+					url: '/Home/AddCommentToMediaPost',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						$('#commentContentInput').val('');
+						currentPage = 1;
+						$('#commentsContainer').empty();
+						$('#commentPager').show();
+
+						loadMoreComments();
+					},
+					error: function (error) {
+						console.error('Error adding comment:', error);
+					}
+				});
+			});
+		});
+	</script>
+
 
 }
