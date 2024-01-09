@@ -1,6 +1,4 @@
-﻿using AreaBox_V0._1.Data.Model;
-
-namespace AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
+﻿namespace AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
 
 public class UMediaPostCommentsOutputDto
 {
@@ -17,6 +15,8 @@ public class UMediaPostCommentsOutputDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string? ProfilePicture { get; set; }
+    public string MediaPostImage { get; set; }
+
 
 
 }

@@ -161,8 +161,8 @@
 			<div class="modal-body">
 				<div class="row">
 					<!-- Left side for Image -->
-					<div class="col-md-6">
-						<img src="path/to/image.jpg" alt="Post Image" class="img-fluid">
+					<div class="col-md-6 d-flex align-items-center justify-content-center">
+						<img src="" id="mediaPostCommentImage" alt="Post Image" class="img-fluid">
 					</div>
 
 					<!-- Right side for Comments -->
@@ -544,15 +544,20 @@
 
 			$('#commentsModal').on('show.bs.modal', function (event) {
 				mediaPostId = $(event.relatedTarget).data('id');
-				$(window).scroll(function () {
-					if (
-						!commentLoading &&
-						$(window).scrollTop() + $(window).height() >= $(document).height() - 100
-					) {
-						commentLoading = true;
-						loadMoreComments();
-					}
-				});
+
+				mediaPostImage = $(event.relatedTarget).data('postimage');
+				debugger
+				$('#mediaPostCommentImage').attr('src', mediaPostImage);
+				
+				// $(window).scroll(function () {
+				// 	if (
+				// 		!commentLoading &&
+				// 		$(window).scrollTop() + $(window).height() >= $(document).height() - 100
+				// 	) {
+				// 		commentLoading = true;
+				// 		loadMoreComments();
+				// 	}
+				// });
 
 				console.log($(window).height())
 				console.log($(document).height())
@@ -603,6 +608,10 @@
 							if (response.length < 5) {
 								$('#commentPager').hide();
 							}
+							
+							
+
+
 							displayComments(response);
 							currentPage++;
 							commentLoading = false;
