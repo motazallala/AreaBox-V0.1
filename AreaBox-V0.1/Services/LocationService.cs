@@ -1,4 +1,5 @@
 ﻿
+using AreaBox_V0._1.Models.Location;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -29,9 +30,18 @@ namespace AreaBox_V0._1.Services
 			var response = await _httpClient.GetStringAsync(apiUrlWithCoordinates);
 			var data = JsonConvert.DeserializeObject<dynamic>(response);
 
-			var cityId = data.results[0].components["ISO_3166-2"][0].ToString();
+			var key = data.results[0].components["ISO_3166-2"][0].ToString();
+			var country = data.results[0].components["country"].ToString();
+			var city = data.results[0].components["state"].ToString(); 
 
-			return cityId;
+			var geolocationInfo = new GeolocationInfo
+			{
+				Key = key,
+				Country = country,
+				City = city
+			};
+
+			return JsonConvert.SerializeObject(geolocationInfo);
 		}
 	}
 }

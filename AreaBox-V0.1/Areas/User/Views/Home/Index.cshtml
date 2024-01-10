@@ -239,39 +239,39 @@
 		$(document).on('click', '.likeBtn', function () {
 			console.log('Button clicked!');
 
-		var button = $(this);
-		var postId = button.data('mpid');
-		var likeCountElement = button.siblings('.count-post-like');
+			var button = $(this);
+			var postId = button.data('mpid');
+			var likeCountElement = button.siblings('.count-post-like');
 			button.prop('disabled', true);
-		console.log('postId:', postId);
+			console.log('postId:', postId);
 
 			var formData = new FormData();
 			formData.append('MpostId', postId);
 
-		$.ajax({
-			url: '/Home/AddLikeToMediaPost', // Update the URL to match your endpoint
-			type: 'POST',
-			data: formData,
-			processData: false,
-			contentType: false,
-			success: function (data, textStatus, xhr) {
-				var currentLikeCount = parseInt(likeCountElement.text(), 10);
-				if (xhr.status === 200) {
-					if (data === "Post Liked") {
-						document.getElementById('likeSound').play();
-						button.prop('disabled', false);
-						button.addClass('active');
-						console.log("like");
+			$.ajax({
+				url: '/Home/AddLikeToMediaPost', // Update the URL to match your endpoint
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (data, textStatus, xhr) {
+					var currentLikeCount = parseInt(likeCountElement.text(), 10);
+					if (xhr.status === 200) {
+						if (data === "Post Liked") {
+							document.getElementById('likeSound').play();
+							button.prop('disabled', false);
+							button.addClass('active');
+							console.log("like");
 
-						// Increment the like count in the DOM
-							
-						likeCountElement.text(currentLikeCount + 1);
-					} else if (data === "Post Liked Removed") {
+							// Increment the like count in the DOM
+
+							likeCountElement.text(currentLikeCount + 1);
+						} else if (data === "Post Liked Removed") {
 							button.prop('disabled', false);
 
-						console.log("unlike");
-						button.removeClass('active');
-						likeCountElement.text(currentLikeCount - 1);
+							console.log("unlike");
+							button.removeClass('active');
+							likeCountElement.text(currentLikeCount - 1);
 
 							// You may decrement the like count here if needed
 						}
@@ -548,7 +548,7 @@
 				mediaPostImage = $(event.relatedTarget).data('postimage');
 				debugger
 				$('#mediaPostCommentImage').attr('src', mediaPostImage);
-				
+
 				// $(window).scroll(function () {
 				// 	if (
 				// 		!commentLoading &&
@@ -574,26 +574,26 @@
 				let commentsHtml = '';
 				comments.forEach(function (comment) {
 					commentsHtml += `
-						<div class="row align-items-end">
-							<div class="col-auto">
-								<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
-							</div>
-							<div class="col col-lg-10 mt-3">
-								<div class="chat-bubble">
-									<div class="chat-bubble-title">
-										<div class="row">
-											<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
-											<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+								<div class="row align-items-end">
+									<div class="col-auto">
+										<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+									</div>
+									<div class="col col-lg-10 mt-3">
+										<div class="chat-bubble">
+											<div class="chat-bubble-title">
+												<div class="row">
+													<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+													<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+												</div>
+											</div>
+											<div class="chat-bubble-body">
+												<!-- Displaying the comment content -->
+												<p>${comment.commentContent}</p>
+											</div>
 										</div>
 									</div>
-									<div class="chat-bubble-body">
-										<!-- Displaying the comment content -->
-										<p>${comment.commentContent}</p>
-									</div>
 								</div>
-							</div>
-						</div>
-						`;
+								`;
 				});
 				$('#commentsContainer').append(commentsHtml);
 			}
@@ -608,9 +608,6 @@
 							if (response.length < 5) {
 								$('#commentPager').hide();
 							}
-							
-							
-
 
 							displayComments(response);
 							currentPage++;
@@ -632,7 +629,7 @@
 				loadMoreComments();
 			});
 
-			$('#addCommentButton').on('click', function () {
+			function addComment() {
 				var commentContent = $('#commentContentInput').val();
 				var formData = new FormData();
 				formData.append('PostId', mediaPostId);
@@ -649,16 +646,62 @@
 						currentPage = 1;
 						$('#commentsContainer').empty();
 						$('#commentPager').show();
-
 						loadMoreComments();
 					},
 					error: function (error) {
 						console.error('Error adding comment:', error);
 					}
 				});
+			}
+
+			$('#addCommentButton').on('click', function () {
+				addComment();
+			});
+
+			$('#commentContentInput').on('keydown', function (event) {
+				if (event.keyCode === 13) {
+					event.preventDefault();
+					addComment();
+				}
+			});
+
+			$('.commentBtn').on('click', function (event) {
+
+				debugger
+				var mediaPostId = $(this).data('id');
+				var count = $('span[data-mpcommentid="' + mediaPostId + '"]');
+				var currentCommentsCount = parseInt(count.text(), 10);
+				var commentContent = $('input[data-commentinput="' + mediaPostId + '"]').val();
+				var formData = new FormData();
+				formData.append('PostId', mediaPostId);
+				formData.append('CommentContent', commentContent);
+
+				$.ajax({
+					url: '/Home/AddCommentToMediaPost',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						$('input[data-commentinput="' + mediaPostId + '"]').val('');
+						count.text(currentCommentsCount + 1);
+						$('#success-body').text(data);
+						$('#alertSuccess').show();
+						setTimeout(function () {
+							$('#alertSuccess').hide();
+						}, 4000);
+					},
+					error: function (error) {
+						$('#error-body').text(error.responseText);
+						$('#alertDanger').show();
+						setTimeout(function () {
+							$('#alertDanger').hide();
+						}, 4000);
+						console.error('Error adding comment:', error);
+					}
+				});
 			});
 		});
 	</script>
-
 
 }

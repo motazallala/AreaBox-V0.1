@@ -1,4 +1,8 @@
-﻿@{
+﻿@inject UserManager<ApplicationUser> _userManager
+
+
+@{
+	var user = await _userManager.GetUserAsync(User);
 	ViewData["Title"] = "Index";
 }
 
@@ -36,12 +40,25 @@
 					url: `/Chat/GetGeolocation`,
 					type: 'GET',
 					data: { latitude, longitude },
-					success: function (cityId) {
+					success: function (response) {
+						const geolocationInfo = JSON.parse(response);
 						const hiddenInput = document.createElement("input");
+
 						hiddenInput.type = "hidden";
 						hiddenInput.id = "hiddenCityID";
-						hiddenInput.value = cityId;
+						hiddenInput.value = geolocationInfo.key;
+						hiddenInput.setAttribute("data-userid", "@user.Id"); 
 						document.body.appendChild(hiddenInput);
+
+						var optionCountry = document.createElement("option");
+						optionCountry.value = geolocationInfo.Country;
+						optionCountry.textContent = geolocationInfo.Country;
+						document.getElementById("countryDropdown").appendChild(optionCountry);
+
+						var optionCity = document.createElement("option");
+						optionCity.value = geolocationInfo.City;
+						optionCity.textContent = geolocationInfo.City;
+						document.getElementById("cityDropdown").appendChild(optionCity);
 					},
 					error: function (error) {
 						console.error('Error fetching geolocation details:', error);
@@ -61,36 +78,71 @@
 		.withUrl("/chathub")
 		.build();
 
-	connection.on("ReceiveMessage", (userId, message, time) => {
+	connection.on("ReceiveMessage", (userId, userName, userImage, message, time) => {
 		const chatBubbles = document.querySelector(".chat-bubbles");
-
 		const chatItem = document.createElement("div");
-		chatItem.className = "chat-item";
+		const hiddenInput = document.getElementById('hiddenCityID');
 
-		const chatBubble = `
-					<div class="row align-items-end">
-						<div class="col-auto">
-							<span class="avatar"></span>
+		const cuserId = hiddenInput.getAttribute('data-userid');
+		chatItem.className = "chat-item";
+		
+		const currentUserId = cuserId;
+
+		const isCurrentUser = userId === currentUserId;
+
+		const alignmentClass = isCurrentUser ? "justify-content-start" : "justify-content-end";
+		const bubbleClass = isCurrentUser ? "bg-primary text-white" : "bg-light";
+		let chatBubble = ``;
+
+		if (isCurrentUser) { 
+			chatBubble = `
+			<div class="row align-items-end ${alignmentClass}">
+					<div class="col-auto d-flex align-items-center justify-content-center">
+						<span class="avatar" style="background-image: url('${userImage}');""></span>
+				</div>
+				<div class="col col-lg-6">
+					<div class="chat-bubble ${bubbleClass}">
+						<div class="chat-bubble-title">
+							<div class="row">
+								<div class="col chat-bubble-author">${userName}</div>
+								<div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
+							</div>
 						</div>
-						<div class="col col-lg-6">
-							<div class="chat-bubble">
-								<div class="chat-bubble-title">
-									<div class="row">
-										<div class="col chat-bubble-author">${userId}</div>
-										<div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
-									</div>
+						<div class="chat-bubble-body">
+							<p>${message}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
+		}
+		else{
+			chatBubble = `
+				<div class="row align-items-end ${alignmentClass}">
+					<div class="col col-lg-6">
+						<div class="chat-bubble ${bubbleClass}">
+							<div class="chat-bubble-title">
+								<div class="row">
+									<div class="col chat-bubble-author">${userName}</div>
+									<div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
 								</div>
-								<div class="chat-bubble-body">
-									<p>${message}</p>
-								</div>
+							</div>
+							<div class="chat-bubble-body">
+								<p>${message}</p>
 							</div>
 						</div>
 					</div>
-				`;
+					<div class="col-auto">
+						<span class="avatar" style="background-image: url('${userImage}');"></span>
+					</div>
+				</div>
+			`;
+		}
 
 		chatItem.innerHTML = chatBubble;
 		chatBubbles.appendChild(chatItem);
 	});
+
 
 
 	connection.start().catch(err => console.error(err));
