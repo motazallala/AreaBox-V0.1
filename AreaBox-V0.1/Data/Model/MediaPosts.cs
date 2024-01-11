@@ -24,10 +24,13 @@ public class MediaPosts
 
     public string MplongDescription { get; set; }
 
+    public int? LikeCount { get; set; } = 0;
+    public int? CommentCount { get; set; } = 0;
+
     public bool Mpstate { get; set; }
 
     public virtual ICollection<MediaPostLikes> MediaPostsLikes { get; set; } = new List<MediaPostLikes>();
-    public int PostLike => MediaPostsLikes.Count;
+
 
     public virtual ICollection<MediaPostComments> MediaPostComments { get; set; } = new List<MediaPostComments>();
 

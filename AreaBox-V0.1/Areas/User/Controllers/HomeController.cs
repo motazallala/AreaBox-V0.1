@@ -46,7 +46,7 @@ public class HomeController : Controller
         int pages = (int)Math.Ceiling((double)resultCount / PageSize);
         int skip = PageSize * (page - 1);
         int take = PageSize;
-        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes", "MediaPostComments" }, skip, take);
+        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take);
 
         var posts = new UMediaPostIndexDto
         {
@@ -79,7 +79,7 @@ public class HomeController : Controller
         // Retrieve posts from your data source based on the page number
         int skip = PageSize * (page - 1);
         int take = PageSize;
-        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes", "MediaPostComments" }, skip, take);
+        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take);
 
         return PartialView("_MediaPostListPartial", resalt);
     }
@@ -189,9 +189,10 @@ public class HomeController : Controller
             return BadRequest("Choose Post to like ");
         }
 
-        var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.MpostId);
 
-        if (mediapost == false)
+        var mediapost = await db.MediaPosts.GetByIdAsync(input.MpostId);
+
+        if (mediapost == null)
         {
             return NotFound("the post not Exists");
         }
@@ -207,16 +208,18 @@ public class HomeController : Controller
 
         if (resalt == false)
         {
-
             db.MediaPostLikes.Add(newPostLike);
+            mediapost.LikeCount++;
+            db.MediaPosts.Update(mediapost);
             await db.Save();
             return Ok("Post Liked");
         }
         else
         {
-
-
             db.MediaPostLikes.Remove(existingLike);
+
+            mediapost.LikeCount--;
+            db.MediaPosts.Update(mediapost);
             await db.Save();
             return Ok("Post Liked Removed");
         }
@@ -346,9 +349,10 @@ public class HomeController : Controller
             return BadRequest("Choose Post to comment.");
         }
 
-        var mediaPost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == input.PostId);
+        var mediapost = await db.MediaPosts.GetByIdAsync(input.PostId);
 
-        if (mediaPost == false)
+
+        if (mediapost == null)
         {
             return BadRequest("The post not exists!");
         }
@@ -360,8 +364,9 @@ public class HomeController : Controller
             MpcommentContent = input.CommentContent,
             MpcommnetDate = DateTime.Now
         };
-
         db.MediaPostComments.Add(newPostLike);
+        mediapost.CommentCount++;
+        db.MediaPosts.Update(mediapost);
         await db.Save();
         return Ok("Comment has been added");
     }
