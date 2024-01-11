@@ -1,5 +1,7 @@
 ﻿
 
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+
 namespace AreaBox_V0._1.Data.Model;
 
 public class MediaPosts
@@ -30,7 +32,7 @@ public class MediaPosts
     public int PostLike => MediaPostsLikes.Count;
 
     public virtual ICollection<MediaPostComments> MediaPostComments { get; set; } = new List<MediaPostComments>();
-
+    public int CommentCount => MediaPostComments.Count;
 
     public virtual Categories Mpcategory { get; set; }
 
