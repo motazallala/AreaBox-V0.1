@@ -92,6 +92,7 @@ namespace AreaBox_V0._1.Common
                 ;
 
             CreateMap<MediaPostLikes, UMediaPostOutputDto>();
+            
             CreateMap<MediaPosts, UMediaPostOutputDto>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(src => src.MpostId))
                 .ForMember(dest => dest.CategoryId, src => src.MapFrom(src => src.MpcategoryId))
@@ -112,6 +113,6 @@ namespace AreaBox_V0._1.Common
                 .ForMember(dest => dest.CityName, src => src.MapFrom(src => src.Mpcity.CityName))
                 ;
 
-        }
+		}
     }
 }
