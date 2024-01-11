@@ -35,7 +35,6 @@ public class MediaPosts
 
 
     public virtual ICollection<MediaPostComments> MediaPostComments { get; set; } = new List<MediaPostComments>();
-    public int CommentCount => MediaPostComments.Count;
 
     public virtual Categories Mpcategory { get; set; }
 

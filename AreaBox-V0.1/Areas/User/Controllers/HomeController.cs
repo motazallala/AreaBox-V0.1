@@ -158,7 +158,7 @@ public class HomeController : Controller
         }
     }
 
-    [HttpDelete]
+    [HttpPost]
     public async Task<IActionResult> DeleteMediaPost([FromForm] string mediaPostId)
     {
         if (mediaPostId == null)

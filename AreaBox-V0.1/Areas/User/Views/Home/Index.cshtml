@@ -197,9 +197,36 @@
 	</div>
 </div>
 
-
-
-
+<div class="modal modal-blur fade" id="deletePostModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-status bg-danger"></div>
+			<div class="modal-body text-center py-4">
+				<!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+				<svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+				<h3>Are you sure?</h3>
+				<div class="text-secondary">Do you really want to delete this post? What you've done cannot be undone.</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<a class="btn w-100" data-bs-dismiss="modal">
+								Cancel
+							</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-danger w-100" id="deletePostButton" data-bs-dismiss="modal">
+								Delete
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <div class="row justify-content-center">
@@ -291,7 +318,6 @@
 		$(document).ready(function () {
 			// Initialize Dropzone
 			var myDropzone = new Dropzone("#dropzone-default", {
-				url: '/Home/AddPost',
 				uploadMultiple: false,
 				maxFiles: 1, // Set maximum number of files to 1
 				acceptedFiles: 'image/jpeg,image/png', // Accept only JPEG and PNG files
@@ -303,27 +329,43 @@
 				parallelUploads: 1, // Upload one file at a time
 				init: function () {
 					var submitButton = document.querySelector("#SavePost");
+					var self = this; // Store reference to the Dropzone object
 
-					// Disable the submit button until the user adds a file
 					submitButton.disabled = true;
 
-					// Listen to the addedfile event to enable the submit button
 					this.on("addedfile", function () {
 						submitButton.disabled = false;
+						// Start the manual upload simulation
+						simulateUpload();
 					});
 
-					// Listen to the removedfile event to disable the submit button if no files are present
 					this.on("removedfile", function () {
 						if (this.files.length === 0) {
 							submitButton.disabled = true;
 						}
 					});
-				}
-			});
 
-			myDropzone.on("uploadprogress", function (file, progress) {
-				// Update the progress bar or any other UI indicator here
-				console.log("Upload progress: " + progress + "%");
+					function simulateUpload() {
+						var file = self.files[0];
+						var totalSteps = 100; 
+						var currentStep = 0;
+
+						var uploadInterval = setInterval(function () {
+							var random = 15 + Math.random() * 25;
+							currentStep += random;
+							var progress = currentStep;
+
+							self.emit('uploadprogress', file, progress, progress);
+
+							if (currentStep >= totalSteps) {
+								clearInterval(uploadInterval);
+								self.emit('success', file, 'success', null);
+								self.emit('complete', file);
+								self.processQueue();
+							}
+						}, 200); 
+					}
+				}
 			});
 
 			// Handle the SavePost button click
@@ -534,6 +576,49 @@
 		});
 	</script>
 
+	<script>
+		$(document).ready(function () {
+			$('#deletePostModal').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget);
+				var mediaPostId = button.data('mpid'); 
+
+				$('#deletePostButton').data('mpid', mediaPostId); 
+			});
+
+			$('#deletePostButton').on('click', function (event) {
+				var mediaPostId = $(this).data('mpid');
+
+				var formData = new FormData();
+				formData.append('mediaPostId', mediaPostId);
+
+				$.ajax({
+					url: '/Home/DeleteMediaPost',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						$('#post-container').empty();
+						page = 1;
+						loadMorePosts();
+						$('#success-body').text(data);
+						$('#alertSuccess').show();
+						setTimeout(function () {
+							$('#alertSuccess').hide();
+						}, 3000);
+					},
+					error: function (error) {
+						$('#error-body').text(error.responseText);
+						$('#alertDanger').show();
+						setTimeout(function () {
+							$('#alertDanger').hide();
+						}, 3000);
+					}
+				});
+			});
+		});
+	</script>
+
 
 	<script>
 		$(document).ready(function () {
@@ -634,6 +719,14 @@
 				formData.append('PostId', mediaPostId);
 				formData.append('CommentContent', commentContent);
 
+				if (commentContent == '') {
+					$('#error-body').text("Please fill the comment input!");
+					$('#alertDanger').show();
+					setTimeout(function () {
+						$('#alertDanger').hide();
+					}, 4000);
+					return;
+				}
 				$.ajax({
 					url: '/Home/AddCommentToMediaPost',
 					type: 'POST',
@@ -666,11 +759,19 @@
 
 			$('.commentBtn').on('click', function (event) {
 
-				debugger
 				var mediaPostId = $(this).data('id');
 				var count = $('span[data-mpcommentid="' + mediaPostId + '"]');
 				var currentCommentsCount = parseInt(count.text(), 10);
 				var commentContent = $('input[data-commentinput="' + mediaPostId + '"]').val();
+				if (commentContent == ''){
+					$('#error-body').text("Please fill the comment input!");
+					$('#alertDanger').show();
+					setTimeout(function () {
+						$('#alertDanger').hide();
+					}, 4000);
+
+					return;
+				}
 				var formData = new FormData();
 				formData.append('PostId', mediaPostId);
 				formData.append('CommentContent', commentContent);
