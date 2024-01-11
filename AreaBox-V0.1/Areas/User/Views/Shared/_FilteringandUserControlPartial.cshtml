@@ -22,15 +22,13 @@
     <div class="card-body">
         <div class="mb-3">
             <div class="form-label">Country:</div>
-                <select class="form-select" id="countryDropdown" name="Country" disabled>
-            </select>
+                <input class="form-control" id="countryText" name="Country" disabled/>
+        
         </div>
         <div class="mb-3">
 
             <div class="form-label">City:</div>
-            <select class="form-select" id="cityDropdown" name="City" disabled>
-            </select>
-
+                <input class="form-control" type="text" id="cityText" name="City" disabled />
         </div>
         <div class="mb-3">
 
@@ -57,3 +55,25 @@
         Add New Post
     </button>
 </div>
+
+<script defer>
+    // Function to get the value of a cookie by name
+    function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) return match[2];
+    }
+
+    // Retrieve the geolocationInfo cookie value
+    const geolocationInfoCookie = getCookie('geolocationInfo');
+    if (geolocationInfoCookie) {
+        const geolocationInfo = JSON.parse(geolocationInfoCookie);
+
+        document.getElementById('countryText').value = '';
+        document.getElementById('cityText').value = '';
+        // Set the values of the input fields
+        document.getElementById('countryText').value = geolocationInfo.Country;
+        document.getElementById('cityText').value = geolocationInfo.City;
+    } else {
+        console.error('Geolocation info not found in the cookie.');
+    }
+</script>
