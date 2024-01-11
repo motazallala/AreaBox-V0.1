@@ -24,6 +24,40 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script defer>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    $.ajax({
+                        url: `/Chat/GetGeolocation`,
+                        type: 'GET',
+                        data: { latitude, longitude },
+                        success: function (response) {
+                            const geolocationInfo = JSON.parse(response);
+
+                            // Save geolocationInfo in a cookie
+                            document.cookie = `geolocationInfo=${JSON.stringify(geolocationInfo)}; path=/`;
+
+                            // You can perform other actions here if needed
+                        },
+                        error: function (error) {
+                            console.error('Error fetching geolocation details:', error);
+                            $('#loadingPlaceholder').hide();
+                        }
+                    });
+                });
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        });
+
+    </script>
 
     <style>
         @@import url('https://rsms.me/inter/inter.css');
@@ -195,6 +229,7 @@
             </div>
         </div>
     </div>
+
     <!-- Libs JS -->
     <script src="~/tabler/libs/dropzone/dist/dropzone-min.js?1684106062" defer></script>
     <script src="~/tabler/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
@@ -205,6 +240,7 @@
     <script src="~/tabler/js/tabler.min.js?1684106062" defer></script>
     <script src="~/tabler/js/demo.min.js?1684106062" defer></script>
     <script src="~/js/site.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

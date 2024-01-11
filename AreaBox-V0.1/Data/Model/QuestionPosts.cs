@@ -21,6 +21,7 @@ public class QuestionPosts
     public string Qptitle { get; set; }
 
     public string Qpdescription { get; set; }
+    public int? CommentCount { get; set; }
 
     public bool Qpstate { get; set; }
 

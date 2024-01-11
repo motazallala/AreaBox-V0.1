@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AreaBox_V0._1.Migrations
 {
     /// <inheritdoc />
-    public partial class initMig : Migration
+    public partial class intMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -225,7 +225,13 @@ namespace AreaBox_V0._1.Migrations
                     Type = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Details = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    UserEmail = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                    UserEmail = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    ReviewByAdmin = table.Column<bool>(type: "bit", nullable: true),
+                    TechnicalAdminId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Reviewed = table.Column<bool>(type: "bit", nullable: true),
+                    SuperAdminId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    ReviewNote = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Complete = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -235,6 +241,18 @@ namespace AreaBox_V0._1.Migrations
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TechnicalReports_SuperAdmin",
+                        column: x => x.SuperAdminId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TechnicalReports_TechnicalAdmin",
+                        column: x => x.TechnicalAdminId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -316,6 +334,8 @@ namespace AreaBox_V0._1.Migrations
                     MPImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MPShortDescription = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     MPLongDescription = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    LikeCount = table.Column<int>(type: "int", nullable: true),
+                    CommentCount = table.Column<int>(type: "int", nullable: true),
                     MPState = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -349,6 +369,7 @@ namespace AreaBox_V0._1.Migrations
                     QPUserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     QPTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     QPDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommentCount = table.Column<int>(type: "int", nullable: true),
                     QPState = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -388,7 +409,8 @@ namespace AreaBox_V0._1.Migrations
                         name: "FK_MediaPostComments_MediaPosts",
                         column: x => x.MPostID,
                         principalTable: "MediaPosts",
-                        principalColumn: "MPostID");
+                        principalColumn: "MPostID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MediaPostComments_Users",
                         column: x => x.UserId,
@@ -401,7 +423,8 @@ namespace AreaBox_V0._1.Migrations
                 columns: table => new
                 {
                     MPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    Version = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -447,6 +470,28 @@ namespace AreaBox_V0._1.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserMediaPosts",
+                columns: table => new
+                {
+                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    MpostId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserMediaPosts", x => new { x.UserID, x.MpostId });
+                    table.ForeignKey(
+                        name: "FK_UserMediaPostSave_AspNetUsers",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserMediaPostSave_MediaPosts",
+                        column: x => x.MpostId,
+                        principalTable: "MediaPosts",
+                        principalColumn: "MPostID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "QuestionPostComments",
                 columns: table => new
                 {
@@ -463,7 +508,8 @@ namespace AreaBox_V0._1.Migrations
                         name: "FK_QuestionPostComments_QuestionPosts",
                         column: x => x.QPostID,
                         principalTable: "QuestionPosts",
-                        principalColumn: "QPostID");
+                        principalColumn: "QPostID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_QuestionPostComments_Users",
                         column: x => x.UserId,
@@ -497,6 +543,28 @@ namespace AreaBox_V0._1.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserQuestionPosts",
+                columns: table => new
+                {
+                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    QpostId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserQuestionPosts", x => new { x.UserID, x.QpostId });
+                    table.ForeignKey(
+                        name: "FK_UserQuestionPostSave_AspNetUsers",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserQuestionPostSave_QuestionPosts",
+                        column: x => x.QpostId,
+                        principalTable: "QuestionPosts",
+                        principalColumn: "QPostID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -634,6 +702,16 @@ namespace AreaBox_V0._1.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TechnicalReports_SuperAdminId",
+                table: "TechnicalReports",
+                column: "SuperAdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TechnicalReports_TechnicalAdminId",
+                table: "TechnicalReports",
+                column: "TechnicalAdminId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TechnicalReports_UserID",
                 table: "TechnicalReports",
                 column: "UserID");
@@ -642,6 +720,16 @@ namespace AreaBox_V0._1.Migrations
                 name: "IX_UserCategories_CategoryId",
                 table: "UserCategories",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserMediaPosts_MpostId",
+                table: "UserMediaPosts",
+                column: "MpostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserQuestionPosts_QpostId",
+                table: "UserQuestionPosts",
+                column: "QpostId");
         }
 
         /// <inheritdoc />
@@ -684,13 +772,19 @@ namespace AreaBox_V0._1.Migrations
                 name: "UserCategories");
 
             migrationBuilder.DropTable(
+                name: "UserMediaPosts");
+
+            migrationBuilder.DropTable(
+                name: "UserQuestionPosts");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "MediaPosts");
+                name: "PostReports");
 
             migrationBuilder.DropTable(
-                name: "PostReports");
+                name: "MediaPosts");
 
             migrationBuilder.DropTable(
                 name: "QuestionPosts");
