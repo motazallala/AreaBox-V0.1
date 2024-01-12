@@ -4,6 +4,7 @@ using AreaBox_V0._1.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaBox_V0._1.Migrations
 {
     [DbContext(typeof(AreaBoxDbContext))]
-    partial class AreaBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112021853_addCascadeMediaPostReport")]
+    partial class addCascadeMediaPostReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -829,7 +832,7 @@ namespace AreaBox_V0._1.Migrations
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostsReports", b =>
                 {
                     b.HasOne("AreaBox_V0._1.Data.Model.MediaPosts", "Mpost")
-                        .WithMany("MediaPostsReports")
+                        .WithMany()
                         .HasForeignKey("MpostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -1124,8 +1127,6 @@ namespace AreaBox_V0._1.Migrations
                     b.Navigation("MediaPostComments");
 
                     b.Navigation("MediaPostsLikes");
-
-                    b.Navigation("MediaPostsReports");
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostType", b =>

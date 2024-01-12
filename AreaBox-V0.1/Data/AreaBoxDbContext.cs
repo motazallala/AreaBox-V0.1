@@ -202,7 +202,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Mpost).WithMany(l => l.MediaPostsLikes)
                 .HasForeignKey(d => d.MpostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_MediaPostLikes_MediaPosts");
 
             entity.HasOne(d => d.User).WithMany()
@@ -269,14 +269,15 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasColumnName("MPostID");
             entity.Property(e => e.PostReportId).HasColumnName("PostReportID");
 
-            entity.HasOne(d => d.Mpost).WithMany()
+
+
+            entity.HasOne(d => d.Mpost).WithMany(p => p.MediaPostsReports)
                 .HasForeignKey(d => d.MpostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_MediaPostsReports_MediaPosts");
 
-            entity.HasOne(d => d.PostReport).WithMany()
-                .HasForeignKey(d => d.PostReportId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+            entity.HasOne(d => d.PostReport).WithOne()
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_MediaPostsReports_ReportTypes");
             entity.HasOne(d => d.User).WithMany(d => d.MediaPostsReports)
                 .HasForeignKey(d => d.UserId)

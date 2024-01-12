@@ -1,4 +1,5 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.UserManagementDto.send;
+using AreaBox_V0._1.Consts;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
@@ -20,7 +21,7 @@ public class UserManagementController : Controller
 		int take = pageSize;
 		IEnumerable<ApplicationUserDto> result;
 		int resultsCount;
-		result = await db.Users.FindAndFilter<ApplicationUser, ApplicationUserDto>(null, skip, take,
+		result = await db.Users.FindAndFilter<ApplicationUser, ApplicationUserDto>(null, skip, take, e => e.UserName, OrderBy.Ascending,
 																					SearchType == "phonenumber" && Search != null ? x => x.PhoneNumber.Contains(Search) : x => true,
 																					SearchType == "email" && Search != null ? x => x.Email.Contains(Search) : x => true,
 																					SearchType == "username" && Search != null ? x => x.UserName.Contains(Search) : x => true);
