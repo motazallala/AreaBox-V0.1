@@ -53,7 +53,6 @@
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Models\UMediaPostDto\input\" />
     <Folder Include="Areas\User\Models\UQuestionPostCommentsDto\Input\" />
-    <Folder Include="Areas\User\Models\UQuestionPostDto\Input\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,9 @@
-﻿@model List<AreaBox_V0._1.Models.Dto.QuestionPostsDto>
+﻿@inject UserManager<ApplicationUser> userManager;
+@model List<AreaBox_V0._1.Models.Dto.QuestionPostsDto>
+
+@{
+    var currentUserId = (await userManager.GetUserAsync(User))?.Id;
+}
 
 @foreach (var post in Model)
 {
@@ -32,6 +37,26 @@
                                             <div class="dropdown-menu dropdown-menu-end">
                                                 <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportQPostModal" data-id="@post.Id">Report The Post</a>
                                                 <a class="dropdown-item" style="cursor: pointer;">Save Post</a>
+                                                @if (post.UserId == currentUserId)
+                                                {
+                                                    <a class="dropdown-item text-dark hover-text-primary"
+                                                       style="cursor: pointer; transition: color 0.3s;"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#editQPostModal"
+                                                       data-qpid="@post.Id">
+                                                        Edit Post
+                                                    </a>
+                                                }
+                                                @if (post.UserId == currentUserId)
+                                                {
+                                                    <a class="dropdown-item text-dark hover-text-primary"
+                                                       style="cursor: pointer; transition: color 0.3s;"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#deleteQPostModal"
+                                                       data-qpid="@post.Id">
+                                                        Delete Post
+                                                    </a>
+                                                }
                                             </div>
                                         </div>
                                     </div>
