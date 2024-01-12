@@ -131,7 +131,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.Cities", b =>
@@ -156,7 +156,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.Countries", b =>
@@ -175,7 +175,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasKey("CountryId");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostComments", b =>
@@ -209,7 +209,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MediaPostComments");
+                    b.ToTable("MediaPostComments", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostLikes", b =>
@@ -234,7 +234,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MediaPostLikes");
+                    b.ToTable("MediaPostLikes", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPosts", b =>
@@ -242,6 +242,12 @@ namespace AreaBox_V0._1.Migrations
                     b.Property<string>("MpostId")
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("MPostID");
+
+                    b.Property<int?>("CommentCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LikeCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("MpcategoryId")
                         .HasColumnType("int")
@@ -290,7 +296,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("MpuserId");
 
-                    b.ToTable("MediaPosts");
+                    b.ToTable("MediaPosts", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.MediaPostsReports", b =>
@@ -315,7 +321,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex(new[] { "PostReportId" }, "IX_MediaPostsReports_PostReportID");
 
-                    b.ToTable("MediaPostsReports");
+                    b.ToTable("MediaPostsReports", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostReports", b =>
@@ -339,7 +345,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("ReportTypeId");
 
-                    b.ToTable("PostReports");
+                    b.ToTable("PostReports", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.PostType", b =>
@@ -356,7 +362,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasKey("PostTypeId");
 
-                    b.ToTable("PostTypes");
+                    b.ToTable("PostTypes", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPostComments", b =>
@@ -390,7 +396,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionPostComments");
+                    b.ToTable("QuestionPostComments", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPosts", b =>
@@ -398,6 +404,9 @@ namespace AreaBox_V0._1.Migrations
                     b.Property<string>("QpostId")
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("QPostID");
+
+                    b.Property<int?>("CommentCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("QpcategoryId")
                         .HasColumnType("int")
@@ -440,7 +449,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("QpuserId");
 
-                    b.ToTable("QuestionPosts");
+                    b.ToTable("QuestionPosts", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.QuestionPostsReports", b =>
@@ -464,7 +473,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionPostsReports");
+                    b.ToTable("QuestionPostsReports", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.ReportTypes", b =>
@@ -484,7 +493,7 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasKey("ReportTypeId");
 
-                    b.ToTable("ReportTypes");
+                    b.ToTable("ReportTypes", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.TechnicalReports", b =>
@@ -496,9 +505,33 @@ namespace AreaBox_V0._1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TechnicalReportId"));
 
+                    b.Property<bool?>("Complete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Details")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("ReviewByAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReviewNote")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("ReviewNote");
+
+                    b.Property<bool?>("Reviewed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SuperAdminId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("SuperAdminId");
+
+                    b.Property<string>("TechnicalAdminId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("TechnicalAdminId");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -518,9 +551,13 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasKey("TechnicalReportId");
 
+                    b.HasIndex("SuperAdminId");
+
+                    b.HasIndex("TechnicalAdminId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("TechnicalReports");
+                    b.ToTable("TechnicalReports", (string)null);
                 });
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserCategories", b =>
@@ -537,7 +574,41 @@ namespace AreaBox_V0._1.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("UserCategories");
+                    b.ToTable("UserCategories", (string)null);
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserMediaPostSave", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserID");
+
+                    b.Property<string>("MpostId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "MpostId");
+
+                    b.HasIndex("MpostId");
+
+                    b.ToTable("UserMediaPosts", (string)null);
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserQuestionPostSave", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserID");
+
+                    b.Property<string>("QpostId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "QpostId");
+
+                    b.HasIndex("QpostId");
+
+                    b.ToTable("UserQuestionPosts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -693,6 +764,7 @@ namespace AreaBox_V0._1.Migrations
                     b.HasOne("AreaBox_V0._1.Data.Model.MediaPosts", "Mpost")
                         .WithMany("MediaPostComments")
                         .HasForeignKey("MpostId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostComments_MediaPosts");
 
@@ -804,6 +876,7 @@ namespace AreaBox_V0._1.Migrations
                     b.HasOne("AreaBox_V0._1.Data.Model.QuestionPosts", "Qpost")
                         .WithMany("QuestionPostComments")
                         .HasForeignKey("QpostId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_QuestionPostComments_QuestionPosts");
 
@@ -874,11 +947,27 @@ namespace AreaBox_V0._1.Migrations
 
             modelBuilder.Entity("AreaBox_V0._1.Data.Model.TechnicalReports", b =>
                 {
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "SuperAdmin")
+                        .WithMany()
+                        .HasForeignKey("SuperAdminId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("FK_TechnicalReports_SuperAdmin");
+
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "TechnicalAdmin")
+                        .WithMany()
+                        .HasForeignKey("TechnicalAdminId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("FK_TechnicalReports_TechnicalAdmin");
+
                     b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "User")
                         .WithMany("TechnicalReports")
                         .HasForeignKey("UserId")
                         .IsRequired()
                         .HasConstraintName("FK_TechnicalReports_AspNetUsers");
+
+                    b.Navigation("SuperAdmin");
+
+                    b.Navigation("TechnicalAdmin");
 
                     b.Navigation("User");
                 });
@@ -898,6 +987,44 @@ namespace AreaBox_V0._1.Migrations
                         .HasConstraintName("FK_UserCategories_AspNetUsers");
 
                     b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserMediaPostSave", b =>
+                {
+                    b.HasOne("AreaBox_V0._1.Data.Model.MediaPosts", "MediaPosts")
+                        .WithMany()
+                        .HasForeignKey("MpostId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserMediaPostSave_MediaPosts");
+
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserMediaPostSave_AspNetUsers");
+
+                    b.Navigation("MediaPosts");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AreaBox_V0._1.Data.Model.UserQuestionPostSave", b =>
+                {
+                    b.HasOne("AreaBox_V0._1.Data.Model.QuestionPosts", "QuestionPosts")
+                        .WithMany()
+                        .HasForeignKey("QpostId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserQuestionPostSave_QuestionPosts");
+
+                    b.HasOne("AreaBox_V0._1.Data.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserQuestionPostSave_AspNetUsers");
+
+                    b.Navigation("QuestionPosts");
 
                     b.Navigation("User");
                 });

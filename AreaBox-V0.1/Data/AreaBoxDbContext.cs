@@ -16,6 +16,8 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<Categories> Categories { get; set; }
     public virtual DbSet<UserCategories> UserCategories { get; set; }
+    public virtual DbSet<UserMediaPostSave> UserMediaPosts { get; set; }
+    public virtual DbSet<UserQuestionPostSave> UserQuestionPosts { get; set; }
 
     public virtual DbSet<Cities> Cities { get; set; }
 
@@ -110,7 +112,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Mpost).WithMany(p => p.MediaPostComments)
                 .HasForeignKey(d => d.MpostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_MediaPostComments_MediaPosts");
 
             entity.HasOne(d => d.User).WithMany(p => p.MediaPostComments)
@@ -138,6 +140,51 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserCategories_AspNetUsers");
+        });
+
+
+        modelBuilder.Entity<UserMediaPostSave>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.MpostId });
+
+            entity.Property(e => e.MpostId)
+                .IsRequired();
+            entity.Property(e => e.UserId)
+                .IsRequired()
+                .HasMaxLength(450)
+                .HasColumnName("UserID");
+
+            entity.HasOne(d => d.MediaPosts).WithMany()
+                .HasForeignKey(d => d.MpostId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserMediaPostSave_MediaPosts");
+
+            entity.HasOne(d => d.User).WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserMediaPostSave_AspNetUsers");
+        });
+
+        modelBuilder.Entity<UserQuestionPostSave>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.QpostId });
+
+            entity.Property(e => e.QpostId)
+                .IsRequired();
+            entity.Property(e => e.UserId)
+                .IsRequired()
+                .HasMaxLength(450)
+                .HasColumnName("UserID");
+
+            entity.HasOne(d => d.QuestionPosts).WithMany()
+                .HasForeignKey(d => d.QpostId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserQuestionPostSave_QuestionPosts");
+
+            entity.HasOne(d => d.User).WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserQuestionPostSave_AspNetUsers");
         });
 
         modelBuilder.Entity<MediaPostLikes>(entity =>
@@ -190,6 +237,8 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .IsRequired()
                 .HasMaxLength(450)
                 .HasColumnName("MPUserID");
+
+
 
             entity.HasOne(d => d.Mpcategory).WithMany(p => p.MediaPosts)
                 .HasForeignKey(d => d.MpcategoryId)
@@ -253,7 +302,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Qpost).WithMany(p => p.QuestionPostComments)
                 .HasForeignKey(d => d.QpostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_QuestionPostComments_QuestionPosts");
 
             entity.HasOne(d => d.User).WithMany(p => p.QuestionPostComments)
@@ -362,10 +411,37 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasMaxLength(450)
                 .HasColumnName("UserID");
 
+
+            entity.Property(e => e.SuperAdminId)
+                .HasMaxLength(450)
+                .HasColumnName("SuperAdminId");
+
+            entity.Property(e => e.TechnicalAdminId)
+                .HasMaxLength(450)
+                .HasColumnName("TechnicalAdminId");
+
+            entity.Property(e => e.ReviewNote)
+                .HasMaxLength(450)
+                .HasColumnName("ReviewNote");
+
             entity.HasOne(d => d.User).WithMany(p => p.TechnicalReports)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TechnicalReports_AspNetUsers");
+
+            // Relationship with the technical admin
+            entity.HasOne(d => d.TechnicalAdmin)
+                .WithMany()
+                .HasForeignKey(d => d.TechnicalAdminId)
+                .HasConstraintName("FK_TechnicalReports_TechnicalAdmin")
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relationship with the super admin
+            entity.HasOne(d => d.SuperAdmin)
+                .WithMany()
+                .HasForeignKey(d => d.SuperAdminId)
+                .HasConstraintName("FK_TechnicalReports_SuperAdmin")
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
 

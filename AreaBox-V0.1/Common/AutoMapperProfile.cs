@@ -28,7 +28,6 @@ namespace AreaBox_V0._1.Common
                 .ForMember(dest => dest.ShortDescription, src => src.MapFrom(src => src.MpshortDescription))
                 .ForMember(dest => dest.LongDescription, src => src.MapFrom(src => src.MplongDescription))
                 .ForMember(dest => dest.MediaPostLikes, opt => opt.MapFrom(src => src.MediaPostsLikes))
-                .ForMember(dest => dest.PostLike, src => src.MapFrom(src => src.PostLike))
                 .ForMember(dest => dest.MediaPostComments, opt => opt.MapFrom(src => src.MediaPostComments))
                 .ForMember(dest => dest.Category, src => src.MapFrom(src => src.Mpcategory))
                 .ForMember(dest => dest.User, src => src.MapFrom(src => src.Mpuser))
@@ -93,6 +92,7 @@ namespace AreaBox_V0._1.Common
                 ;
 
             CreateMap<MediaPostLikes, UMediaPostOutputDto>();
+            
             CreateMap<MediaPosts, UMediaPostOutputDto>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(src => src.MpostId))
                 .ForMember(dest => dest.CategoryId, src => src.MapFrom(src => src.MpcategoryId))
@@ -104,16 +104,15 @@ namespace AreaBox_V0._1.Common
                 .ForMember(dest => dest.Image, src => src.MapFrom(src => src.Mpimage))
                 .ForMember(dest => dest.ShortDescription, src => src.MapFrom(src => src.MpshortDescription))
                 .ForMember(dest => dest.LongDescription, src => src.MapFrom(src => src.MplongDescription))
-                .ForMember(dest => dest.CountPostLike, opt => opt.MapFrom(src => src.PostLike))
+                .ForMember(dest => dest.CountPostLike, src => src.MapFrom(src => src.LikeCount))
                 .ForMember(dest => dest.CountMediaPostComments, opt => opt.MapFrom(src => src.CommentCount))
-                .ForMember(dest => dest.MediaPostsLikes, src => src.MapFrom(src => src.MediaPostsLikes.Where(x => x.UserId == src.MpuserId).ToList()))
+                .ForMember(dest => dest.MediaPostsLikes, src => src.MapFrom(src => src.MediaPostsLikes))
                 .ForMember(dest => dest.UserName, src => src.MapFrom(src => src.Mpuser.UserName))
                 .ForMember(dest => dest.UserProfilePicture, src => src.MapFrom(src => src.Mpuser.ProfilePicture))
                 .ForMember(dest => dest.CountryName, src => src.MapFrom(src => src.Mpcity.Country.CountryName))
                 .ForMember(dest => dest.CityName, src => src.MapFrom(src => src.Mpcity.CityName))
-
                 ;
 
-        }
+		}
     }
 }
