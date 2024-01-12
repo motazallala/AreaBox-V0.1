@@ -27,37 +27,24 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script defer>
-
         document.addEventListener("DOMContentLoaded", function () {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
 
-                    $.ajax({
-                        url: `/Chat/GetGeolocation`,
-                        type: 'GET',
-                        data: { latitude, longitude },
-                        success: function (response) {
-                            const geolocationInfo = JSON.parse(response);
+                    // Save latitude and longitude in the cookie
+                    document.cookie = `latitude=${latitude}; path=/`;
+                    document.cookie = `longitude=${longitude}; path=/`;
 
-                            // Save geolocationInfo in a cookie
-                            document.cookie = `geolocationInfo=${JSON.stringify(geolocationInfo)}; path=/`;
-
-                            // You can perform other actions here if needed
-                        },
-                        error: function (error) {
-                            console.error('Error fetching geolocation details:', error);
-                            $('#loadingPlaceholder').hide();
-                        }
-                    });
+                    // You can perform other actions here if needed
                 });
             } else {
                 console.error("Geolocation is not supported by this browser.");
             }
         });
-
     </script>
+
 
     <style>
         @@import url('https://rsms.me/inter/inter.css');
