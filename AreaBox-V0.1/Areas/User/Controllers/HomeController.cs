@@ -58,7 +58,6 @@ public class HomeController : Controller
             var loc = await location.GetGeolocationObject(latitude, longitude);
 
 
-
             int resultCount = await db.MediaPosts.Count<MediaPosts>(e => e.Mpcity.CityName == loc.City);
             int pages = (int)Math.Ceiling((double)resultCount / PageSize);
             int skip = PageSize * (page - 1);
@@ -104,12 +103,6 @@ public class HomeController : Controller
     public async Task<ActionResult> GetMediaPostPartialList(int page = 1)
     {
         var geolocationInfoCookie = Request.Cookies["geolocationInfo"];
-
-
-
-
-
-
         var latitudeCookie = Request.Cookies["latitude"];
         var longitudeCookie = Request.Cookies["longitude"];
 
@@ -130,7 +123,6 @@ public class HomeController : Controller
                                                                                                 loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true);
 
             return PartialView("_MediaPostListPartial", resalt);
-
 
         }
         else
@@ -375,16 +367,18 @@ public class HomeController : Controller
         {
             return BadRequest("the post not Exists");
         }
-        int resultCount = await db.MediaPostComments.Count<MediaPostComments>();
+
+        int resultCount = await db.MediaPostComments.Count<MediaPostComments>(e=>e.MpostId == mediaPostId);
         int pages = (int)Math.Ceiling((double)resultCount / PageSize);
+
         if (page > pages)
         {
             return Ok("no more posts");
-
         }
+
         int skip = PageSize * (page - 1);
         int take = PageSize;
-        var resalt = await db.MediaPostComments.FindAndFilter<MediaPostComments, UMediaPostCommentsOutputDto>(new[] { "User", "Mpost" }, skip, take, e => e.MpostId == mediaPostId);
+        var resalt = await db.MediaPostComments.FindAndFilter<MediaPostComments, UMediaPostCommentsOutputDto>(new[] { "User", "Mpost" }, skip, take, e => e.MpcommnetDate, OrderBy.Descending, e => e.MpostId == mediaPostId);
         return Ok(resalt);
     }
 

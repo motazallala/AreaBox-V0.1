@@ -226,7 +226,7 @@ public class QandAController : Controller
 			return BadRequest("The post not exists");
 		}
 
-		var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>(new[] { "PostReports" });
+		var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>();
 		return Ok(resalt);
 	}
 

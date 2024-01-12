@@ -81,6 +81,16 @@
                                     <a class="dropdown-item text-dark hover-text-primary"
                                        style="cursor: pointer; transition: color 0.3s;"
                                        data-bs-toggle="modal"
+                                       data-bs-target="#editPostModal"
+                                       data-mpid="@post.Id">
+                                        Edit Post
+                                    </a>
+                                }
+                                @if (post.UserId == currentUserId)
+                                {
+                                    <a class="dropdown-item text-dark hover-text-primary"
+                                       style="cursor: pointer; transition: color 0.3s;"
+                                       data-bs-toggle="modal"
                                        data-bs-target="#deletePostModal"
                                        data-mpid="@post.Id">
                                         Delete Post

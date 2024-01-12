@@ -228,6 +228,40 @@
 	</div>
 </div>
 
+<div class="modal modal-blur" id="editPostModal" data-bs-backdrop="static" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Question Post</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="editPostId" />
+				<div class="row mb-3 align-items-end">
+					<div class="col">
+						<label class="form-label">Question Title</label>
+						<input type="text" class="form-control" id="editQuestionTitle" />
+					</div>
+				</div>
+				<div>
+					<label class="form-label">Question Description</label>
+					<textarea class="form-control" data-bs-toggle="autosize" id="editQuestionDescription" placeholder="Type something…"></textarea>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label"></label>
+					<select class="form-select" id="editCategoryDropdownModel" name="Category">
+					</select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="updatePost" data-bs-dismiss="modal">Update Post</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div class="row justify-content-center">
 	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
@@ -658,26 +692,26 @@
 				let commentsHtml = '';
 				comments.forEach(function (comment) {
 					commentsHtml += `
-								<div class="row align-items-end">
-									<div class="col-auto">
-										<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
-									</div>
-									<div class="col col-lg-10 mt-3">
-										<div class="chat-bubble">
-											<div class="chat-bubble-title">
-												<div class="row">
-													<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
-													<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+										<div class="row align-items-end">
+											<div class="col-auto">
+												<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+											</div>
+											<div class="col col-lg-10 mt-3">
+												<div class="chat-bubble">
+													<div class="chat-bubble-title">
+														<div class="row">
+															<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+															<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+														</div>
+													</div>
+													<div class="chat-bubble-body">
+														<!-- Displaying the comment content -->
+														<p>${comment.commentContent}</p>
+													</div>
 												</div>
 											</div>
-											<div class="chat-bubble-body">
-												<!-- Displaying the comment content -->
-												<p>${comment.commentContent}</p>
-											</div>
 										</div>
-									</div>
-								</div>
-								`;
+										`;
 				});
 				$('#commentsContainer').append(commentsHtml);
 			}
@@ -688,6 +722,9 @@
 					type: 'GET',
 					data: { mediaPostId: mediaPostId, page: currentPage },
 					success: function (response) {
+						if (response == 'no more posts'){
+							$('#commentPager').hide();
+						}
 						if (response.length > 0) {
 							if (response.length < 5) {
 								$('#commentPager').hide();
@@ -719,14 +756,6 @@
 				formData.append('PostId', mediaPostId);
 				formData.append('CommentContent', commentContent);
 
-				if (commentContent == '') {
-					$('#error-body').text("Please fill the comment input!");
-					$('#alertDanger').show();
-					setTimeout(function () {
-						$('#alertDanger').hide();
-					}, 4000);
-					return;
-				}
 				$.ajax({
 					url: '/Home/AddCommentToMediaPost',
 					type: 'POST',
@@ -759,19 +788,11 @@
 
 			$('.commentBtn').on('click', function (event) {
 
+				debugger
 				var mediaPostId = $(this).data('id');
 				var count = $('span[data-mpcommentid="' + mediaPostId + '"]');
 				var currentCommentsCount = parseInt(count.text(), 10);
 				var commentContent = $('input[data-commentinput="' + mediaPostId + '"]').val();
-				if (commentContent == ''){
-					$('#error-body').text("Please fill the comment input!");
-					$('#alertDanger').show();
-					setTimeout(function () {
-						$('#alertDanger').hide();
-					}, 4000);
-
-					return;
-				}
 				var formData = new FormData();
 				formData.append('PostId', mediaPostId);
 				formData.append('CommentContent', commentContent);
