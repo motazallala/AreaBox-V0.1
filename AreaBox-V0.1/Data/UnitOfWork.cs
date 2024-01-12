@@ -23,9 +23,7 @@ public class UnitOfWork : IUnitOfWork
 
 	public IMediaPostReportsRepository MediaPostReports { get; private set; }
 
-	public IPostReportsRepository PostReports { get; private set; }
 
-	public IPostTypeRepository PostTypes { get; private set; }
 
 	public IQuestionPostCommentsRepository QuestionPostComments { get; private set; }
 
@@ -56,8 +54,6 @@ public class UnitOfWork : IUnitOfWork
 		MediaPostLikes = new MediaPostLikesRepository(db, mapper);
 		MediaPosts = new MediaPostRepository(db, mapper);
 		MediaPostReports = new MediaPostReportsRepository(db, mapper);
-		PostReports = new PostReportsRepository(db, mapper);
-		PostTypes = new PostTypeRepository(db, mapper);
 		QuestionPostComments = new QuestionPostCommentsRepository(db, mapper);
 		QuestionPosts = new QuestionPostRepository(db, mapper);
 		QuestionPostsReports = new QuestionPostReportsRepository(db, mapper);

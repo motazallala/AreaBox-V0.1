@@ -176,23 +176,13 @@ public class QandAController : Controller
 		{
 			return BadRequest("You have already reported this post.");
 		}
-		var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "QAPost");
-		var newReport = new PostReports
-		{
-			ReportTypeId = inputReport.ReportTypeId,
-			PostTypeId = postType.PostTypeId
-		};
-
-
-		db.PostReports.Add(newReport);
-		await db.Save();
 
 
 		var newQuestionReport = new QuestionPostsReports
 		{
 			UserId = userId,
 			QpostId = inputReport.QpostId,
-			PostReportId = newReport.PostReportId,
+			ReportTypeId = inputReport.ReportTypeId,
 
 		};
 

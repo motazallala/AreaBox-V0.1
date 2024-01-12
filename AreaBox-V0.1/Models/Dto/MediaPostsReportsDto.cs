@@ -2,7 +2,7 @@
 
 public class MediaPostsReportsDto
 {
-    public int PostReportId { get; set; }
+    public int ReportTypeId { get; set; }
 
     public string MpostId { get; set; }
 
@@ -12,6 +12,7 @@ public class MediaPostsReportsDto
 
     public virtual MediaPostsDto Mpost { get; set; }
 
-    public virtual PostReportsDto PostReport { get; set; }
+    public virtual ReportTypesDto ReportType { get; set; }
+
 
 }

@@ -38,7 +38,7 @@
 											</span>
 										</td>
 										<td>
-                                            <button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#QPReportModal" data-id="@item.PostReportId">
+                                            <button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#QPReportModal" data-postid="@item.QpostId" data-userid="@item.UserId">
 												View
 											</button>
 										</td>
@@ -96,25 +96,26 @@
     $(document).ready(function () {
         $('#QPReportModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
-            var QPReportId = button.data('id');
+            var postid = button.data('postid');
+            var userid = button.data('userid');
+            
 
             $('#loadingPlaceholder').show();
             $('#actualContent').hide();
 
             $.ajax({
-                url: `/AdminApi/GetQPReportDetails/${QPReportId}`,
+                url: `/AdminApi/GetQPReportDetails/${postid}`,
                 type: 'GET',
-                data: { id: QPReportId },
+                data: { userId: userid, postId: postid },  // Use the correct parameter names
                 success: function (data) {
                     $('#loadingPlaceholder').hide();
                     $('#actualContent').show();
                     $('#mediaDetails').html(`
-                                                <p>Report Id: ${data.reportId}</p>
-                                                <p>User Name: ${data.userName}</p>
-                                                <p>User Email: ${data.userEmail}</p>
-                                                <p>Report Type: ${data.type}</p>
-                                                <p>Report Description: ${data.description}</p>
-                                        `);
+                            <p>User Name: ${data.userName}</p>
+                            <p>User Email: ${data.userEmail}</p>
+                            <p>Report Type: ${data.type}</p>
+                            <p>Report Description: ${data.description}</p>
+                        `);
                 },
                 error: function (error) {
                     console.error('Error fetching media details:', error);
@@ -124,4 +125,5 @@
         });
     });
 </script>
+
 

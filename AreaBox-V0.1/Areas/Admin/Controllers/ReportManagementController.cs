@@ -54,7 +54,7 @@ public class ReportManagementController : Controller
         }
         int skip = pageSize * (id - 1);
         int take = pageSize;
-        var result = await db.MediaPostReports.FindAndFilter<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "PostReport", "User" }, skip, take);
+        var result = await db.MediaPostReports.FindAndFilter<MediaPostsReports, MediaPostsReportsDto>(new[] { "Mpost", "User" }, skip, take);
 
 
 
@@ -96,7 +96,7 @@ public class ReportManagementController : Controller
         }
         int take = pageSize;
         int skip = pageSize * (id - 1);
-        var result = await db.QuestionPostsReports.FindAndFilter<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "PostReports", "User" }, skip, take);
+        var result = await db.QuestionPostsReports.FindAndFilter<QuestionPostsReports, QuestionPostsReportsDto>(new[] { "Qpost", "User" }, skip, take);
 
 
 
@@ -118,11 +118,7 @@ public class ReportManagementController : Controller
         return View(questionPostsReportPaging);
 
     }
-    public async Task<IActionResult> Details(string id)
-    {
-        var getReport = await db.PostReports.GetByIdAsync(id);
-        return View(getReport);
-    }
+
 
     public async Task<IActionResult> Disable(Guid id)
     {
