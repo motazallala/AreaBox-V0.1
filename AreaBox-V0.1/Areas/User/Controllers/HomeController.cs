@@ -213,25 +213,25 @@ public class HomeController : Controller
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> DeleteMediaPost([FromForm] string mediaPostId)
-    {
-        if (mediaPostId == null)
-        {
-            return BadRequest("Choose post to delete");
-        }
-        var isExist = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
-        if (isExist == false)
-        {
-            return NotFound("the post not Found");
-        }
-        var itemToDelete = await db.MediaPosts.GetByIdAsync(mediaPostId);
-        db.MediaPosts.Remove(itemToDelete);
-        await db.Save();
-        return Ok("the post is deleted!");
-    }
+	[HttpPost]
+	public async Task<IActionResult> DeleteMediaPost([FromForm] string mediaPostId)
+	{
+		if (mediaPostId == null)
+		{
+			return BadRequest("Choose post to delete");
+		}
+		var isExist = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
+		if (isExist == false)
+		{
+			return NotFound("The specified media post was not found.");
+		}
+		var itemToDelete = await db.MediaPosts.GetByIdAsync(mediaPostId);
+		db.MediaPosts.Remove(itemToDelete);
+		await db.Save();
+		return Ok("The media post has been successfully deleted.");
+	}
 
-    [HttpPost]
+	[HttpPost]
     public async Task<IActionResult> AddLikeToMediaPost([FromForm] UMediaPostLikeInputDto input)
     {
         var userId = _userManager.GetUserId(User);
