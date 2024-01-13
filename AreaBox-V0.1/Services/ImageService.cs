@@ -45,7 +45,7 @@ namespace AreaBox_V0._1.Services
         {
             return fileSize switch
             {
-                long size when size > 25 * 1024 * 1024 => 0.5,
+                long size when size > 25 * 1024 * 1024 => 0.05,
                 long size when size > 10 * 1024 * 1024 => 0.10,
                 long size when size > 5 * 1024 * 1024 => 0.15,
                 long size when size > 1 * 1024 * 1024 => 0.20,

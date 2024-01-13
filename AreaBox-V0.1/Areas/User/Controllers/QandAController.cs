@@ -169,7 +169,6 @@ public class QandAController : Controller
         existingQuestionPost.QpcategoryId = questionPostEditDto.CategoryId;
         existingQuestionPost.Qptitle = questionPostEditDto.Title;
         existingQuestionPost.Qpdescription = questionPostEditDto.Description;
-		existingQuestionPost.Qpdate = DateTime.Now;
 
         db.QuestionPosts.Update(existingQuestionPost);
         await db.Save();

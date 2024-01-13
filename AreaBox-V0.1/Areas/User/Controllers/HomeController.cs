@@ -5,10 +5,12 @@ using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostLikeDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostReportDto.input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.input;
 using AreaBox_V0._1.Consts;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models.Dto;
 using AreaBox_V0._1.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +46,7 @@ public class HomeController : Controller
 
     public async Task<ActionResult> Index(int page = 1)
     {
+
         var latitudeCookie = Request.Cookies["latitude"];
         var longitudeCookie = Request.Cookies["longitude"];
 
@@ -54,16 +57,15 @@ public class HomeController : Controller
         // Try parsing the cookies into double values
         if (double.TryParse(latitudeCookie, out latitude) && double.TryParse(longitudeCookie, out longitude))
         {
-
             var loc = await location.GetGeolocationObject(latitude, longitude);
-
-
+            await db.Countries.CheckAndInsertCountry(loc.Country);
+            await db.Cities.CheckAndInsertCity(loc.City, loc.Country);
             int resultCount = await db.MediaPosts.Count<MediaPosts>(e => e.Mpcity.CityName == loc.City);
             int pages = (int)Math.Ceiling((double)resultCount / PageSize);
             int skip = PageSize * (page - 1);
             int take = PageSize;
             var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take, e => e.Mpdate, OrderBy.Descending,
-                                                                                                loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true);
+                                                                                                loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true, e=>e.Mpstate == false);
 
             var posts = new UMediaPostIndexDto
             {
@@ -74,16 +76,13 @@ public class HomeController : Controller
 
             return View(posts);
 
-
         }
         else
         {
-            return View("Error", "Failed to retrieve geolocation information");
+            var posts = new UMediaPostIndexDto();
+            return View(posts);
         }
-
-
     }
-
 
 
     public IActionResult Info()
@@ -116,11 +115,10 @@ public class HomeController : Controller
 
             var loc = await location.GetGeolocationObject(latitude, longitude);
 
-
             int skip = PageSize * (page - 1);
             int take = PageSize;
             var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take, e => e.Mpdate, OrderBy.Descending,
-                                                                                                loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true);
+                                                                                                loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true, e => e.Mpstate == false);
 
             return PartialView("_MediaPostListPartial", resalt);
 
@@ -273,12 +271,96 @@ public class HomeController : Controller
     }
 
 
+	[HttpGet]
+	public async Task<IActionResult> GetMediaPostDetails(string mediaPostId)
+	{
+		if (mediaPostId == null)
+		{
+			return BadRequest("Choose media post to Get the details.");
+		}
 
-    #endregion
+		var existingMediaPost = await db.MediaPosts.GetByIdAsync(mediaPostId);
+
+		if (existingMediaPost == null)
+		{
+			return NotFound("The specified question post was not found.");
+		}
+
+		var getMediaPost = new MediaPostsDto
+		{
+			Id = existingMediaPost.MpostId,
+			UserId = existingMediaPost.MpuserId,
+            Image = existingMediaPost.Mpimage,
+            LongDescription = existingMediaPost.MplongDescription,
+            ShortDescription = existingMediaPost.MpshortDescription,
+			CategoryId = existingMediaPost.MpcategoryId,
+			CityId = existingMediaPost.MpcityId,
+			Date = existingMediaPost.Mpdate
+		};
+
+		return Ok(getMediaPost);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> EditMediaPost([FromForm] UMediaPostEditDto mediaPostEditDto, IFormFile image)
+	{
+		var userId = _userManager.GetUserId(User);
+
+		if (string.IsNullOrEmpty(userId))
+		{
+			return BadRequest("User is not authenticated. Please log in to continue.");
+		}
+
+		if (string.IsNullOrEmpty(mediaPostEditDto.Id))
+		{
+			return BadRequest("Invalid media post ID provided.");
+		}
+
+		var existingMediaPost = await db.MediaPosts.GetByIdAsync(mediaPostEditDto.Id);
+
+		if (existingMediaPost == null)
+		{
+			return BadRequest("The specified media post was not found.");
+		}
+
+		if (existingMediaPost.MpuserId != userId)
+		{
+			return BadRequest("You are not authorized to edit this media post.");
+		}
 
 
-    #region Category Fun
-    [HttpPost]
+        if(image != null)
+        {
+			var fileExtension = Path.GetExtension(image.FileName).ToLower();
+			var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".ico" };
+
+			if (!allowedExtensions.Contains(fileExtension))
+			{
+				return BadRequest("Only image files are allowed.");
+			}
+
+			string base64String = await _imageService.UploadImage(image);
+			existingMediaPost.Mpimage = base64String;
+		}
+
+		existingMediaPost.MpuserId = userId;
+		existingMediaPost.MpostId = mediaPostEditDto.Id;
+		existingMediaPost.MpcityId = mediaPostEditDto.CityId;
+		existingMediaPost.MpcategoryId = mediaPostEditDto.CategoryId;
+        existingMediaPost.MplongDescription = mediaPostEditDto.LongDescription;
+        existingMediaPost.MpshortDescription = mediaPostEditDto.ShortDescription;
+
+		db.MediaPosts.Update(existingMediaPost);
+		await db.Save();
+
+		return Ok("Media post updated successfully.");
+	}
+
+	#endregion
+
+
+	#region Category Fun
+	[HttpPost]
     public async Task<IActionResult> AddUserCategory([FromForm] UUserCategoriesInputDto input)
     {
         var userId = _userManager.GetUserId(User);
