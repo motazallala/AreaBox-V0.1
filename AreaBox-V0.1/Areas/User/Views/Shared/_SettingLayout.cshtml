@@ -40,19 +40,39 @@
 <body>
     <script src="~/tabler/js/demo-theme.min.js?1684106062"></script>
     <div class="page">
-
-        <div class="page-wrappe">
-            <div class="page-bod">
-                <div class="container-fluid">
-                    <div class="card">
-                        <div class="row g-0" style="min-height:0">
-                            <div class="col-12 col-md-3 border-end">
-                                @Html.Partial("Layout/_SettingNav")
+        @Html.Partial("Layout/_SettingNav")
+        <div class="page-wrapper">
+            <!-- Page header -->
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row g-0 align-items-center">
+                        <div class="col">
+                            <!-- Page pre-title -->
+                            <div class="page-pretitle">
+                                @ViewData["Title"]
                             </div>
-                            <div class="col-12 col-md-9" style="overflow-y: scroll;">
-                                @RenderBody()
+                            <h2 class="page-title">
+                                Settings
+                            </h2>
+                        </div>
+                        <!-- Page title actions -->
+                        <div class="col-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                                <span class="d-sm-inline">
+                                    <a asp-area="User" asp-controller="Home" asp-action="Index" class="btn">
+                                        <i class="ti ti-home-x" style="font-size:24px"></i>
+                                    </a>
+                                </span>
+
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>`
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="card">
+                                @RenderBody()
                     </div>
                 </div>
             </div>

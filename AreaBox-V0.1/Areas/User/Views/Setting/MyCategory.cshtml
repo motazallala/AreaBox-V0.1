@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewData["Title"] = "My Category";
+    Layout = "~/Areas/User/Views/Shared/_SettingLayout.cshtml";
+}
+
+
+
+<div class="card-body">
+    <h2 class="mb-4">My Category</h2>
+    <h3>All Category</h3>
+    <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-team">
+        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+        Add Category
+    </a>
+    <br />
+    <br />
+    <div class="btn-list">
+
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+        <button class="btn position-relative">Blue badge <span class="badge  badge-blink"></span></button>
+    </div>
+</div>
+
+
+
+<div class="modal modal-blur fade" id="modal-team" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a new team</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 align-items-end">
+                    <div class="col">
+                        <select type="text" class="form-select tomselected ts-hidden-accessible" id="select-people" value="" tabindex="-1">
+
+
+                            <option value="3" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/002m.jpg)&quot;></span>">Mallory Hulme</option>
+                            <option value="4" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/003m.jpg)&quot;></span>">Dunn Slane</option>
+                            <option value="5" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/000f.jpg)&quot;></span>">Emmy Levet</option>
+                            <option value="6" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/001f.jpg)&quot;></span>">Maryjo Lebarree</option>
+                            <option value="7" data-custom-properties="<span class=&quot;avatar avatar-xs&quot;>EP</span>">Egan Poetz</option>
+                            <option value="8" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/002f.jpg)&quot;></span>">Kellie Skingley</option>
+                            <option value="9" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/003f.jpg)&quot;></span>">Christabel Charlwood</option>
+                            <option value="10" data-custom-properties="<span class=&quot;avatar avatar-xs&quot;>HS</span>">Haskel Shelper</option>
+                            <option value="11" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/006m.jpg)&quot;></span>">Lorry Mion</option>
+                            <option value="12" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/004f.jpg)&quot;></span>">Leesa Beaty</option>
+                            <option value="13" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/007m.jpg)&quot;></span>">Perren Keemar</option>
+                            <option value="14" data-custom-properties="<span class=&quot;avatar avatar-xs&quot;>SA</span>">Sunny Airey</option>
+                            <option value="15" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/009m.jpg)&quot;></span>">Geoffry Flaunders</option>
+                            <option value="16" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/010m.jpg)&quot;></span>">Thatcher Keel</option>
+                            <option value="17" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/005f.jpg)&quot;></span>">Dyann Escala</option>
+                            <option value="18" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/006f.jpg)&quot;></span>">Avivah Mugleston</option>
+                            <option value="19" data-custom-properties="<span class=&quot;avatar avatar-xs&quot;>AA</span>">Arlie Armstead</option>
+                            <option value="20" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/008f.jpg)&quot;></span>">Tessie Curzon</option>
+                            <option value=""></option>
+                            <option value="1" data-custom-properties="<span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/000m.jpg)&quot;></span>">Paweł Kuna</option>
+                            <option value="2" data-custom-properties="<span class=&quot;avatar avatar-xs&quot;>JL</span>">Jeffie Lewzey</option>
+                        </select>
+                        <div class="ts-wrapper form-select single full has-items input-hidden"><div class="ts-control"><div data-value="2" class="item" data-ts-item=""><span class="dropdown-item-indicator"><span class="avatar avatar-xs">JL</span></span>Jeffie Lewzey</div><input tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="select-people-ts-dropdown" id="select-people-ts-control" type="select-one" aria-activedescendant="select-people-opt-2"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Add Team</button>
+            </div>
+        </div>
+    </div>
+</div>
+
