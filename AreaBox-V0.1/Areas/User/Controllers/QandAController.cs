@@ -8,6 +8,8 @@ using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Policy;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
@@ -87,28 +89,99 @@ public class QandAController : Controller
 		return Ok("Post Added Successful!!!");
 	}
 
-	[HttpDelete]
+	[HttpPost]
 	public async Task<IActionResult> DeleteQuestionPost([FromForm] string questionPostId)
 	{
 		if (questionPostId == null)
 		{
-			return BadRequest("Choose post to delete");
+			return BadRequest("Choose question to delete");
 		}
 		var isExist = await db.QuestionPosts.CheckItemExistence<QuestionPosts>(e => e.QpostId == questionPostId);
 		if (isExist == false)
 		{
-			return NotFound("the post not Found");
+			return NotFound("The specified question was not found.");
 		}
 		var itemToDelete = await db.QuestionPosts.GetByIdAsync(questionPostId);
 		db.QuestionPosts.Remove(itemToDelete);
 		await db.Save();
-		return Ok("the post is deleted!");
+		return Ok("The Question has been successfully deleted.");
 	}
 
-	#endregion
+    [HttpGet]
+    public async Task<IActionResult> GetQuestionPostDetails(string questionPostId)
+    {
+        if (questionPostId == null)
+        {
+            return BadRequest("Choose question to Get the details.");
+        }
 
-	#region Comment Fun
-	[HttpGet]
+        var existingQuestionPost = await db.QuestionPosts.GetByIdAsync(questionPostId);
+
+        if (existingQuestionPost == null)
+        {
+            return NotFound("The specified question post was not found.");
+        }
+
+        var getQuestionPost = new QuestionPostsDto
+        {
+            Id = existingQuestionPost.QpostId,
+            CategoryId = existingQuestionPost.QpcategoryId,
+            CityId = existingQuestionPost.QpcityId,
+            Date = existingQuestionPost.Qpdate,
+            UserId = existingQuestionPost.QpuserId,
+            Title = existingQuestionPost.Qptitle,
+            Description = existingQuestionPost.Qpdescription,
+        };
+
+        return Ok(getQuestionPost);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditQuestionPost([FromForm] UQuestionPostEditDto questionPostEditDto)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return BadRequest("User is not authenticated. Please log in to continue.");
+        }
+
+        if (string.IsNullOrEmpty(questionPostEditDto.Id))
+        {
+            return BadRequest("Invalid question post ID provided.");
+        }
+
+        var existingQuestionPost = await db.QuestionPosts.GetByIdAsync(questionPostEditDto.Id);
+
+        if (existingQuestionPost == null)
+        {
+            return BadRequest("The specified question post was not found.");
+        }
+
+		if(existingQuestionPost.QpuserId != userId)
+		{
+            return BadRequest("You are not authorized to edit this question post.");
+        }
+
+        existingQuestionPost.QpuserId = userId;
+		existingQuestionPost.QpostId = questionPostEditDto.Id;
+		existingQuestionPost.QpcityId = questionPostEditDto.CityId;
+        existingQuestionPost.QpcategoryId = questionPostEditDto.CategoryId;
+        existingQuestionPost.Qptitle = questionPostEditDto.Title;
+        existingQuestionPost.Qpdescription = questionPostEditDto.Description;
+		existingQuestionPost.Qpdate = DateTime.Now;
+
+        db.QuestionPosts.Update(existingQuestionPost);
+        await db.Save();
+
+        return Ok("Question post updated successfully.");
+    }
+
+
+    #endregion
+
+    #region Comment Fun
+    [HttpGet]
 	public async Task<IActionResult> GetQuestionPostComments([FromForm] string questionPostId, [FromForm] int page = 1)
 	{
 		if (page < 1)
@@ -153,7 +226,7 @@ public class QandAController : Controller
 			return BadRequest("The post not exists");
 		}
 
-		var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>(new[] { "PostReports" });
+		var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>();
 		return Ok(resalt);
 	}
 
@@ -176,23 +249,13 @@ public class QandAController : Controller
 		{
 			return BadRequest("You have already reported this post.");
 		}
-		var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "QAPost");
-		var newReport = new PostReports
-		{
-			ReportTypeId = inputReport.ReportTypeId,
-			PostTypeId = postType.PostTypeId
-		};
-
-
-		db.PostReports.Add(newReport);
-		await db.Save();
 
 
 		var newQuestionReport = new QuestionPostsReports
 		{
 			UserId = userId,
 			QpostId = inputReport.QpostId,
-			PostReportId = newReport.PostReportId,
+			ReportTypeId = inputReport.ReportTypeId,
 
 		};
 

@@ -1,4 +1,5 @@
 ﻿using AreaBox_V0._1.Areas.Admin.Models.MediaPost;
+using AreaBox_V0._1.Consts;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
@@ -23,7 +24,7 @@ public class MediaManagementController : Controller
 		IEnumerable<MediaPostsDto> getAllMediaPosts;
 		int resultsCount;
 
-		getAllMediaPosts = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take,
+		getAllMediaPosts = await db.MediaPosts.FindAndFilter<MediaPosts, MediaPostsDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country" }, skip, take, e => e.Mpdate, OrderBy.Descending,
 																					ss != null ? e => e.MplongDescription.Contains(ss) : e => true,
 																					City != null ? e => e.MpcityId == City : e => true,
 																					Category != null ? e => e.MpcategoryId == Category : e => true,

@@ -6,6 +6,7 @@ using AreaBox_V0._1.Areas.User.Models.UMediaPostLikeDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostReportDto.input;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.input;
+using AreaBox_V0._1.Consts;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Services;
@@ -23,6 +24,7 @@ public class HomeController : Controller
     private readonly IImageService _imageService;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork db;
+    private readonly ILocationService location;
 
     private readonly int PageSize = 5;
     public HomeController(
@@ -30,32 +32,56 @@ public class HomeController : Controller
         UserManager<ApplicationUser> userManager,
         IUnitOfWork _db,
         IImageService imageService
-        )
+,
+        ILocationService location)
     {
         _userManager = userManager;
         _mapper = mapper;
         _imageService = imageService;
         db = _db;
+        this.location = location;
     }
 
     public async Task<ActionResult> Index(int page = 1)
     {
-        var userId = _userManager.GetUserId(User);
+        var latitudeCookie = Request.Cookies["latitude"];
+        var longitudeCookie = Request.Cookies["longitude"];
 
-        int resultCount = await db.MediaPosts.Count<MediaPosts>();
-        int pages = (int)Math.Ceiling((double)resultCount / PageSize);
-        int skip = PageSize * (page - 1);
-        int take = PageSize;
-        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take);
+        // Initialize variables to store converted values
+        double latitude;
+        double longitude;
 
-        var posts = new UMediaPostIndexDto
+        // Try parsing the cookies into double values
+        if (double.TryParse(latitudeCookie, out latitude) && double.TryParse(longitudeCookie, out longitude))
         {
-            mediaPostsDtos = resalt,
-            PagesCount = pages
-        };
+
+            var loc = await location.GetGeolocationObject(latitude, longitude);
 
 
-        return View(posts);
+            int resultCount = await db.MediaPosts.Count<MediaPosts>(e => e.Mpcity.CityName == loc.City);
+            int pages = (int)Math.Ceiling((double)resultCount / PageSize);
+            int skip = PageSize * (page - 1);
+            int take = PageSize;
+            var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take, e => e.Mpdate, OrderBy.Descending,
+                                                                                                loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true);
+
+            var posts = new UMediaPostIndexDto
+            {
+                mediaPostsDtos = resalt,
+                PagesCount = pages
+            };
+
+
+            return View(posts);
+
+
+        }
+        else
+        {
+            return View("Error", "Failed to retrieve geolocation information");
+        }
+
+
     }
 
 
@@ -76,12 +102,33 @@ public class HomeController : Controller
     #region Posts Fun
     public async Task<ActionResult> GetMediaPostPartialList(int page = 1)
     {
-        // Retrieve posts from your data source based on the page number
-        int skip = PageSize * (page - 1);
-        int take = PageSize;
-        var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take);
+        var geolocationInfoCookie = Request.Cookies["geolocationInfo"];
+        var latitudeCookie = Request.Cookies["latitude"];
+        var longitudeCookie = Request.Cookies["longitude"];
 
-        return PartialView("_MediaPostListPartial", resalt);
+        // Initialize variables to store converted values
+        double latitude;
+        double longitude;
+
+        // Try parsing the cookies into double values
+        if (double.TryParse(latitudeCookie, out latitude) && double.TryParse(longitudeCookie, out longitude))
+        {
+
+            var loc = await location.GetGeolocationObject(latitude, longitude);
+
+
+            int skip = PageSize * (page - 1);
+            int take = PageSize;
+            var resalt = await db.MediaPosts.FindAndFilter<MediaPosts, UMediaPostOutputDto>(new[] { "Mpcity", "Mpuser", "Mpcategory", "Mpcity.Country", "MediaPostsLikes" }, skip, take, e => e.Mpdate, OrderBy.Descending,
+                                                                                                loc.City != null ? e => e.Mpcity.CityName == loc.City : e => true);
+
+            return PartialView("_MediaPostListPartial", resalt);
+
+        }
+        else
+        {
+            return BadRequest("Failed to retrieve geolocation information");
+        }
     }
 
 
@@ -98,7 +145,7 @@ public class HomeController : Controller
         {
             return BadRequest("the post not Exists");
         }
-        var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>(new[] { "PostReports" });
+        var resalt = await db.ReportTypes.GetAllAsync<ReportTypes, UReportTypeOutPutDto>(null);
         return Ok(resalt);
     }
 
@@ -158,25 +205,25 @@ public class HomeController : Controller
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> DeleteMediaPost([FromForm] string mediaPostId)
-    {
-        if (mediaPostId == null)
-        {
-            return BadRequest("Choose post to delete");
-        }
-        var isExist = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
-        if (isExist == false)
-        {
-            return NotFound("the post not Found");
-        }
-        var itemToDelete = await db.MediaPosts.GetByIdAsync(mediaPostId);
-        db.MediaPosts.Remove(itemToDelete);
-        await db.Save();
-        return Ok("the post is deleted!");
-    }
+	[HttpPost]
+	public async Task<IActionResult> DeleteMediaPost([FromForm] string mediaPostId)
+	{
+		if (mediaPostId == null)
+		{
+			return BadRequest("Choose post to delete");
+		}
+		var isExist = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
+		if (isExist == false)
+		{
+			return NotFound("The specified media post was not found.");
+		}
+		var itemToDelete = await db.MediaPosts.GetByIdAsync(mediaPostId);
+		db.MediaPosts.Remove(itemToDelete);
+		await db.Save();
+		return Ok("The media post has been successfully deleted.");
+	}
 
-    [HttpPost]
+	[HttpPost]
     public async Task<IActionResult> AddLikeToMediaPost([FromForm] UMediaPostLikeInputDto input)
     {
         var userId = _userManager.GetUserId(User);
@@ -320,16 +367,18 @@ public class HomeController : Controller
         {
             return BadRequest("the post not Exists");
         }
-        int resultCount = await db.MediaPostComments.Count<MediaPostComments>();
+
+        int resultCount = await db.MediaPostComments.Count<MediaPostComments>(e=>e.MpostId == mediaPostId);
         int pages = (int)Math.Ceiling((double)resultCount / PageSize);
+
         if (page > pages)
         {
             return Ok("no more posts");
-
         }
+
         int skip = PageSize * (page - 1);
         int take = PageSize;
-        var resalt = await db.MediaPostComments.FindAndFilter<MediaPostComments, UMediaPostCommentsOutputDto>(new[] { "User", "Mpost" }, skip, take, e => e.MpostId == mediaPostId);
+        var resalt = await db.MediaPostComments.FindAndFilter<MediaPostComments, UMediaPostCommentsOutputDto>(new[] { "User", "Mpost" }, skip, take, e => e.MpcommnetDate, OrderBy.Descending, e => e.MpostId == mediaPostId);
         return Ok(resalt);
     }
 
@@ -391,23 +440,13 @@ public class HomeController : Controller
         {
             return BadRequest("You have already reported this post.");
         }
-        var postType = await db.PostTypes.Find<PostType, PostType>(e => e.Name == "MediaPost");
-        var newReport = new PostReports
-        {
-            ReportTypeId = inputReport.ReportTypeId,
-            PostTypeId = postType.PostTypeId
-        };
-
-
-        db.PostReports.Add(newReport);
-        await db.Save();
 
 
         var newMediaReport = new MediaPostsReports
         {
             UserId = userId,
             MpostId = inputReport.MpostId,
-            PostReportId = newReport.PostReportId,
+            ReportTypeId = inputReport.ReportTypeId,
 
         };
 

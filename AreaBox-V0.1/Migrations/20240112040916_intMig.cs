@@ -84,19 +84,6 @@ namespace AreaBox_V0._1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostTypes",
-                columns: table => new
-                {
-                    PostTypeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostTypes", x => x.PostTypeId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ReportTypes",
                 columns: table => new
                 {
@@ -297,32 +284,6 @@ namespace AreaBox_V0._1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostReports",
-                columns: table => new
-                {
-                    PostReportId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PostTypeId = table.Column<int>(type: "int", nullable: false),
-                    ReportTypeID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostReports", x => x.PostReportId);
-                    table.ForeignKey(
-                        name: "FK_PostReports_PostTypes_PostTypeId",
-                        column: x => x.PostTypeId,
-                        principalTable: "PostTypes",
-                        principalColumn: "PostTypeId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostReports_ReportTypes_ReportTypeID",
-                        column: x => x.ReportTypeID,
-                        principalTable: "ReportTypes",
-                        principalColumn: "ReportTypeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MediaPosts",
                 columns: table => new
                 {
@@ -438,30 +399,32 @@ namespace AreaBox_V0._1.Migrations
                         name: "FK_MediaPostLikes_MediaPosts",
                         column: x => x.MPostID,
                         principalTable: "MediaPosts",
-                        principalColumn: "MPostID");
+                        principalColumn: "MPostID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MediaPostsReports",
                 columns: table => new
                 {
-                    PostReportID = table.Column<int>(type: "int", nullable: false),
                     MPostID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReportTypeID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaPostsReports", x => new { x.MPostID, x.PostReportID });
+                    table.PrimaryKey("PK_MediaPostsReports", x => new { x.MPostID, x.UserId });
                     table.ForeignKey(
                         name: "FK_MediaPostsReports_MediaPosts",
                         column: x => x.MPostID,
                         principalTable: "MediaPosts",
-                        principalColumn: "MPostID");
+                        principalColumn: "MPostID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MediaPostsReports_ReportTypes",
-                        column: x => x.PostReportID,
-                        principalTable: "PostReports",
-                        principalColumn: "PostReportId");
+                        name: "FK_MediaPostsReports_ReportType",
+                        column: x => x.ReportTypeID,
+                        principalTable: "ReportTypes",
+                        principalColumn: "ReportTypeId");
                     table.ForeignKey(
                         name: "FK_MediaPostsReports_Users",
                         column: x => x.UserId,
@@ -521,23 +484,23 @@ namespace AreaBox_V0._1.Migrations
                 name: "QuestionPostsReports",
                 columns: table => new
                 {
-                    PostReportID = table.Column<int>(type: "int", nullable: false),
                     QPostID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    ReportTypeID = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuestionPostsReports", x => new { x.QPostID, x.PostReportID });
-                    table.ForeignKey(
-                        name: "FK_QuestionPostsReports_PostReports",
-                        column: x => x.PostReportID,
-                        principalTable: "PostReports",
-                        principalColumn: "PostReportId");
+                    table.PrimaryKey("PK_QuestionPostsReports", x => new { x.QPostID, x.ReportTypeID });
                     table.ForeignKey(
                         name: "FK_QuestionPostsReports_QuestionPosts",
                         column: x => x.QPostID,
                         principalTable: "QuestionPosts",
                         principalColumn: "QPostID");
+                    table.ForeignKey(
+                        name: "FK_QuestionPostsReports_ReportType",
+                        column: x => x.ReportTypeID,
+                        principalTable: "ReportTypes",
+                        principalColumn: "ReportTypeId");
                     table.ForeignKey(
                         name: "FK_QuestionPostsReports_Users",
                         column: x => x.UserId,
@@ -647,24 +610,14 @@ namespace AreaBox_V0._1.Migrations
                 column: "MPostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MediaPostsReports_PostReportID",
+                name: "IX_MediaPostsReports_ReportTypeID",
                 table: "MediaPostsReports",
-                column: "PostReportID");
+                column: "ReportTypeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MediaPostsReports_UserId",
                 table: "MediaPostsReports",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostReports_PostTypeId",
-                table: "PostReports",
-                column: "PostTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostReports_ReportTypeID",
-                table: "PostReports",
-                column: "ReportTypeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionPostComments_QPostID",
@@ -692,9 +645,9 @@ namespace AreaBox_V0._1.Migrations
                 column: "QPUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionPostsReports_PostReportID",
+                name: "IX_QuestionPostsReports_ReportTypeID",
                 table: "QuestionPostsReports",
-                column: "PostReportID");
+                column: "ReportTypeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionPostsReports_UserId",
@@ -781,19 +734,13 @@ namespace AreaBox_V0._1.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "PostReports");
+                name: "ReportTypes");
 
             migrationBuilder.DropTable(
                 name: "MediaPosts");
 
             migrationBuilder.DropTable(
                 name: "QuestionPosts");
-
-            migrationBuilder.DropTable(
-                name: "PostTypes");
-
-            migrationBuilder.DropTable(
-                name: "ReportTypes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

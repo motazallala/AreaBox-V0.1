@@ -39,7 +39,7 @@
 											</span>
 										</td>
 										<td>
-											<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaPostReportModal" data-id="@item.PostReportId">
+                                            <button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaPostReportModal" data-postid="@item.MpostId" data-userid="@item.UserId">
 												View
 											</button>
 										</td>
@@ -98,20 +98,20 @@
     $(document).ready(function () {
         $('#mediaPostReportModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
-            var PostReportId = button.data('id');
+            var postid = button.data('postid');
+            var userid = button.data('userid');
 
             $('#loadingPlaceholder').show();
             $('#actualContent').hide(); 
 
             $.ajax({
-                url: `/AdminApi/GetMediaPostReportDetails/${PostReportId}`,
+                url: `/AdminApi/GetMediaPostReportDetails/${postid}`,
                 type: 'GET',
-                data: { id: PostReportId },
+                data: { userId: userid, postId: postid },
                 success: function (data) {
                     $('#loadingPlaceholder').hide();
                     $('#actualContent').show();   
                     $('#mediaDetails').html(`
-                                            <p>report Id: ${data.reportId}</p>
                                             <p>user Name: ${data.userName}</p>
                                             <p>user Email: ${data.userEmail}</p>
                                             <p>Report Type: ${data.type}</p>

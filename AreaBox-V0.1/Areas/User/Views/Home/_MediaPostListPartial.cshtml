@@ -2,7 +2,6 @@
 @model List<AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostOutputDto>
 @{
     var currentUserId = (await userManager.GetUserAsync(User))?.Id;
-
 }
 
 
@@ -77,6 +76,16 @@
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportPostModal" data-id="@post.Id">Report The Post</a>
                                 <a class="dropdown-item" style="cursor: pointer;">Save Post</a>
+                                @if (post.UserId == currentUserId)
+                                {
+                                    <a class="dropdown-item text-dark hover-text-primary"
+                                       style="cursor: pointer; transition: color 0.3s;"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#editPostModal"
+                                       data-mpid="@post.Id">
+                                        Edit Post
+                                    </a>
+                                }
                                 @if (post.UserId == currentUserId)
                                 {
                                     <a class="dropdown-item text-dark hover-text-primary"

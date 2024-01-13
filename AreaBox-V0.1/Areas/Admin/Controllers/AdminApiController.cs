@@ -130,11 +130,11 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
 
         [HttpGet("GetMediaPostReportDetails/{id}")]
-        public async Task<IActionResult> GetMediaPostReportDetails(int id)
+        public async Task<IActionResult> GetMediaPostReportDetails(string userId, string postId)
         {
 
             var mediaPostReports = await db.MediaPostReports.Find<MediaPostsReports, MediaPostsReportsDto>
-                (x => x.PostReportId == id, new[] { "User", "Mpost", "PostReport", "PostReport.ReportTypes" });
+                (x => x.UserId == userId && x.MpostId == postId, new[] { "User", "Mpost", "ReportType" });
 
             if (mediaPostReports == null)
             {
@@ -143,23 +143,23 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
             var mediaPostDetails = new
             {
-                reportId = mediaPostReports.PostReportId,
                 userName = mediaPostReports.User.UserName,
                 userEmail = mediaPostReports.User.Email,
-                type = mediaPostReports.PostReport.ReportTypes.Type,
-                description = mediaPostReports.PostReport.ReportTypes.Description,
+                type = mediaPostReports.ReportType.Type,
+                description = mediaPostReports.ReportType.Description,
 
             };
 
             return Ok(mediaPostDetails);
+
         }
 
         [HttpGet("GetQPReportDetails/{id}")]
-        public async Task<IActionResult> GetQPReportDetails(int id)
+        public async Task<IActionResult> GetQPReportDetails(string userId, string postId)
         {
 
             var QPReports = await db.QuestionPostsReports.Find<QuestionPostsReports, QuestionPostsReportsDto>
-                (x => x.PostReportId == id, new[] { "User", "Qpost", "PostReports", "PostReports.ReportTypes" });
+                (x => x.UserId == userId && x.QpostId == postId, new[] { "User", "Qpost", "ReportType" });
 
             if (QPReports == null)
             {
@@ -168,14 +168,15 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
             var QPDetails = new
             {
-                reportId = QPReports.PostReportId,
                 userName = QPReports.User.UserName,
                 userEmail = QPReports.User.Email,
-                type = QPReports.PostReports.ReportTypes.Type,
-                description = QPReports.PostReports.ReportTypes.Description,
+                type = QPReports.ReportType.Type,
+                description = QPReports.ReportType.Description,
             };
 
             return Ok(QPDetails);
+
+
         }
 
         [HttpGet("GetUserDetails/{id}")]

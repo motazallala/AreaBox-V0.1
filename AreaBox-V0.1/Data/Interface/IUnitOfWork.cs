@@ -1,6 +1,4 @@
-﻿using AreaBox_V0._1.Data.Model;
-
-namespace AreaBox_V0._1.Data.Interface;
+﻿namespace AreaBox_V0._1.Data.Interface;
 
 public interface IUnitOfWork : IDisposable
 {
@@ -15,8 +13,6 @@ public interface IUnitOfWork : IDisposable
 	IMediaPostReportsRepository MediaPostReports { get; }
 
 
-	IPostReportsRepository PostReports { get; }
-	IPostTypeRepository PostTypes { get; }
 	IQuestionPostCommentsRepository QuestionPostComments { get; }
 
 	IQuestionPostRepository QuestionPosts { get; }
