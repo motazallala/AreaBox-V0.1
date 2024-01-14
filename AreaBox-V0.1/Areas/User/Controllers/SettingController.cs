@@ -31,4 +31,14 @@ public class SettingController : Controller
         return View();
     }
 
+    public IActionResult SavedMediaPost()
+    {
+        return View();
+    }
+
+    public IActionResult SavedQuestionPost()
+    {
+        return View();
+    }
+
 }

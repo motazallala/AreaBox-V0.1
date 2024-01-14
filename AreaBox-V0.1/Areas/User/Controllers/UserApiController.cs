@@ -31,4 +31,15 @@ public class UserApiController : ControllerBase
         return Ok(userCategoriesList);
     }
     #endregion
+
+
+    #region Saved Post Fun
+
+    //public async Task<IActionResult> GetAllUserSavedMediaPost()
+    //{
+    //    var userSavedMediaPost = db.Users.FindAndFilter<ApplicationUser, ApplicationUser>(new["MediaPosts","MediaPosts.MediaPostsLikes"]);
+    //}
+
+
+    #endregion
 }
