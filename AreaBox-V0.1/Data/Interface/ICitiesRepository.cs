@@ -4,5 +4,6 @@ namespace AreaBox_V0._1.Data.Interface
 {
 	public interface ICitiesRepository : IRepository<Cities>
 	{
-	}
+        Task CheckAndInsertCity(string cityName, string countryName);
+    }
 }

@@ -228,39 +228,57 @@
 	</div>
 </div>
 
-<div class="modal modal-blur" id="editPostModal" data-bs-backdrop="static" tabindex="-1">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+
+<!-- Edit post model -->
+<div class="modal modal-blur" id="editMediaPostModal" data-bs-backdrop="static" tabindex="-1">
+	<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+		<!-- Increase modal size using modal-xl -->
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Edit Question Post</h5>
+				<h5 class="modal-title">Edit a post</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="editPostId" />
-				<div class="row mb-3 align-items-end">
-					<div class="col">
-						<label class="form-label">Question Title</label>
-						<input type="text" class="form-control" id="editQuestionTitle" />
-					</div>
-				</div>
-				<div>
-					<label class="form-label">Question Description</label>
-					<textarea class="form-control" data-bs-toggle="autosize" id="editQuestionDescription" placeholder="Type something…"></textarea>
-				</div>
+				<div class="row">
 
-				<div class="mb-3">
-					<label class="form-label"></label>
-					<select class="form-select" id="editCategoryDropdownModel" name="Category">
-					</select>
+					<div class="col-md-6 d-flex align-items-center justify-content-center">
+						<img src="" id="oldImage" alt="Old Image" class="img-fluid">
+					</div>
+
+					<div class="col-md-6">
+						<div class="mb-3 align-items-end">
+							<div class="dropzone" id="editDropzoneDefault" action="./" autocomplete="off" novalidate>
+								<div class="fallback">
+									<input name="file" type="file" id="postImage" />
+								</div>
+							</div>
+						</div>
+						<div class="mb-3">
+							<input type="hidden" value="1" id="editPostInCity" />
+							<label class="form-label">Media Post Title</label>
+							<input type="text" class="form-control" id="editMediaTitle" />
+						</div>
+						<div>
+							<label class="form-label">Media Post Description</label>
+							<textarea class="form-control" data-bs-toggle="autosize" id="editMediaDescription" placeholder="Type something…"></textarea>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Media Post Category</label>
+							<select class="form-select" id="editCategoryDropdownModel" name="Category">
+								<!-- Your categories here -->
+							</select>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" id="updatePost" data-bs-dismiss="modal">Update Post</button>
+				<button type="button" class="btn btn-primary" id="editPost" data-bs-dismiss="modal">Save Change</button>
 			</div>
 		</div>
 	</div>
 </div>
+
 
 
 <div class="row justify-content-center">
@@ -351,6 +369,7 @@
 	<script>
 		$(document).ready(function () {
 			// Initialize Dropzone
+
 			var myDropzone = new Dropzone("#dropzone-default", {
 				uploadMultiple: false,
 				maxFiles: 1, // Set maximum number of files to 1
@@ -381,7 +400,7 @@
 
 					function simulateUpload() {
 						var file = self.files[0];
-						var totalSteps = 100; 
+						var totalSteps = 100;
 						var currentStep = 0;
 
 						var uploadInterval = setInterval(function () {
@@ -397,7 +416,7 @@
 								self.emit('complete', file);
 								self.processQueue();
 							}
-						}, 200); 
+						}, 200);
 					}
 				}
 			});
@@ -433,6 +452,9 @@
 					processData: false,  // Important: Don't process the data
 					contentType: false,  // Important: Don't set content type to 'application/json'
 					success: function (data) {
+						myDropzone.removeAllFiles(true);
+						$('#mediaTitle').val('');
+						$('#mediaDescription').val('');
 						$('#post-container').empty();
 						page = 1;
 						loadMorePosts();
@@ -525,6 +547,7 @@
 					console.error('Error fetching category data:', error);
 				}
 			});
+
 			$('#mediaManagementModal').on('show.bs.modal', function (event) {
 				$.ajax({
 					url: '/AdminApi/GetAllCategories',
@@ -614,9 +637,9 @@
 		$(document).ready(function () {
 			$('#deletePostModal').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget);
-				var mediaPostId = button.data('mpid'); 
+				var mediaPostId = button.data('mpid');
 
-				$('#deletePostButton').data('mpid', mediaPostId); 
+				$('#deletePostButton').data('mpid', mediaPostId);
 			});
 
 			$('#deletePostButton').on('click', function (event) {
@@ -692,26 +715,26 @@
 				let commentsHtml = '';
 				comments.forEach(function (comment) {
 					commentsHtml += `
-										<div class="row align-items-end">
-											<div class="col-auto">
-												<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
-											</div>
-											<div class="col col-lg-10 mt-3">
-												<div class="chat-bubble">
-													<div class="chat-bubble-title">
-														<div class="row">
-															<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
-															<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+												<div class="row align-items-end">
+													<div class="col-auto">
+														<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+													</div>
+													<div class="col col-lg-10 mt-3">
+														<div class="chat-bubble">
+															<div class="chat-bubble-title">
+																<div class="row">
+																	<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+																	<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+																</div>
+															</div>
+															<div class="chat-bubble-body">
+																<!-- Displaying the comment content -->
+																<p>${comment.commentContent}</p>
+															</div>
 														</div>
 													</div>
-													<div class="chat-bubble-body">
-														<!-- Displaying the comment content -->
-														<p>${comment.commentContent}</p>
-													</div>
 												</div>
-											</div>
-										</div>
-										`;
+												`;
 				});
 				$('#commentsContainer').append(commentsHtml);
 			}
@@ -722,7 +745,7 @@
 					type: 'GET',
 					data: { mediaPostId: mediaPostId, page: currentPage },
 					success: function (response) {
-						if (response == 'no more posts'){
+						if (response == 'no more posts') {
 							$('#commentPager').hide();
 						}
 						if (response.length > 0) {
@@ -788,7 +811,6 @@
 
 			$('.commentBtn').on('click', function (event) {
 
-				debugger
 				var mediaPostId = $(this).data('id');
 				var count = $('span[data-mpcommentid="' + mediaPostId + '"]');
 				var currentCommentsCount = parseInt(count.text(), 10);
@@ -845,6 +867,159 @@
 		} else {
 			console.error('Geolocation info not found in the cookie.');
 		}
+	</script>
+
+
+	<script>
+		$(document).ready(function () {
+
+			var myDropzone = new Dropzone("#editDropzoneDefault", {
+				uploadMultiple: false,
+				maxFiles: 1,
+				acceptedFiles: 'image/jpeg,image/jpg,image/png',
+				maxFilesize: 10,
+				maxFilesizeUnit: 'MB',
+				autoProcessQueue: false,
+				paramName: 'Image',
+				addRemoveLinks: true,
+				parallelUploads: 1,
+				dictDefaultMessage: "Upload a new Image from here!",
+				init: function () {
+					var submitButton = document.querySelector("#editPost");
+					var self = this;
+
+					this.on("addedfile", function () {
+						simulateUpload();
+					});
+
+					function simulateUpload() {
+						var file = self.files[0];
+						var totalSteps = 100;
+						var currentStep = 0;
+						var uploadInterval = setInterval(function () {
+							var random = 15 + Math.random() * 25;
+							currentStep += random;
+							var progress = currentStep;
+							self.emit('uploadprogress', file, progress, progress);
+							if (currentStep >= totalSteps) {
+								clearInterval(uploadInterval);
+								self.emit('success', file, 'success', null);
+								self.emit('complete', file);
+								self.processQueue();
+							}
+						}, 200);
+					}
+				}
+			});
+
+			$('#editMediaPostModal').on('show.bs.modal', function (event) {
+				$.ajax({
+					url: '/AdminApi/GetAllCategories',
+					type: 'GET',
+					dataType: 'json',
+					success: function (data) {
+						var categoryDropdown = $('#editCategoryDropdownModel');
+						categoryDropdown.empty();
+						$.each(data, function (key, entry) {
+							categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+						});
+					},
+					error: function (error) {
+						console.error('Error fetching category data:', error);
+					}
+				});
+			});
+
+			$('#editMediaPostModal').on('shown.bs.modal', function (event) {
+				var button = $(event.relatedTarget);
+				var mediaPostId = button.data('mpid');
+				$.ajax({
+					url: '/Home/GetMediaPostDetails',
+					type: 'GET',
+					data: { mediaPostId: mediaPostId },
+					success: function (data) {
+						$('#editPostInCity').val(data.cityId);
+						$('#editMediaTitle').val(data.shortDescription);
+						$('#editMediaDescription').val(data.longDescription);
+						$('#oldImage').attr('src', data.image);
+						$('#editMediaPostModal').modal('show');
+					},
+					error: function () {
+						console.log('Error fetching media post details.');
+					}
+				});
+
+				$("#editPost").click(function () {
+					var data = {
+						Id: mediaPostId,
+						CategoryId: $('#editCategoryDropdownModel').val(),
+						CityId: $('#editPostInCity').val(),
+						ShortDescription: $('#editMediaTitle').val(),
+						LongDescription: $('#editMediaDescription').val(),
+					};
+
+					var formData = new FormData();
+					for (var key in data) {
+						formData.append(key, data[key]);
+					}
+					var file = myDropzone.files[0];
+					if (file) {
+						formData.append('Image', file);
+					}
+					$.ajax({
+						url: '/Home/EditMediaPost',
+						type: 'POST',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (data) {
+							myDropzone.removeAllFiles(true);
+							$('#post-container').empty();
+							page = 1;
+							loadMorePosts();
+							$('#success-body').text(data);
+							$('#alertSuccess').show();
+							setTimeout(function () {
+								$('#alertSuccess').hide();
+							}, 3000);
+						},
+						error: function (error) {
+							$('#error-body').text(error.responseText);
+							$('#alertDanger').show();
+							setTimeout(function () {
+								$('#alertDanger').hide();
+							}, 3000);
+						}
+					});
+				});
+
+				function loadMorePosts() {
+					if (page <= @Model.PagesCount) {
+						$('#loading-indicator').show();
+						$('#loadBut').hide();
+						$.ajax({
+							url: '/Home/GetMediaPostPartialList',
+							type: 'GET',
+							data: { page: page },
+							success: function (data) {
+								$('#post-container').append(data);
+								page++;
+								$('#loading-indicator').hide();
+								$('#loadBut').show();
+							},
+							error: function () {
+								console.log('Error loading posts.');
+								$('#loading-indicator').hide();
+								$('#loadBut').show();
+							}
+						});
+					} else {
+						$('#loadBut').hide();
+					}
+				}
+			});
+		});
+
 	</script>
 
 }
