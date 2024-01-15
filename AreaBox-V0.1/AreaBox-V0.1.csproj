@@ -674,6 +674,20 @@
     <None Include="wwwroot\tabler\libs\tom-select\dist\js\tom-select.popular.js.map" />
     <None Include="wwwroot\tabler\libs\tom-select\dist\js\tom-select.popular.min.js" />
     <None Include="wwwroot\tabler\libs\tom-select\dist\js\tom-select.popular.min.js.map" />
+    <None Include="wwwroot\userhome\assets\js\app.js" />
+    <None Include="wwwroot\userhome\dependencies\bootstrap-validator\js\validator.min.js" />
+    <None Include="wwwroot\userhome\dependencies\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\userhome\dependencies\elevate-zoom\jquery.elevatezoom.js" />
+    <None Include="wwwroot\userhome\dependencies\icofont\fonts\icofont.woff2" />
+    <None Include="wwwroot\userhome\dependencies\imagesloaded\js\imagesloaded.pkgd.min.js" />
+    <None Include="wwwroot\userhome\dependencies\isotope-layout\js\isotope.pkgd.min.js" />
+    <None Include="wwwroot\userhome\dependencies\jquery\js\jquery.min.js" />
+    <None Include="wwwroot\userhome\dependencies\magnific-popup\js\jquery.magnific-popup.min.js" />
+    <None Include="wwwroot\userhome\dependencies\mcustomscrollbar\jquery.mCustomScrollbar.concat.min.js" />
+    <None Include="wwwroot\userhome\dependencies\popper.js\js\popper.min.js" />
+    <None Include="wwwroot\userhome\dependencies\sal.js\sal.js" />
+    <None Include="wwwroot\userhome\dependencies\select2\js\select2.min.js" />
+    <None Include="wwwroot\userhome\dependencies\slick-carousel\js\slick.min.js" />
   </ItemGroup>
 
   <ItemGroup>
