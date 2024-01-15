@@ -14,7 +14,7 @@
             <div class="col mb-4">
                 <div class="card">
                     <div class="card-header">
-                        <div>
+
                             <div class="row align-items-center">
                                 <div class="col-auto">
                                     <img src="@post.UserProfilePicture" alt="" class="avatar rounded" style="width: 60px; height:57px">
@@ -22,7 +22,7 @@
                                 <div class="col">
                                     <input type="hidden" value="@post.Id" id="PostId" />
                                     <div class="fw-bold">
-                                        @post.UserName <span class="text-muted ms-2">•</span> <span class="formattedDate">
+                                        @post.UserName <span class="text-muted ms-2">•</span> <span class="text-muted fs-4">
                                             @{
                                                 var timeDifference = DateTime.Now - post.Date;
 
@@ -59,7 +59,6 @@
                                     <div class="card-subtitle"> @post.CountryName-@post.CityName / @post.CategoryName</div>
                                 </div>
                             </div>
-                        </div>
                         <div class="card-actions">
                             <div class="dropdown">
                                 <a class="btn-action dropdown-toggle" data-bs-toggle="dropdown"

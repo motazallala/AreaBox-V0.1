@@ -4,49 +4,64 @@
     var userData = await user.GetUserAsync(User);
 }
 <div class="col">
-<form class="card" asp-action="Index" asp-area="admin" asp-controller="MediaManagement" method="get">
-    <div class="card-header">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <img src="@userData.ProfilePicture" alt="" class="avatar rounded" style="width: 60px; height:57px">
-            </div>
-            <div class="col-auto">
-                <div class="fw-bold">
-                    <h3 class="card-title">@userData.UserName</h3>
-                    <div class="card-subtitle"> century-city / Category</div>
+    <div class="card">
+        <div class="card-header">
+
+            <div class="row align-items-center">
+                <div class="col-auto me-auto">
+                    <img src="@userData.ProfilePicture" alt="" class="avatar rounded" style="width: 60px; height:57px">
+                </div>
+                <div class="col-auto me-auto">
+                    <div class="fw-bold">
+                        <h3 class="card-title">@userData.UserName</h3>
+                        <div class="card-subtitle"> century-city / Category</div>
+                    </div>
+
                 </div>
             </div>
-        </div>
+            <div class="card-actions pe-3">
+                <partial name="_LoginPartial" />
 
-    </div>
-    <div class="card-body">
-        <div class="mb-3">
-            <div class="form-label">Country:</div>
-                <input class="form-control" id="countryText" name="Country" disabled/>
-        
-        </div>
-        <div class="mb-3">
+            </div>
 
-            <div class="form-label">City:</div>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <div class="form-label">Country:</div>
+                <input class="form-control" id="countryText" name="Country" disabled />
+
+            </div>
+            <div class="mb-3">
+
+                <div class="form-label">City:</div>
                 <input class="form-control" type="text" id="cityText" name="City" disabled />
+            </div>
+            <div class="mb-3">
+
+                <div class="form-label">Category:</div>
+                <select class="form-select" id="categoryDropdown" name="Category">
+                </select>
+
+            </div>
+
         </div>
-        <div class="mb-3">
+        <div class="card-footer ">
+            <div class="row">
 
-            <div class="form-label">Category:</div>
-            <select class="form-select" id="categoryDropdown" name="Category">
-            </select>
+                <div class="col-auto me-auto">
+                    <a id="refreshLoc" class="btn btn-primary ">
+                        <i class="ti ti-reload me-2"></i>
+                        Apply</a>
+                </div>
+
+                <div class="col-auto ">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                </div>
+            </div>
+            
 
         </div>
-
     </div>
-    <div class="card-footer text-end">
-        @*			<a asp-action="@Model.Action" asp-controller="@Model.Controller" class="btn btn-outline-warning">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-zoom-reset" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M21 21l-6 -6" /><path d="M3.268 12.043a7.017 7.017 0 0 0 6.634 4.957a7.012 7.012 0 0 0 7.043 -6.131a7 7 0 0 0 -5.314 -7.672a7.021 7.021 0 0 0 -8.241 4.403" /><path d="M3 4v4h4" /></svg>
-        Reset
-        </a>*@
-        <button type="submit" class="btn btn-primary justify-content-end">Apply</button>
-    </div>
-</form>
 </div>
 <div class="col text-end ">
 

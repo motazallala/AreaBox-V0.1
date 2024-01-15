@@ -1,5 +1,5 @@
 ﻿
-<aside class="navbar navbar-vertical navbar-expand-lg sticky-sm-top" data-bs-theme="dark">
+<aside class="navbar navbar-vertical navbar-expand-lg sticky-sm-top" data-bs-theme="light">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -140,12 +140,11 @@
         </div>
         <div class="collapse navbar-collapse" id="sidebar-menu">
             <ul class="navbar-nav pt-lg-3">
-                <li class="nav-item">
+                <li class="nav-item @(ViewData["Title"] == "MediaPost"  ? "active fw-bold" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Home">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                             <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
+                            <i class="ti ti-home fs-2 @(ViewData["Title"] == "MediaPost"  ? "text-blue" : "")"></i>
                         </span>
                         <span class="nav-link-title">
                             Home
@@ -153,11 +152,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item @(ViewData["Title"] == "QuestionPost"  ? "active fw-bold" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="QandA">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                             <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                            <i class="ti ti-message-question fs-2 @(ViewData["Title"] == "QuestionPost"  ? "text-blue" : "")"></i>
 
                         </span>
                         <span class="nav-link-title">
@@ -166,12 +165,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item @(ViewData["Title"] == "Chat"  ? "active fw-bold" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Chat">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                             <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
+                            <i class="ti ti-message-circle-2 fs-2 @(ViewData["Title"] == "Chat"  ? "text-blue" : "")"></i>
                         </span>
                         <span class="nav-link-title">
                             Chat
@@ -180,18 +178,6 @@
                 </li>
 
 
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="AddPost" asp-controller="Home">
-                        <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
-                        </span>
-                        <span class="nav-link-title">
-                            AddPost
-                        </span>
-                    </a>
-                </li>
 
 
 
@@ -199,3 +185,5 @@
         </div>
     </div>
 </aside>
+
+<script src="~/js/getuserloction.js"></script>

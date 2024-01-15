@@ -1,23 +1,8 @@
 ﻿@model AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostIndexDto
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "MediaPost";
 }
-<style>
-	.user-title {
-		font-size: 18px;
-	}
 
-	.formattedDate {
-		font-size: 14px;
-		color: #888;
-	}
-
-	.card-footer.border-bottom {
-		border-color: #ccc;
-		border-style: dashed;
-		border-width: 1px;
-	}
-</style>
 <style>
 	.make-me-sticky {
 		position: -webkit-sticky;
@@ -284,6 +269,7 @@
 <div class="row justify-content-center">
 	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
 		<div class="make-me-sticky">
+
 			@Html.Partial("_FilteringandUserControlPartial")
 		</div>
 
@@ -311,7 +297,8 @@
 @section Scripts {
 
 
-
+    <script src="~/js/refreshforlocation.js"></script>
+    <script src="~/js/getuserloction.js"></script>
 
 	<script>
 		$(document).on('click', '.likeBtn', function () {
