@@ -162,6 +162,12 @@ public class HomeController : Controller
         {
             return BadRequest("Please select an Image.");
         }
+
+        if(mediaPostsDto.ShortDescription.Length > 150)
+        {
+            return BadRequest("Short descripton should be less than 150");
+        }
+
         else
         {
             var fileExtension = Path.GetExtension(image.FileName).ToLower();

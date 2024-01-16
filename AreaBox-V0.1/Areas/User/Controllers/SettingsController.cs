@@ -3,7 +3,7 @@
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
 [Route("[controller]/[action]")]
-public class SettingController : Controller
+public class SettingsController : Controller
 {
     public IActionResult MyAccount()
     {

@@ -1,6 +1,7 @@
 ﻿@model AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostIndexDto
 @{
 	ViewData["Title"] = "Index";
+	ViewData["ActivePage"] = "Home";
 }
 <style>
 	.user-title {
@@ -99,11 +100,11 @@
 					@*NOTE ---  this will take it from cookie  *@
 					<input type="hidden" value="1" id="postInCity" />
 					<label class="form-label">Media Post Title</label>
-					<input type="text" class="form-control" id="mediaTitle" />
+					<input type="text" class="form-control" id="mediaTitle" maxlength="150" />
 				</div>
 				<div>
 					<label class="form-label">Media Post Description</label>
-					<textarea class="form-control" data-bs-toggle="autosize" id="mediaDescription" placeholder="Type something…"></textarea>
+					<textarea class="form-control" data-bs-toggle="autosize" id="mediaDescription" placeholder="Type something…" maxlength="450"></textarea>
 				</div>
 				<div class="mb-3">
 					<label class="form-label">Media Post Category</label>
@@ -149,7 +150,7 @@
 </div>
 
 <div class="modal" id="commentsModal" data-bs-backdrop="static" tabindex="-1">
-	<div class="modal-dialog modal-xl modal-dialog-centered">
+	<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<!-- Modal Header -->
 			<div class="modal-header">
@@ -374,7 +375,7 @@
 				uploadMultiple: false,
 				maxFiles: 1, // Set maximum number of files to 1
 				acceptedFiles: 'image/jpeg,image/jpg,image/png', // Accept only JPEG and PNG files
-				maxFilesize: 10, // Set maximum file size to 10 MB
+				maxFilesize: 50, // Set maximum file size to 50 MB
 				maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
 				autoProcessQueue: false, // Do not process the queue automatically
 				paramName: 'Image', // Set the parameter name for the file
@@ -747,6 +748,7 @@
 					success: function (response) {
 						if (response == 'no more posts') {
 							$('#commentPager').hide();
+							$('#commentsContainer').html('<div class="text-center d-flex flex-column align-items-center" style="height: 100%;"><i class="ti ti-messages fa-6x mb-3 mt-7" style="font-size: 150px;"></i><p style="font-weight: bold;">No comments yet. Be the first one!</p></div>');
 						}
 						if (response.length > 0) {
 							if (response.length < 5) {

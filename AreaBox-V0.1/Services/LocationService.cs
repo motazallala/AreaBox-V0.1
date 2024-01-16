@@ -29,16 +29,25 @@ namespace AreaBox_V0._1.Services
             var response = await _httpClient.GetStringAsync(apiUrlWithCoordinates);
             var data = JsonConvert.DeserializeObject<dynamic>(response);
 
-            var key = data.results[0].components["ISO_3166-2"][0].ToString();
+			var key = data.results[0].components["ISO_3166-2"][0].ToString();
             var country = data.results[0].components["country"].ToString();
-            var city = data.results[0].components["state"].ToString();
+            string city;
 
-            var geolocationInfo = new GeolocationInfo
+			if (data.results[0].components["state"] != null){
+                city = data.results[0].components["state"].ToString();
+			}
+            else
+            {
+                city = data.results[0].components["town"].ToString();
+			}
+
+			var geolocationInfo = new GeolocationInfo
             {
                 Key = key,
                 Country = country,
                 City = city
             };
+
 
             return JsonConvert.SerializeObject(geolocationInfo);
         }
@@ -54,20 +63,31 @@ namespace AreaBox_V0._1.Services
             var apiUrlWithCoordinates = $"{apiUrl}{latitude}+{longitude}&key={apiKey}";
 
             var response = await _httpClient.GetStringAsync(apiUrlWithCoordinates);
+
             var data = JsonConvert.DeserializeObject<dynamic>(response);
+
+			string city;
 
             var key = data.results[0].components["ISO_3166-2"][0].ToString();
             var country = data.results[0].components["country"].ToString();
-            var city = data.results[0].components["state"].ToString();
 
-            var geolocationInfo = new GeolocationInfo
+			if (data.results[0].components["state"] != null)
+			{
+				city = data.results[0].components["state"].ToString();
+			}
+			else
+			{
+				city = data.results[0].components["town"].ToString();
+			}
+
+			var geolocationInfo = new GeolocationInfo
             {
                 Key = key,
                 Country = country,
                 City = city
             };
 
-            return geolocationInfo;
+			return geolocationInfo;
         }
     }
 }

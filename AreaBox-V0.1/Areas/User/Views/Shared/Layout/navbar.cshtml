@@ -1,5 +1,28 @@
-﻿
-<aside class="navbar navbar-vertical navbar-expand-lg sticky-sm-top" data-bs-theme="dark">
+﻿<style>
+    .icons .nav-link:hover {
+        background-color: #f8f9fa;
+        border-left: 3px solid #007bff;
+    }
+
+    .icons .nav-link .nav-link-icon i {
+        font-size: 40px;
+        transition: font-size 0.3s ease;
+    }
+
+    .activePage{
+
+        color: #000;
+        font-weight: bold;
+        background-color: #f8f9fa;
+        border-left: 3px solid #007bff;
+    }
+</style>
+
+@{
+  var activePage = ViewData["ActivePage"];
+}
+
+<aside class="navbar navbar-vertical navbar-expand-lg sticky-sm-top" data-bs-theme="withe">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -133,68 +156,56 @@
                     <a href="~/profile.html" class="dropdown-item">Profile</a>
                     <a href="#" class="dropdown-item">Feedback</a>
                     <div class="dropdown-divider"></div>
-                    <a href="~/settings.html" class="dropdown-item">Settings</a>
+                    <a href="~/Settingss.html" class="dropdown-item">Settingss</a>
                     <a href="~/sign-in.html" class="dropdown-item">Logout</a>
                 </div>
             </div>
         </div>
         <div class="collapse navbar-collapse" id="sidebar-menu">
-            <ul class="navbar-nav pt-lg-3">
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="Index" asp-controller="Home">
+            <ul class="navbar-nav pt-lg-4">
+                <li class="icons @(activePage == "Home" ? "activePage" : "")">
+                    <a class="nav-link p-3" asp-action="Index" asp-controller="Home" data-bs-toggle="tooltip" data-bs-placement="right" title="Hoem">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
+                            <i class="ti ti-home text-pink" style="font-size: 30px;"></i>
                         </span>
-                        <span class="nav-link-title">
+                        <span class="nav-link-title ms-2 fs-3">
                             Home
                         </span>
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="Index" asp-controller="QandA">
+                <li class="icons @(activePage == "QandA" ? "activePage" : "")">
+                    <a class="nav-link p-3" asp-action="Index" asp-controller="QandA" data-bs-toggle="tooltip" data-bs-placement="right" title="Question and Answer">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
+                            <i class="ti ti-message-question" style="font-size: 30px;"></i>
                         </span>
-                        <span class="nav-link-title">
+                        <span class="nav-link-title ms-2 fs-3">
                             Q And A
                         </span>
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="Index" asp-controller="Chat">
+                <li class="icons @(activePage == "Chat" ? "activePage" : "")">
+                    <a class="nav-link p-3" asp-action="Index" asp-controller="Chat" data-bs-toggle="tooltip" data-bs-placement="right" title="Chat">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
+                            <i class="ti ti-message-circle-2" style="font-size: 30px;"></i>
                         </span>
-                        <span class="nav-link-title">
+                        <span class="nav-link-title ms-2 fs-3">
                             Chat
                         </span>
                     </a>
                 </li>
 
-
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="AddPost" asp-controller="Home">
+                <li class="icons @(activePage == "Settingss" ? "activePage" : "")">
+                    <a class="nav-link p-3" asp-action="Index" asp-controller="Chat" data-bs-toggle="tooltip" data-bs-placement="right" title="Chat">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-
+                            <i class="ti ti-message-circle-2" style="font-size: 30px;"></i>
                         </span>
-                        <span class="nav-link-title">
-                            AddPost
+                        <span class="nav-link-title ms-2 fs-3">
+                            Chat
                         </span>
                     </a>
                 </li>
-
-
-
             </ul>
         </div>
     </div>
