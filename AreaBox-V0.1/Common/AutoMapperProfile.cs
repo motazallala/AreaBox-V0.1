@@ -4,6 +4,7 @@ using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using AutoMapper;
@@ -89,6 +90,16 @@ namespace AreaBox_V0._1.Common
 				.ForMember(dest => dest.LastName, src => src.MapFrom(src => src.User.LastName))
 				.ForMember(dest => dest.ProfilePicture, src => src.MapFrom(src => src.User.ProfilePicture))
 				;
+
+
+			CreateMap<QuestionPosts, UQuestionPostOutPutDto>()
+                .ForMember(dest => dest.UserName, src => src.MapFrom(src => src.Qpuser.UserName))
+				.ForMember(dest => dest.UserImage, src => src.MapFrom(src => src.Qpuser.ProfilePicture))
+                .ForMember(dest => dest.CountryName, src => src.MapFrom(src => src.Qpcity.Country.CountryName))
+                .ForMember(dest => dest.CityName, src => src.MapFrom(src => src.Qpcity.CityName))
+                .ForMember(dest => dest.CategoryName, src => src.MapFrom(src => src.Qpcategory.CategoryName))
+
+                ;
 
 			CreateMap<MediaPostLikes, UMediaPostOutputDto>();
 

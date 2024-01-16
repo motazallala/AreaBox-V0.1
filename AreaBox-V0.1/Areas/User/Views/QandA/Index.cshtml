@@ -182,6 +182,52 @@
 </div>
 
 
+<div class="modal modal-blur fade" id="myQuestionPostComment" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="col-md-12">
+                <div class="page-body">
+                    <div class="container-xl">
+                        <div class="d-flex align-items-center  mb-3">
+                            <img class="avatar" src="" id="UserImage"/>
+                            <div class="ms-2">
+                                <a class="text-body" id="UserName"></a>
+                                <div class="text-secondary" id="QPDate"></div>
+                            </div>
+                        </div>
+                        <h3 class="card-title"><a id="QPTitle"></a></h3>
+                        <div class="text-secondary mb-2" id="QPDescription"></div>
+                        <div class="card">
+                            <div class="card-body" style="height: 60vh; overflow-y: auto;">
+                                <div class="chat">
+                                    <div id="commentsContainer">
+
+                                    </div>
+                                    <div id="commentPager">
+                                        <button class="btn btn-primary mt-5" id="loadMoreComments">Load More</button>
+                                    </div>
+                                    <div id="loading-indicator2" class="my-5" style="display: none;">
+                                        <div class="spinner-border text-primary"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <input type="text" class="form-control mb-2" id="commentContentInput" placeholder="Add a comment...">
+                                <button class="btn btn-primary" id="addCommentButton">Add Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 <div class="row justify-content-center">
@@ -560,6 +606,167 @@
                     }, 3000);
                 }
             });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        let currentPage = 1;
+        let questionPostId;
+        let resCount = 0;
+        var userName = document.querySelector('h3[data-username]').getAttribute('data-username');
+        var userImage = document.querySelector('img[data-userimage]').getAttribute('data-userimage');
+        var QPTitle = document.querySelector('h3[data-title]').getAttribute('data-title');
+        var QPDescription = document.querySelector('p[data-description]').getAttribute('data-description');
+        var addUserImage = document.getElementById('UserImage');
+
+        $('#myQuestionPostComment').on('show.bs.modal', function (event) {
+            questionPostId = $(event.relatedTarget).data('id');
+
+            // $(window).scroll(function () {
+            // 	if (
+            // 		!commentLoading &&
+            // 		$(window).scrollTop() + $(window).height() >= $(document).height() - 100
+            // 	) {
+            // 		commentLoading = true;
+            // 		loadMoreComments();
+            // 	}
+            // });
+
+            loadMoreComments();
+        });
+
+        $('#myQuestionPostComment').on('hide.bs.modal', function () {
+            currentPage = 1;
+
+            if (resCount > 0) {
+                resCount--;
+            }
+            addUserImage.src = '';
+            $('#UserName').text('');
+            $('#QPTitle').text('');
+            $('#QPDescription').text('');
+            $('#commentsContainer').empty();
+            $('#commentPager').show();
+        });
+
+        function displayComments(comments) {
+            let commentsHtml = '';
+            comments.forEach(function (comment) {
+                commentsHtml += `
+                                                    <div class="row align-items-end">
+                                                        <div class="col-auto">
+                                                            <img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+                                                        </div>
+                                                        <div class="col col-lg-10 mt-3">
+                                                            <div class="chat-bubble">
+                                                                <div class="chat-bubble-title">
+                                                                    <div class="row">
+                                                                        <div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+                                                                        <div class="col-auto chat-bubble-date">${comment.commentDate}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="chat-bubble-body">
+                                                                    <!-- Displaying the comment content -->
+                                                                    <p>${comment.commentContent}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    `;
+            });
+            $('#commentsContainer').append(commentsHtml);
+        }
+
+        function loadMoreComments() {
+            $.ajax({
+                url: `/QandA/GetQuestionPostComments`,
+                type: 'GET',
+                data: { questionPostId: questionPostId, page: currentPage },
+                success: function (response) {
+
+                    addUserImage.src = '';
+                    $('#UserName').text('');
+                    $('#QPTitle').text('');
+                    $('#QPDescription').text('');
+
+                    addUserImage.src = userImage;
+                    $('#UserName').append(userName);
+                    $('#QPTitle').append(QPTitle)
+                    $('#QPDescription').append(QPDescription)
+
+                    if (response == 'No more comments' && resCount == 0) {
+                        $('#commentPager').hide();
+                        $('#commentsContainer').html('<div class="text-center d-flex flex-column align-items-center" style="height: 100%;"><i class="ti ti-messages fa-6x mb-3 mt-7" style="font-size: 150px;"></i><p style="font-weight: bold;">No comments yet. Be the first one!</p></div>');
+                        return;
+                    }
+
+                    if (response == 'No more comments') {
+                        $('#commentPager').hide();
+                    }
+
+                    if (response.length > 0) {
+                        if (response.length < 5) {
+                            $('#commentPager').hide();
+                        }
+
+                        displayComments(response);
+                        currentPage++;
+                        resCount++;
+                        commentLoading = false;
+                        $('#commentsModal').scrollTop($('#commentsModal')[0].scrollHeight);
+                    }
+                    else {
+                        commentLoading = false;
+                        $('#commentPager').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error('Error loading more comments:', error);
+                }
+            });
+        }
+
+        $('#loadMoreComments').on('click', function () {
+            loadMoreComments();
+        });
+
+        function addComment() {
+            var commentContent = $('#commentContentInput').val();
+            var formData = new FormData();
+            formData.append('PostId', questionPostId);
+            formData.append('CommentContent', commentContent);
+
+            $.ajax({
+                url: '/QandA/AddCommentToQuestionPost',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#commentContentInput').val('');
+                    currentPage = 1;
+                    $('#commentsContainer').empty();
+                    $('#commentPager').show();
+                    loadMoreComments();
+                },
+                error: function (error) {
+                    console.error('Error adding comment:', error);
+                }
+            });
+        }
+
+        $('#addCommentButton').on('click', function () {
+            addComment();
+        });
+
+        $('#commentContentInput').on('keydown', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                addComment();
+            }
         });
     });
 </script>

@@ -45,9 +45,12 @@
 						const geolocationInfo = JSON.parse(response);
 						const hiddenInput = document.createElement("input");
 
+						hiddenInput.type = "hidden";
 						hiddenInput.id = "hiddenCityID";
-						hiddenInput.value = geolocationInfo.key;
-						hiddenInput.setAttribute("data-userid", "@user.Id"); 
+						hiddenInput.value = geolocationInfo.Key;
+						hiddenInput.setAttribute("data-userid", "@user.Id");
+						document.body.appendChild(hiddenInput);
+
 					},
 					error: function (error) {
 						console.error('Error fetching geolocation details:', error);
@@ -65,7 +68,15 @@
 <script>
 	const connection = new signalR.HubConnectionBuilder()
 		.withUrl("/chathub")
+		.withAutomaticReconnect()
+		.configureLogging(signalR.LogLevel.Information)
 		.build();
+
+
+	function scrollToBottom() {
+		const chatContainer = document.querySelector(".card-body.scrollable");
+		chatContainer.scrollTop = chatContainer.scrollHeight;
+	}
 
 	connection.on("ReceiveMessage", (userId, userName, userImage, message, time) => {
 		const chatBubbles = document.querySelector(".chat-bubbles");
@@ -74,7 +85,7 @@
 
 		const cuserId = hiddenInput.getAttribute('data-userid');
 		chatItem.className = "chat-item";
-		
+
 		const currentUserId = cuserId;
 
 		const isCurrentUser = userId === currentUserId;
@@ -83,31 +94,12 @@
 		const bubbleClass = isCurrentUser ? "bg-primary text-white" : "bg-light";
 		let chatBubble = ``;
 
-		if (isCurrentUser) { 
-			chatBubble = `
-			<div class="row align-items-end ${alignmentClass}">
-					<div class="col-auto d-flex align-items-center justify-content-center">
-						<span class="avatar" style="background-image: url('${userImage}');""></span>
-				</div>
-				<div class="col col-lg-6">
-					<div class="chat-bubble ${bubbleClass}">
-						<div class="chat-bubble-title">
-							<div class="row">
-								<div class="col chat-bubble-author">${userName}</div>
-								<div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
-							</div>
-						</div>
-						<div class="chat-bubble-body">
-							<p>${message}</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		`;
-		}
-		else{
+		if (isCurrentUser) {
 			chatBubble = `
 				<div class="row align-items-end ${alignmentClass}">
+						<div class="col-auto d-flex align-items-center justify-content-center">
+							<span class="avatar" style="background-image: url('${userImage}');""></span>
+					</div>
 					<div class="col col-lg-6">
 						<div class="chat-bubble ${bubbleClass}">
 							<div class="chat-bubble-title">
@@ -121,25 +113,45 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-auto">
-						<span class="avatar" style="background-image: url('${userImage}');"></span>
-					</div>
 				</div>
 			`;
+		}
+		else {
+			chatBubble = `
+					<div class="row align-items-end ${alignmentClass}">
+						<div class="col col-lg-6">
+							<div class="chat-bubble ${bubbleClass}">
+								<div class="chat-bubble-title">
+									<div class="row">
+										<div class="col chat-bubble-author">${userName}</div>
+										<div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
+									</div>
+								</div>
+								<div class="chat-bubble-body">
+									<p>${message}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-auto">
+							<span class="avatar" style="background-image: url('${userImage}');"></span>
+						</div>
+					</div>
+				`;
 		}
 
 		chatItem.innerHTML = chatBubble;
 		chatBubbles.appendChild(chatItem);
+		scrollToBottom();
+
 	});
-
-
 
 	connection.start().catch(err => console.error(err));
 
 	function sendMessage() {
-		const cityInput = document.getElementById('hiddenCityID');
+		let cityInput = document.getElementById('hiddenCityID');
+		let city = cityInput.value;
+
 		const messageInput = document.getElementById("messageInput");
-		const city = cityInput.value;
 		const message = messageInput.value;
 		const time = Date.now();
 
@@ -148,6 +160,7 @@
 		connection.invoke("SendMessage", message, city, time).catch(err => console.error(err));
 
 		messageInput.value = "";
+
 	}
 
 	function handleEnter(event) {
@@ -163,3 +176,6 @@
 		connection.invoke("LeaveCityGroup", city).catch(err => console.error(err));
 	});
 </script>
+
+
+

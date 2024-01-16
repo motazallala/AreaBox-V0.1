@@ -1,0 +1,129 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<aside class="navbar navbar-vertical navbar-expand-lg sticky-top" data-bs-theme="ligth">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <h1 class="navbar-brand navbar-brand-autodark">
+            <a href=".">
+                <img src="./static/logo.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+            </a>
+        </h1>
+        <div class="navbar-nav flex-row d-lg-none">
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                    <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                    <div class="d-none d-xl-block ps-2">
+                        <div>Paweł Kuna</div>
+                        <div class="mt-1 small text-muted">UI Designer</div>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <a asp-area="Auth" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-item">Logout</a>
+                </div>
+            </div>
+        </div>
+
+@*        This is the main menu*@
+
+        <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+                <li class="nav-item @(ViewData["Title"] == "My Account"  ? "active" : "")">
+                    <a class="nav-link" asp-action="MyAccount" asp-controller="Settings">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                        </span>
+                        <span class="nav-link-title">
+                            My Account
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewData["Title"] == "My Category"  ? "active" : "")">
+                    <a class="nav-link" asp-action="MyCategory" asp-controller="Settings">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                        </span>
+                        <span class="nav-link-title">
+                            My Category
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewData["Title"] == "My Media Post"  ? "active" : "")">
+                    <a class="nav-link" asp-action="MyMediaPost" asp-controller="Settings">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                        </span>
+                        <span class="nav-link-title">
+                            My Media Post
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewData["Title"] == "My Question Post"  ? "active" : "")">
+                    <a class="nav-link" asp-action="MyQuestionPost" asp-controller="Settings">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                        </span>
+                        <span class="nav-link-title">
+                            My Question Post
+                        </span>
+                    </a>
+                </li>
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="ti ti-archive" style="font-size:19px"></i>
+                        </span>
+                        <span class="nav-link-title">
+                            Saved Post
+                        </span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a asp-action="SavedMediaPost" asp-controller="Settings" class="dropdown-item  @(ViewData["Title"] == "Saved Media Post"  ? "active" : "")"  rel="noopener">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-photo" style="font-size:18px;"></i>
+                            </span>
+                            <span class="nav-link-title">
+                                Media Post
+                            </span>
+                        </a>
+                        <a asp-action="SavedQuestionPost" asp-controller="Settings" class="dropdown-item @(ViewData["Title"] == "Saved Question Post"  ? "active" : "")">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-message-2-question" style="font-size:18px;"></i>
+                            </span>
+                            <span class="nav-link-title">
+                                Question Post
+                            </span>
+                        </a>
+                    </div>
+                </li>
+
+                <li class="nav-item @(ViewData["Title"] == "Techical Report"  ? "active" : "")">
+                    <a class="nav-link" asp-action="TechicalReport" asp-controller="Settings">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                        </span>
+                        <span class="nav-link-title">
+                            Techical Report
+                        </span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+</aside>

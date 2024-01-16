@@ -4,25 +4,27 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Admin" asp-page="/Settingss/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="login-btn">
-            <form id="logoutForm" class="form-inline" asp-area="Auth" asp-page="/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <a id="logout" type="submit" class="item-btn"><i class="fas fa-user"></i>Logout</a>
-        </form>
-    </li>
-}
-else
-{
-@*    <li class="login-btn">
-            <a class="item-btn" id="register" asp-area="Auth" asp-page="/Register"><i class="fas fa-user"></i>Register</a>
-    </li>*@
-    <li class="login-btn">
-            <a class="item-btn" id="login" asp-area="Auth" asp-page="/Login"><i class="fas fa-user"></i>Login</a>
-    </li>
-}
-</ul>
+<div class="col">
+    <ul class="navbar-nav">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li class="nav-item">
+                <a id="manage" class="nav-link text-dark" asp-area="Admin" asp-page="/Settingss/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+            </li>
+            <li class="login-btn ml-2">
+                <form id="logoutForm" class="form-inline" asp-area="Auth" asp-page="/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button id="logout" type="submit" class="item-btn"><i class="fas fa-user"></i>Logout</button>
+                </form>
+            </li>
+        }
+        else
+        {
+            <li class="login-btn">
+                <a class="item-btn" id="register" asp-area="Auth" asp-page="/Register"><i class="fas fa-user"></i>Register</a>
+            </li>
+            <li class="login-btn">
+                <a class="item-btn" id="login" asp-area="Auth" asp-page="/Login"><i class="fas fa-user"></i>Login</a>
+            </li>
+        }
+    </ul>
+</div>

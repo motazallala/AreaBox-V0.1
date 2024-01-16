@@ -1,10 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
+using AreaBox_V0._1.Data.Interface;
+using AreaBox_V0._1.Data.Model;
+using AreaBox_V0._1.Models.Dto;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Area("User")]
 [Route("[controller]/[action]")]
 public class SettingsController : Controller
 {
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUnitOfWork _db;
+
+    public SettingsController(UserManager<ApplicationUser> userManager, IUnitOfWork db)
+    {
+        _userManager = userManager;
+        _db = db;
+    }
     public IActionResult MyAccount()
     {
         return View();
@@ -14,14 +29,21 @@ public class SettingsController : Controller
     {
         return View();
     }
-    public IActionResult MyMediaPost()
+
+    public async Task<IActionResult> MyMediaPostAsync()
     {
-        return View();
+		var user = await _userManager.GetUserAsync(User);
+		var results = await _db.MediaPosts.FindAll<MediaPosts, UMediaPostOutputDto>(e => e.MpuserId == user.Id, new[] { "Mpcity", "Mpcategory" });
+		return View(results);
     }
-    public IActionResult MyQuestionPost()
+
+    public async Task<IActionResult> MyQuestionPost()
     {
-        return View();
+        var user = await _userManager.GetUserAsync(User);
+		var results = await _db.MediaPosts.FindAll<QuestionPosts, UQuestionPostOutPutDto>(e => e.QpuserId == user.Id, new[] { "Qpcity", "Qpcity.Country", "Qpcategory" });
+		return View(results);
     }
+
     public IActionResult SavePost()
     {
         return View();

@@ -682,6 +682,7 @@
 		$(document).ready(function () {
 			let currentPage = 1;
 			let mediaPostId;
+			let resCount = 0;
 
 
 			$('#commentsModal').on('show.bs.modal', function (event) {
@@ -701,13 +702,16 @@
 				// 	}
 				// });
 
-				console.log($(window).height())
-				console.log($(document).height())
 				loadMoreComments();
 			});
 
 			$('#commentsModal').on('hide.bs.modal', function () {
 				currentPage = 1;
+
+				if(resCount > 0){
+					resCount--;
+				}
+
 				$('#commentsContainer').empty();
 				$('#commentPager').show();
 			});
@@ -746,10 +750,17 @@
 					type: 'GET',
 					data: { mediaPostId: mediaPostId, page: currentPage },
 					success: function (response) {
-						if (response == 'no more posts') {
+
+						if (response == 'no more posts' && resCount == 0) {
 							$('#commentPager').hide();
 							$('#commentsContainer').html('<div class="text-center d-flex flex-column align-items-center" style="height: 100%;"><i class="ti ti-messages fa-6x mb-3 mt-7" style="font-size: 150px;"></i><p style="font-weight: bold;">No comments yet. Be the first one!</p></div>');
+							return;
 						}
+
+						if (response == 'no more posts') {
+							$('#commentPager').hide();
+						}
+
 						if (response.length > 0) {
 							if (response.length < 5) {
 								$('#commentPager').hide();
@@ -757,6 +768,7 @@
 
 							displayComments(response);
 							currentPage++;
+							resCount++;
 							commentLoading = false;
 							$('#commentsModal').scrollTop($('#commentsModal')[0].scrollHeight);
 						}

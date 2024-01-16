@@ -448,12 +448,12 @@ public class HomeController : Controller
         }
         if (mediaPostId == null)
         {
-            return BadRequest("Choose post to display comment ");
+            return BadRequest("Choose post to display comment");
         }
         var mediapost = await db.MediaPosts.CheckItemExistence<MediaPosts>(e => e.MpostId == mediaPostId);
         if (mediapost == false)
         {
-            return BadRequest("the post not Exists");
+            return BadRequest("The post not exists");
         }
 
         int resultCount = await db.MediaPostComments.Count<MediaPostComments>(e=>e.MpostId == mediaPostId);
@@ -494,14 +494,14 @@ public class HomeController : Controller
             return BadRequest("The post not exists!");
         }
 
-        var newPostLike = new MediaPostComments
+        var newComment = new MediaPostComments
         {
             MpostId = input.PostId,
             UserId = userId,
             MpcommentContent = input.CommentContent,
             MpcommnetDate = DateTime.Now
         };
-        db.MediaPostComments.Add(newPostLike);
+        db.MediaPostComments.Add(newComment);
         mediapost.CommentCount++;
         db.MediaPosts.Update(mediapost);
         await db.Save();

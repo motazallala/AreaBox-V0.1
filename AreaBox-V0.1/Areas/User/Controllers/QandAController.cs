@@ -1,4 +1,6 @@
-﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Input;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostReportTypeDto.Send;
+using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostCommentsDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.Input;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
@@ -18,7 +20,7 @@ public class QandAController : Controller
 {
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly IUnitOfWork db;
-	private readonly int PageSize = 15;
+	private readonly int PageSize = 5;
 	public QandAController(UserManager<ApplicationUser> userManager, IUnitOfWork _db)
 	{
 		_userManager = userManager;
@@ -181,26 +183,29 @@ public class QandAController : Controller
 
     #region Comment Fun
     [HttpGet]
-	public async Task<IActionResult> GetQuestionPostComments([FromForm] string questionPostId, [FromForm] int page = 1)
+	public async Task<IActionResult> GetQuestionPostComments(string questionPostId, int page = 1)
 	{
 		if (page < 1)
 		{
 			page = 1;
 		}
+
 		if (questionPostId == null)
 		{
 			return BadRequest("Choose post to display comment ");
 		}
+
 		var questionPosts = await db.QuestionPosts.CheckItemExistence<QuestionPosts>(e => e.QpostId == questionPostId);
 		if (questionPosts == false)
 		{
-			return BadRequest("the post not Exists");
+			return BadRequest("The post not exists");
 		}
+
 		int resultCount = await db.QuestionPostComments.Count<QuestionPostComments>();
 		int pages = (int)Math.Ceiling((double)resultCount / PageSize);
 		if (page > pages)
 		{
-			return Ok("no more posts");
+			return Ok("No more comments");
 
 		}
 		int skip = PageSize * (page - 1);
@@ -208,9 +213,48 @@ public class QandAController : Controller
 		var resalt = await db.QuestionPostComments.FindAndFilter<QuestionPostComments, UQuestionPostCommentsOutputDto>(new[] { "User" }, skip, take, e => e.QpostId == questionPostId);
 		return Ok(resalt);
 	}
-	#endregion
 
-	[HttpGet]
+    [HttpPost]
+    public async Task<IActionResult> AddCommentToQuestionPost([FromForm] UQuestionPostCommentsInputDto input)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (userId == null)
+        {
+            return BadRequest("Log in to comment on this post!");
+        }
+
+        if (input.PostId == null)
+        {
+            return BadRequest("Choose Question Post to comment.");
+        }
+
+        var quetionPost = await db.QuestionPosts.GetByIdAsync(input.PostId);
+
+
+        if (quetionPost == null)
+        {
+            return BadRequest("The post not exists!");
+        }
+
+        var newComment = new QuestionPostComments
+        {
+            QpostId = input.PostId,
+            UserId = userId,
+            QpcommentContent = input.CommentContent,
+            QpcommentDate = DateTime.Now
+        };
+
+        db.QuestionPostComments.Add(newComment);
+        quetionPost.CommentCount++;
+        db.QuestionPosts.Update(quetionPost);
+        await db.Save();
+        return Ok("Comment has been added");
+    }
+
+    #endregion
+
+    [HttpGet]
 	public async Task<IActionResult> GetQuestionPostReportTypes(string questionPostId)
 	{
 		if (questionPostId == null)
