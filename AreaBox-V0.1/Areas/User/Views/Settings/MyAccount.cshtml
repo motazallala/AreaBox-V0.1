@@ -7,6 +7,141 @@
 }
 
 
+<!--=====================================-->
+<!--=        Edit user image model      =-->
+<!--=====================================-->
+
+<div class="modal modal-blur" id="editUserImageModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload profile picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class=" mb-3 align-items-end">
+                    <div class="dropzone" id="dropzone-default" action="./" autocomplete="off" novalidate>
+                        <div class="fallback">
+                            <input name="file" type="file" id="userImage" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveImage" data-bs-dismiss="modal">Save change</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--=====================================-->
+<!--=          Edit email model       	=-->
+<!--=====================================-->
+
+<div class="modal modal-blur" id="editUserEmailModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editUserEmail" />
+                <div class="row mb-3 align-items-end">
+                    <div class="col">
+                        <label class="form-label">Your Email</label>
+                        <input type="text" class="form-control" value="@user.Email" disabled />
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">New Email</label>
+                    <input type="text" class="form-control" id="userEmailInput" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateEmail" data-bs-dismiss="modal">Update Email</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--=====================================-->
+<!--=      Conferm edit user info       =-->
+<!--=====================================-->
+
+<div class="modal modal-blur fade" id="confermEditInfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-primary"></div>
+            <div class="modal-body text-center py-4">
+                <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-primary icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                <h3>Are you sure?</h3>
+                <div class="text-secondary">Do you really want to update your info?</div>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                        <div class="col">
+                            <a class="btn w-100" data-bs-dismiss="modal">
+                                Cancel
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-primary w-100" id="saveChangesBtn" data-bs-dismiss="modal">
+                                Save
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--=====================================-->
+<!--=       Edit user password model    =-->
+<!--=====================================-->
+
+<div class="modal modal-blur" id="editUserPasswordModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit your password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 align-items-end">
+                    <div class="col">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="oldPassword" class="form-control" />
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" />
+                </div>
+                <div>
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="changePasswordBtn" data-bs-dismiss="modal">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="card-body">
     <h2 class="mb-4">My Account</h2>
     <h3 class="card-title">Profile Details</h3>
@@ -15,7 +150,7 @@
             <img class="avatar avatar-xl" src="@user.ProfilePicture" />
         </div>
         <div class="col-auto">
-            <a href="#" class="btn">
+            <a data-bs-toggle="modal" data-bs-target="#editUserImageModal" class="btn">
                 Change avatar
             </a>
         </div>
@@ -41,10 +176,10 @@
                         <div>
                             <div class="row g-2">
                                 <div class="col-auto">
-                                    <input type="text" class="form-control w-auto" value="@user.Email">
+                                    <input type="text" class="form-control w-auto" asp-for="@user.Email" disabled>
                                 </div>
                                 <div class="col-auto">
-                                    <a href="#" class="btn">
+                                    <a data-bs-toggle="modal" data-bs-target="#editUserEmailModal" class="btn">
                                         Change
                                     </a>
                                 </div>
@@ -56,50 +191,53 @@
                 <div class="col-sm-6 col-md-6">
                     <div class="mb-3">
                         <label class="form-label">First Name</label>
-                        <input type="text" class="form-control" placeholder="First Name" value="@user.FirstName">
+                        <input type="text" class="form-control" id="userFirstName" placeholder="First Name" asp-for="@user.FirstName">
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Last Name</label>
-                        <input type="text" class="form-control" placeholder="Full Name" value="@user.LastName">
+                        <input type="text" class="form-control" id="userLastName" placeholder="Full Name" asp-for="@user.LastName">
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" placeholder="Phone Number" value="@user.PhoneNumber">
+                        <input type="number" class="form-control" id="userPhoneNumber" placeholder="Phone Number" asp-for="@user.PhoneNumber">
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Gender</label>
-                        <input type="text" class="form-control" placeholder="Gender" value="@user.Gender">
+                        <select class="form-select" id="userGender">
+                            <!option value="Male" @(user.Gender == "Male" ? "selected" : "")>Male</!option>
+                            <!option value="Female"  @(user.Gender == "Female" ? "selected" : "")>Female</!option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="col-md-12">
                     <div class="mb-3 mb-0">
                         <label class="form-label">About Me</label>
-                        <textarea rows="5" class="form-control" placeholder="Here can be your description" value="Mike">@user.Bio</textarea>
+                        <textarea rows="5" id="userBio" class="form-control" placeholder="Here can be your description" asp-for="@user.Bio"></textarea>
                     </div>
                 </div>
 
                 <h3 class="card-title mt-4">Password</h3>
                 <p class="card-subtitle">You can set a permanent password if you don't want to use temporary login codes.</p>
                 <div>
-                    <a href="#" class="btn">
+                    <a class="btn" data-bs-toggle="modal" data-bs-target="#editUserPasswordModal">
                         Set new password
                     </a>
                 </div>
             </div>
             <div class="card-footer bg-transparent mt-auto">
                 <div class="btn-list justify-content-end">
-                    <a href="#" class="btn">
+                    <a class="btn">
                         Cancel
                     </a>
-                    <a href="#" class="btn btn-primary">
-                        Submit
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confermEditInfoModal">
+                        Save Changes
                     </a>
                 </div>
             </div>
@@ -108,4 +246,219 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#updateEmail").on("click", function () {
+            var data = {
+                newEmail: $("#userEmailInput").val()
+            };
+
+            var formData = new FormData();
+
+            for (var key in data) {
+                formData.append(key, data[key]);
+            }
+
+            $.ajax({
+                url: '/UserApi/ChangeUserEmail',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 4000);
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 4000);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#saveChangesBtn").on("click", function () {
+            var updatedUserInfo = {
+                FirstName: $("#userFirstName").val(),
+                LastName: $("#userLastName").val(),
+                Gender: $("#userGender").val(),
+                PhoneNumber: $("#userPhoneNumber").val(),
+                Bio: $("#userBio").val()
+            };
+
+            var formData = new FormData();
+
+            for (var key in updatedUserInfo) {
+                formData.append(key, updatedUserInfo[key]);
+            }
+
+            $.ajax({
+                url: '/UserApi/ChangeUserInfo',
+                type: 'POST',
+                contentType: 'application/json',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 4000);
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 4000);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+
+        var myDropzone = new Dropzone("#dropzone-default", {
+            URL: none,
+            uploadMultiple: false,
+            maxFiles: 1,
+            acceptedFiles: 'image/jpeg,image/jpg,image/png', // Accept only JPEG and PNG files
+            maxFilesize: 50, // Set maximum file size to 50 MB
+            maxFilesizeUnit: 'MB', // Specify the unit for maxFilesize
+            autoProcessQueue: false, // Do not process the queue automatically
+            paramName: 'Image', // Set the parameter name for the file
+            addRemoveLinks: true, // Show remove link on preview
+            parallelUploads: 1, // Upload one file at a time
+            
+            init: function () {
+                var submitButton = document.querySelector("#saveImage");
+                var self = this; // Store reference to the Dropzone object
+
+                submitButton.disabled = true;
+
+                this.on("addedfile", function () {
+                    submitButton.disabled = false;
+                    // Start the manual upload simulation
+                    simulateUpload();
+                });
+
+                this.on("removedfile", function () {
+                    if (this.files.length === 0) {
+                        submitButton.disabled = true;
+                    }
+                });
+
+                function simulateUpload() {
+                    var file = self.files[0];
+                    var totalSteps = 100;
+                    var currentStep = 0;
+
+                    var uploadInterval = setInterval(function () {
+                        var random = 15 + Math.random() * 25;
+                        currentStep += random;
+                        var progress = currentStep;
+
+                        self.emit('uploadprogress', file, progress, progress);
+
+                        if (currentStep >= totalSteps) {
+                            clearInterval(uploadInterval);
+                            self.emit('success', file, 'success', null);
+                            self.emit('complete', file);
+                            self.processQueue();
+                        }
+                    }, 200);
+                }
+            }
+        });
+
+        $("#saveImage").click(function () {
+            var formData = new FormData();
+
+            var file = myDropzone.files[0];
+            if (file) {
+                formData.append('Image', file);
+            }
+
+            $.ajax({
+                url: '/UserApi/ChangeUserImage',
+                type: 'POST',
+                data: formData,
+                processData: false,  
+                contentType: false,
+                success: function (data) {
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 3000);
+
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#changePasswordBtn").on("click", function () {
+
+            var data = {
+                oldPassword: $("#oldPassword").val(),
+                newPassword: $("#newPassword").val(),
+                confirmPassword : $("#confirmPassword").val()
+            };
+
+            var formData = new FormData();
+
+            for (var key in data) {
+                formData.append(key, data[key]);
+            }
+
+            $.ajax({
+                url: '/UserApi/ChangeUserPassword',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 3000);
+7                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
+                }
+            });
+        });
+    });
+</script>
+
 
