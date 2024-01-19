@@ -191,8 +191,8 @@ public class HomeController : Controller
                 MpuserId = userId,
                 Mpimage = base64String,
                 Mpdate = DateTime.Now,
-                MpcityId = 1,
-                MpcategoryId = 1,
+                MpcityId = mediaPostsDto.CityId,
+                MpcategoryId = mediaPostsDto.CategoryId,
                 MpshortDescription = mediaPostsDto.ShortDescription,
                 MplongDescription = mediaPostsDto.LongDescription,
                 Mpstate = false

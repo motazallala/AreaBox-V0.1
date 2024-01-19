@@ -3772,7 +3772,7 @@ nav.template-main-menu > ul > li:hover ul.mega-menu {
 
 /*------------------- 4.8 Preloader -------------------*/
 #preloader {
-    background: #ffffff url("../../media/preloader.gif") no-repeat scroll center center;
+    background: #ffffff url("../../../userhome/media/loading.png") no-repeat scroll center center;
     height: 100%;
     left: 0;
     overflow: visible;

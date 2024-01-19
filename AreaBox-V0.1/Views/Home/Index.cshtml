@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using AreaBox_V0._1.Data.Model
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
     ViewData["Title"] = "Home Page";
 }
 <!--=====================================-->
@@ -7,18 +12,34 @@
 <section class="hero-banner">
     <div class="container">
         <div class="hero-content" data-sal="zoom-out" data-sal-duration="1000">
-            <h1 class="item-title">Cirkle Community</h1>
-            <p>Having real social contacts can sometimes be difficult FUN, everything becomes much simpler!</p>
-            <div class="item-number">10,95,219</div>
+            <h1 class="item-title">Area Box Community</h1>
+            <p>Provides multilingual support, further enhancing its global accessibility and user inclusivity.</p>
+            <div class="item-number">10,95219</div>
             <div class="conn-people">Connected People</div>
-            <a href="newsfeed.html" class="button-slide">
-                <span class="btn-text">Discover Now</span>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a asp-action="Index" asp-controller="Home" asp-area="User" class="button-slide">
+                    <span class="btn-text">Discover Now</span>
+
                 <span class="btn-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
                         <path fill-rule="evenodd" fill="rgb(255, 255, 255)" d="M16.671,9.998 L12.997,9.998 L16.462,6.000 L5.000,6.000 L5.000,4.000 L16.462,4.000 L12.997,0.002 L16.671,0.002 L21.003,5.000 L16.671,9.998 ZM17.000,5.379 L17.328,5.000 L17.000,4.621 L17.000,5.379 ZM-0.000,4.000 L3.000,4.000 L3.000,6.000 L-0.000,6.000 L-0.000,4.000 Z" />
                     </svg>
                 </span>
-            </a>
+                </a>
+            }
+            else
+            {
+                <a asp-area="Auth" asp-page="/Login" class="button-slide">
+                    <span class="btn-text">Discover Now</span>
+
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
+                            <path fill-rule="evenodd" fill="rgb(255, 255, 255)" d="M16.671,9.998 L12.997,9.998 L16.462,6.000 L5.000,6.000 L5.000,4.000 L16.462,4.000 L12.997,0.002 L16.671,0.002 L21.003,5.000 L16.671,9.998 ZM17.000,5.379 L17.328,5.000 L17.000,4.621 L17.000,5.379 ZM-0.000,4.000 L3.000,4.000 L3.000,6.000 L-0.000,6.000 L-0.000,4.000 Z" />
+                        </svg>
+                    </span>
+                </a>
+            }
         </div>
     </div>
     <div class="leftside-image">
@@ -48,9 +69,21 @@
             <div class="col-lg-6">
                 <div class="why-choose-box">
                     <div class="item-subtitle">What We Do</div>
-                    <h2 class="item-title"><span>Why Join Our</span> Cirkle from Social Network ?</h2>
-                    <p>Social hen an unknown printer took a galley of type and scrambled make type specimen book. It has survived not only five centuries but also the leap into electronic typesetting, remaining essentialunchanged they popularised with release.</p>
-                    <a asp-area="Auth" asp-page="/Login" class="button-slide">
+                    <h2 class="item-title"><span>Why Join Our</span> Area Box from Social Network ?</h2>
+                    <p>Area Box is a groundbreaking web application revolutionizing social connections by introducing location-based communication. Users can seamlessly engage with content, chat, and participate in a unique Q&A feature, fostering vibrant local communities and personalized online experiences.</p>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-action="Index" asp-controller="Home" asp-area="User" class="button-slide">
+                            <span class="btn-text">Join Our Community</span>
+                            <span class="btn-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
+                                    <path fill-rule="evenodd" fill="rgb(255, 255, 255)" d="M16.671,9.998 L12.997,9.998 L16.462,6.000 L5.000,6.000 L5.000,4.000 L16.462,4.000 L12.997,0.002 L16.671,0.002 L21.003,5.000 L16.671,9.998 ZM17.000,5.379 L17.328,5.000 L17.000,4.621 L17.000,5.379 ZM-0.000,4.000 L3.000,4.000 L3.000,6.000 L-0.000,6.000 L-0.000,4.000 Z" />
+                                </svg>
+                            </span>
+                        </a>
+                    }
+                    else{
+                    <a asp-area="Auth" asp-page="/Register" class="button-slide">
                         <span class="btn-text">Join Our Community</span>
                         <span class="btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
@@ -58,6 +91,7 @@
                             </svg>
                         </span>
                     </a>
+                    }
                 </div>
             </div>
             <div class="col-lg-6">
@@ -66,33 +100,33 @@
                         <li>
                             <div class="media">
                                 <div class="item-icon">
-                                    <i class="icofont-wechat"></i>
+                                    <i class="icofont-multimedia"></i>
                                 </div>
                                 <div class="media-body">
-                                    <h3 class="item-title">Meet Great People</h3>
-                                    <p>when an unknown printer took a galley of scrambled it to make a type specimen It has survived not only.</p>
+                                    <h3 class="item-title">Media Page</h3>
+                                    <p>A dynamic visual hub enabling users to share and explore location-specific photos, fostering an interactive experience with likes and comments.</p>
                                 </div>
                             </div>
                         </li>
                         <li>
                             <div class="media">
                                 <div class="item-icon">
-                                    <i class="icofont-users"></i>
+                                    <i class="icofont-question-square"></i>
                                 </div>
                                 <div class="media-body">
-                                    <h3 class="item-title">Forum Discussion</h3>
-                                    <p>when an unknown printer took a galley of scrambled it to make a type specimen It has survived not only.</p>
+                                    <h3 class="item-title">Q&A Page</h3>
+                                    <p>A knowledge-sharing hub where users ask and answer questions, promoting collaborative learning and serving as a valuable resource for insights.</p>
                                 </div>
                             </div>
                         </li>
                         <li>
                             <div class="media">
                                 <div class="item-icon">
-                                    <i class="icofont-paper"></i>
+                                    <i class="icofont-chat"></i>
                                 </div>
                                 <div class="media-body">
-                                    <h3 class="item-title">Active Groups</h3>
-                                    <p>when an unknown printer took a galley of scrambled it to make a type specimen It has survived not only.</p>
+                                    <h3 class="item-title">Chat Page</h3>
+                                    <p>Real-time, location-based communication platform for users to engage in group chats, enhancing community connections and facilitating instant interactions.</p>
                                 </div>
                             </div>
                         </li>
@@ -117,8 +151,8 @@
         <div class="row justify-content-end">
             <div class="col-lg-6">
                 <div class="community-content">
-                    <h2 class="item-title">129 Countries We Build Our Largest Community in <span>Cirkle Network</span></h2>
-                    <p>when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also leap electronic typesetting, remaining essentially.</p>
+                    <h2 class="item-title">195 Countries We Build Our Largest Community in <span>Area Box Network</span></h2>
+                    <p>Area Box is designed to be inclusive and accessible globally, supporting a diverse range of international languages. Users can enjoy the platform in their preferred language, ensuring a seamless and personalized experience for individuals from various linguistic backgrounds.</p>
                 </div>
             </div>
         </div>
