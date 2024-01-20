@@ -13,6 +13,8 @@ $("#refreshLoc").click(function () {
             document.cookie = `latitude=${latitude}; path=/`;
             document.cookie = `longitude=${longitude}; path=/`;
             SetLocationName();
+            var categoryId = $('#categoryDropdown').val();
+            getPageCount(categoryId);
 
             // Perform additional actions or trigger a function (e.g., loadMorePosts())
             $('#post-container').empty();
@@ -26,18 +28,23 @@ $("#refreshLoc").click(function () {
     }
 });
 
-function SetLocationName() {
+
+
+function getPageCount(categoryId) {
     $.ajax({
-        url: '/UserApi/GetUserLocationByGeolocation',
+        url: '/UserApi/GetPageMediaPostCount',
         type: 'GET',
-        success: function (response) {
-            // Assuming the response has a property named 'country' and 'city'
-            $('#countryText').val(response.country);
-            $('#cityText').val(response.city);
+        data: { categoryId: categoryId },
+        success: function (pagesCount) {
+            // Handle the pagesCount value (you can use it as needed)
+            Pages = pagesCount;
+            console.log('Pages Count:', pagesCount);
         },
-        error: function (error) {
-            alert('Error fetching user location:', error);
+        error: function () {
+            console.log('Error fetching Pages Count.');
+            // Handle the error if needed
         }
     });
-
 }
+
+

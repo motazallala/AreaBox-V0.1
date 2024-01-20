@@ -25,9 +25,10 @@
 </div>
 @section Scripts {
 
+    <script src="~/js/setlocationname.js"></script>
+    <script src="~/js/refreshchatpage.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -50,15 +51,7 @@
 						hiddenInput.setAttribute("data-userid", "@user.Id"); 
 						document.body.appendChild(hiddenInput);
 
-						var optionCountry = document.createElement("option");
-						optionCountry.value = geolocationInfo.Country;
-						optionCountry.textContent = geolocationInfo.Country;
-						document.getElementById("countryDropdown").appendChild(optionCountry);
 
-						var optionCity = document.createElement("option");
-						optionCity.value = geolocationInfo.City;
-						optionCity.textContent = geolocationInfo.City;
-						document.getElementById("cityDropdown").appendChild(optionCity);
 					},
 					error: function (error) {
 						console.error('Error fetching geolocation details:', error);
