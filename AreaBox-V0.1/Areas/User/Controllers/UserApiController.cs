@@ -12,7 +12,6 @@ using System.Text.Encodings.Web;
 using System.Text;
 using System.Text.RegularExpressions;
 using AreaBox_V0._1.Areas.User.Models.UserInfoDto.Input;
-using AreaBox_V0._1.Services;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Route("UserApi/[action]")]
@@ -22,17 +21,16 @@ public class UserApiController : ControllerBase
     private readonly IUnitOfWork _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IImageService _imageService;
-
-    public UserApiController(IUnitOfWork db, UserManager<ApplicationUser> userManager, IImageService imageService)
-    private readonly IUnitOfWork db;
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly ILocationService location;
-    public UserApiController(IUnitOfWork _db, UserManager<ApplicationUser> _userManager, ILocationService _location)
+    private readonly ILocationService _location;
+    public UserApiController(IUnitOfWork db,
+        UserManager<ApplicationUser> userManager,
+        IImageService imageService,
+        ILocationService location)
     {
         _db = db;
         _userManager = userManager;
         _imageService = imageService;
-        location = _location;
+        _location = location;
     }
 
 
@@ -45,7 +43,7 @@ public class UserApiController : ControllerBase
         {
             return BadRequest("Log in to report the post");
         }
-        var userCategoriesList = await db.UserCategories.FindAll<UserCategories, UUserCategoriesOutputDto>(e => e.UserId == userId, new[] { "Category" });
+        var userCategoriesList = await _db.UserCategories.FindAll<UserCategories, UUserCategoriesOutputDto>(e => e.UserId == userId, new[] { "Category" });
 
 
         return Ok(userCategoriesList);
@@ -53,7 +51,7 @@ public class UserApiController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddUserCategory([FromForm] UUserCategoriesInputDto input)
     {
-        var userId = userManager.GetUserId(User);
+        var userId = _userManager.GetUserId(User);
         if (userId == null)
         {
             return BadRequest("Log in to report the post");
@@ -64,12 +62,12 @@ public class UserApiController : ControllerBase
             return BadRequest("Fill the information !!");
         }
 
-        var category = await db.Categories.CheckItemExistence<Categories>(e => e.CategoryId == input.CategoryId);
+        var category = await _db.Categories.CheckItemExistence<Categories>(e => e.CategoryId == input.CategoryId);
         if (category == false)
         {
             return BadRequest("the category not Exists");
         }
-        var usercategory = await db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == input.CategoryId);
+        var usercategory = await _db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == input.CategoryId);
         if (usercategory == true)
         {
             return BadRequest("the usercategory Exists");
@@ -81,8 +79,8 @@ public class UserApiController : ControllerBase
 
         };
 
-        db.UserCategories.Add(newUserCategory);
-        await db.Save();
+        _db.UserCategories.Add(newUserCategory);
+        await _db.Save();
 
         return Ok("Category has been added");
 
@@ -91,7 +89,7 @@ public class UserApiController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteUserCategory([FromForm] int categoryId)
     {
-        var userId = userManager.GetUserId(User);
+        var userId = _userManager.GetUserId(User);
         if (userId == null)
         {
             return BadRequest("Log in to report the post");
@@ -100,12 +98,12 @@ public class UserApiController : ControllerBase
         {
             return BadRequest("send the user category id");
         }
-        var isExist = await db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
+        var isExist = await _db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
         if (isExist == false)
         {
             return Ok("the category is not exist for this user");
         }
-        var itemToRemove = await db.UserCategories.Find<UserCategories, UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
+        var itemToRemove = await _db.UserCategories.Find<UserCategories, UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
         if (itemToRemove == null)
         {
             return Ok("the category is not exist for this user");
@@ -134,12 +132,13 @@ public class UserApiController : ControllerBase
         // Try parsing the cookies into double values
         if (double.TryParse(latitudeCookie, out latitude) && double.TryParse(longitudeCookie, out longitude))
         {
-            var loc = await location.GetGeolocationObject(latitude, longitude);
-            int resultCount = await db.MediaPosts.Count<MediaPosts>(e => e.Mpcity.CityName == loc.City && (categoryId <= 0 || e.MpcategoryId == categoryId) && !e.Mpstate);
+            var loc = await _location.GetGeolocationObject(latitude, longitude);
+            int resultCount = await _db.MediaPosts.Count<MediaPosts>(e => e.Mpcity.CityName == loc.City && (categoryId <= 0 || e.MpcategoryId == categoryId) && !e.Mpstate);
             int pages = (int)Math.Ceiling((double)resultCount / PostConfig.PageSize);
             return Ok(pages);
         }
         return BadRequest("Error accord!!");
+    }
 
     [HttpPost]
     public async Task<IActionResult> ChangeUserEmail([FromForm] string newEmail)
@@ -289,11 +288,6 @@ public class UserApiController : ControllerBase
         return BadRequest("Failed to change password. Please check the provided information.");
     }
 
-
-
-
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetPageQuestionPostCount(int categoryId)
     {
@@ -307,8 +301,8 @@ public class UserApiController : ControllerBase
         // Try parsing the cookies into double values
         if (double.TryParse(latitudeCookie, out latitude) && double.TryParse(longitudeCookie, out longitude))
         {
-            var loc = await location.GetGeolocationObject(latitude, longitude);
-            int resultCount = await db.QuestionPosts.Count<QuestionPosts>(e => e.Qpcity.CityName == loc.City && categoryId > 0 ? e.QpcategoryId == categoryId : true);
+            var loc = await _location.GetGeolocationObject(latitude, longitude);
+            int resultCount = await _db.QuestionPosts.Count<QuestionPosts>(e => e.Qpcity.CityName == loc.City && categoryId > 0 ? e.QpcategoryId == categoryId : true);
             int pages = (int)Math.Ceiling((double)resultCount / PostConfig.PageSize);
             return Ok(pages);
         }
@@ -321,7 +315,7 @@ public class UserApiController : ControllerBase
 
     //public async Task<IActionResult> GetAllUserSavedMediaPost()
     //{
-    //    var userSavedMediaPost = db.Users.FindAndFilter<ApplicationUser, ApplicationUser>(new["MediaPosts","MediaPosts.MediaPostsLikes"]);
+    //    var userSavedMediaPost = _db.Users.FindAndFilter<ApplicationUser, ApplicationUser>(new["MediaPosts","MediaPosts.MediaPostsLikes"]);
     //}
 
 
@@ -339,7 +333,7 @@ public class UserApiController : ControllerBase
         double longitude;
         if (double.TryParse(latitudeCookie, out latitude) && double.TryParse(longitudeCookie, out longitude))
         {
-            var loc = await location.GetGeolocationObject(latitude, longitude);
+            var loc = await _location.GetGeolocationObject(latitude, longitude);
             return Ok(loc);
         }
         return BadRequest("The Application can not get the your location!!");

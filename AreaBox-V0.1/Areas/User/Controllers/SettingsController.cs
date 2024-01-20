@@ -1,5 +1,6 @@
 ﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
+using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.Send;
 using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
@@ -25,9 +26,15 @@ public class SettingsController : Controller
         return View();
     }
 
-    public IActionResult MyCategory()
+    public async Task<IActionResult> MyCategory()
     {
-        return View();
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+        {
+            return BadRequest("Log in to report the post");
+        }
+        var userCategoriesList = await _db.UserCategories.FindAll<UserCategories, UUserCategoriesOutputDto>(e => e.UserId == userId, new[] { "Category" });
+        return View(userCategoriesList);
     }
 
     public async Task<IActionResult> MyMediaPostAsync()
