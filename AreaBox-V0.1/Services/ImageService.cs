@@ -28,6 +28,23 @@ namespace AreaBox_V0._1.Services
             return GenerateBase64DataUri(image, format);
         }
 
+        public async Task<string> UploadLocalImage(string filePath)
+        {
+            var format = DetermineImageFormatFromFilePath(filePath);
+            using var image = await Image.LoadAsync(filePath);
+
+            double percentage = PercentageBasedOnSize(new FileInfo(filePath).Length);
+
+            if (new FileInfo(filePath).Length > 0.25 * 1024 * 1024)
+            {
+                int newWidth = (int)(image.Width * percentage);
+                int newHeight = (int)(image.Height * percentage);
+                image.Mutate(x => x.Resize(newWidth, newHeight));
+            }
+
+            return GenerateBase64DataUri(image, format);
+        }
+
         private IImageEncoder DetermineImageFormat(string contentType)
         {
             return contentType switch
@@ -37,6 +54,21 @@ namespace AreaBox_V0._1.Services
                 "image/gif" => new GifEncoder(),
                 "image/bmp" => new BmpEncoder(),
                 "image/tiff" => new TiffEncoder(),
+                _ => new PngEncoder(),
+            };
+        }
+
+        private IImageEncoder DetermineImageFormatFromFilePath(string filePath)
+        {
+            var extension = Path.GetExtension(filePath)?.TrimStart('.').ToLowerInvariant();
+
+            return extension switch
+            {
+                "jpeg" or "jpg" => new JpegEncoder(),
+                "png" => new PngEncoder(),
+                "gif" => new GifEncoder(),
+                "bmp" => new BmpEncoder(),
+                "tiff" => new TiffEncoder(),
                 _ => new PngEncoder(),
             };
         }

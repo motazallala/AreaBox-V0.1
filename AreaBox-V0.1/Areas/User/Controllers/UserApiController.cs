@@ -130,6 +130,29 @@ public class UserApiController : ControllerBase
     }
 
     [HttpPost]
+    public async Task<IActionResult> DeleteUserImage([FromServices] IWebHostEnvironment webHostEnvironment)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return BadRequest($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        }
+
+        var defaultAvatarPath = Path.Combine(webHostEnvironment.WebRootPath, "userhome", "media", "default-avatar.jpg");
+
+        var defaultAvatar = await _imageService.UploadLocalImage(defaultAvatarPath);
+
+        user.ProfilePicture = defaultAvatar;
+
+        await _userManager.UpdateAsync(user);
+
+        return Ok("Profile picture has been removed!");
+    }
+
+
+
+    [HttpPost]
     public async Task<IActionResult> ChangeUserPassword([FromForm] string oldPassword, [FromForm] string newPassword, [FromForm] string confirmPassword)
     {
         var user = await _userManager.GetUserAsync(User);

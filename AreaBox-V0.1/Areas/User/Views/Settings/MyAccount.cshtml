@@ -20,7 +20,7 @@
             </div>
             <div class="modal-body">
                 <div class=" mb-3 align-items-end">
-                    <div class="dropzone" id="dropzone-default" action="./" autocomplete="off" novalidate>
+                    <div class="dropzone" id="dropzone-default" action="./MyAccount" autocomplete="off" novalidate>
                         <div class="fallback">
                             <input name="file" type="file" id="userImage" />
                         </div>
@@ -107,6 +107,41 @@
 
 
 <!--=====================================-->
+<!--=      Conferm remove user picture  =-->
+<!--=====================================-->
+
+<div class="modal modal-blur fade" id="confermRemovePictureModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-danger"></div>
+            <div class="modal-body text-center py-4">
+                <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                <h3>Are you sure?</h3>
+                <div class="text-danger">Do you really want to delete your profile picture?</div>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                        <div class="col">
+                            <a class="btn w-100" data-bs-dismiss="modal">
+                                Cancel
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-danger w-100" id="removeProfilePicture" data-bs-dismiss="modal">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--=====================================-->
 <!--=       Edit user password model    =-->
 <!--=====================================-->
 
@@ -142,7 +177,10 @@
 </div>
 
 
-<div class="card-body">
+<div class="card-body" id="myaccountcontent">
+    <div id="loading-indicator" class="my-5" style="display: none;">
+        <div class="spinner-border text-primary"></div>
+    </div>
     <h2 class="mb-4">My Account</h2>
     <h3 class="card-title">Profile Details</h3>
     <div class="row align-items-center">
@@ -155,7 +193,7 @@
             </a>
         </div>
         <div class="col-auto">
-            <a href="#" class="btn btn-ghost-danger">
+            <a class="btn btn-ghost-danger" data-bs-toggle="modal" data-bs-target="#confermRemovePictureModal">
                 Delete avatar
             </a>
         </div>
@@ -249,7 +287,7 @@
 
 <script>
     $(document).ready(function () {
-        $("#updateEmail").on("click", function () {
+        $("#updateEmail").off('click').on('click', function () {
             var data = {
                 newEmail: $("#userEmailInput").val()
             };
@@ -267,6 +305,7 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
+                    loadPage();
                     $('#success-body').text(data);
                     $('#alertSuccess').show();
                     setTimeout(function () {
@@ -287,7 +326,8 @@
 
 <script>
     $(document).ready(function () {
-        $("#saveChangesBtn").on("click", function () {
+        $('#saveChangesBtn').off('click').on('click', function () {
+
             var updatedUserInfo = {
                 FirstName: $("#userFirstName").val(),
                 LastName: $("#userLastName").val(),
@@ -310,6 +350,7 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
+                    loadPage();
                     $('#success-body').text(data);
                     $('#alertSuccess').show();
                     setTimeout(function () {
@@ -333,6 +374,7 @@
     $(document).ready(function () {
 
         var myDropzone = new Dropzone("#dropzone-default", {
+            url: null,
             uploadMultiple: false,
             maxFiles: 1,
             acceptedFiles: 'image/jpeg,image/jpg,image/png', // Accept only JPEG and PNG files
@@ -351,7 +393,6 @@
 
                 this.on("addedfile", function () {
                     submitButton.disabled = false;
-                    // Start the manual upload simulation
                     simulateUpload();
                 });
 
@@ -399,6 +440,7 @@
                 processData: false,  
                 contentType: false,
                 success: function (data) {
+                    loadPage();
                     $('#success-body').text(data);
                     $('#alertSuccess').show();
                     setTimeout(function () {
@@ -421,7 +463,7 @@
 
 <script>
     $(document).ready(function () {
-        $("#changePasswordBtn").on("click", function () {
+        $("#changePasswordBtn").off('click').on('click', function () {
 
             var data = {
                 oldPassword: $("#oldPassword").val(),
@@ -459,5 +501,56 @@
         });
     });
 </script>
+
+<script>
+    function loadPage() {
+        $('#loading-indicator').show();
+        $.ajax({
+            url: '/Settings/MyAccount',
+            type: 'GET',
+            success: function (data) {
+                var startIndex = data.indexOf('<h2 class="mb-4">My Account</h2>');
+
+                var contentToReplace = data.substring(startIndex);
+
+                $('#myaccountcontent').html(contentToReplace);
+                $('#loading-indicator').hide();
+            },
+            error: function () {
+                $('#loading-indicator').hide();
+            }
+        });
+    }
+</script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#removeProfilePicture").off('click').on('click', function () {
+            $.ajax({
+                url: '/UserApi/DeleteUserImage',
+                type: 'POST',
+                success: function (data) {
+                    loadPage();
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 3000);
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
+                }
+            });
+        });
+    });
+</script>
+
 
 

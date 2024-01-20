@@ -33,7 +33,17 @@
                                                 </svg>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportQPostModal" data-id="@post.Id">Report The Post</a>
+                                                @if (post.UserId != currentUserId)
+                                                {
+                                                    <a class="dropdown-item"
+                                                       style="cursor: pointer;"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#reportQPostModal"
+                                                       data-id="@post.Id">
+                                                        Report The Post
+                                                    </a>
+
+                                                }
                                                 <a class="dropdown-item" style="cursor: pointer;">Save Post</a>
                                                 @if (post.UserId == currentUserId)
                                                 {
@@ -60,9 +70,9 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                             <div class="row">
-                                
+
                                 <div class="col-md-6 markdown">
                                     <h3 data-title="@post.Title">@post.Title</h3>
                                     <p data-description="@post.Description">@post.Description</p>
