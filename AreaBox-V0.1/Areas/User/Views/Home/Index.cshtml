@@ -1,24 +1,8 @@
 ﻿@model AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send.UMediaPostIndexDto
 @{
-	ViewData["Title"] = "Index";
-	ViewData["ActivePage"] = "Home";
+	ViewData["Title"] = "MediaPost";
 }
-<style>
-	.user-title {
-		font-size: 18px;
-	}
 
-	.formattedDate {
-		font-size: 14px;
-		color: #888;
-	}
-
-	.card-footer.border-bottom {
-		border-color: #ccc;
-		border-style: dashed;
-		border-width: 1px;
-	}
-</style>
 <style>
 	.make-me-sticky {
 		position: -webkit-sticky;
@@ -285,6 +269,7 @@
 <div class="row justify-content-center">
 	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
 		<div class="make-me-sticky">
+
 			@Html.Partial("_FilteringandUserControlPartial")
 		</div>
 
@@ -311,8 +296,10 @@
 
 @section Scripts {
 
-
-
+    <script src="~/js/shared/getusercategories.js"></script>
+	<script src="~/js/SetlocationName.js"></script>
+	<script src="~/js/RefreshMediaPost.js"></script>
+    <script src="~/js/searchbycategory.js"></script>
 
 	<script>
 		$(document).on('click', '.likeBtn', function () {
@@ -479,30 +466,38 @@
 			});
 		});
 
-
+		var Pages = @Model.PagesCount;
 		function loadMorePosts() {
-			if (page <= @Model.PagesCount) {
+			debugger
+			var categoryId = $('#categoryDropdown').val();
+			if (page <= Pages) {
 				console.log("Loading posts - Page " + page);
 				$('#loading-indicator').show();
+				$("#refreshLoc").prop("disabled", true);
+				$("#ApplyBtn").prop("disabled", true);
 				$('#loadBut').hide();
 
 
 				$.ajax({
 					url: '/Home/GetMediaPostPartialList',
 					type: 'GET',
-					data: { page: page },
+					data: { page: page, categoryId : categoryId },
 					success: function (data) {
 						// Append the new posts to the post container
 						$('#post-container').append(data);
 						page++; // Increment the page number for the next request
 						loading = false; // Reset loading flag after successful load
 						$('#loading-indicator').hide();
+						$("#refreshLoc").prop("disabled", false);
+						$("#ApplyBtn").prop("disabled", false);
 						$('#loadBut').show();
 
 					},
 					error: function () {
 						console.log('Error loading posts.');
 						$('#loading-indicator').hide();
+						$("#refreshLoc").prop("disabled", false);
+						$("#ApplyBtn").prop("disabled", false);
 						$('#loadBut').show();
 						loading = false; // Reset loading flag even on error
 					}
@@ -522,6 +517,7 @@
 				!loading &&
 				$(window).scrollTop() + $(window).height() >= $(document).height() - 100
 			) {
+				
 				loading = true; // Set loading flag to true
 				loadMorePosts();
 			}
@@ -534,24 +530,10 @@
 
 	<script>
 		$(document).ready(function () {
-			$.ajax({
-				url: '/AdminApi/GetAllCategories',
-				type: 'GET',
-				dataType: 'json',
-				success: function (data) {
-					var categoryDropdownFilter = $('#categoryDropdown');
-					$.each(data, function (key, entry) {
-						categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-					});
-				},
-				error: function (error) {
-					console.error('Error fetching category data:', error);
-				}
-			});
 
 			$('#mediaManagementModal').on('show.bs.modal', function (event) {
 				$.ajax({
-					url: '/AdminApi/GetAllCategories',
+					url: '/UserApi/GetAllUserCategories',
 					type: 'GET',
 					dataType: 'json',
 					success: function (data) {
@@ -689,7 +671,7 @@
 				mediaPostId = $(event.relatedTarget).data('id');
 
 				mediaPostImage = $(event.relatedTarget).data('postimage');
-				debugger
+				
 				$('#mediaPostCommentImage').attr('src', mediaPostImage);
 
 				// $(window).scroll(function () {
@@ -861,27 +843,6 @@
 		});
 	</script>
 
-	<script>
-		// Function to get the value of a cookie by name
-		function getCookie(name) {
-			const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-			if (match) return match[2];
-		}
-
-		// Retrieve the geolocationInfo cookie value
-		const geolocationInfoCookie = getCookie('geolocationInfo');
-		if (geolocationInfoCookie) {
-			const geolocationInfo = JSON.parse(geolocationInfoCookie);
-
-			document.getElementById('countryText').value = '';
-			document.getElementById('cityText').value = '';
-			// Set the values of the input fields
-			document.getElementById('countryText').value = geolocationInfo.Country;
-			document.getElementById('cityText').value = geolocationInfo.City;
-		} else {
-			console.error('Geolocation info not found in the cookie.');
-		}
-	</script>
 
 
 	<script>
@@ -1007,30 +968,7 @@
 					});
 				});
 
-				function loadMorePosts() {
-					if (page <= @Model.PagesCount) {
-						$('#loading-indicator').show();
-						$('#loadBut').hide();
-						$.ajax({
-							url: '/Home/GetMediaPostPartialList',
-							type: 'GET',
-							data: { page: page },
-							success: function (data) {
-								$('#post-container').append(data);
-								page++;
-								$('#loading-indicator').hide();
-								$('#loadBut').show();
-							},
-							error: function () {
-								console.log('Error loading posts.');
-								$('#loading-indicator').hide();
-								$('#loadBut').show();
-							}
-						});
-					} else {
-						$('#loadBut').hide();
-					}
-				}
+
 			});
 		});
 

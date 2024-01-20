@@ -1,28 +1,5 @@
-﻿<style>
-    .icons .nav-link:hover {
-        background-color: #f8f9fa;
-        border-left: 3px solid #007bff;
-    }
-
-    .icons .nav-link .nav-link-icon i {
-        font-size: 40px;
-        transition: font-size 0.3s ease;
-    }
-
-    .activePage{
-
-        color: #000;
-        font-weight: bold;
-        background-color: #f8f9fa;
-        border-left: 3px solid #007bff;
-    }
-</style>
-
-@{
-  var activePage = ViewData["ActivePage"];
-}
-
-<aside class="navbar navbar-vertical navbar-expand-lg sticky-sm-top" data-bs-theme="withe">
+﻿
+<aside class="navbar navbar-vertical navbar-expand-lg sticky-sm-top" data-bs-theme="light">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -162,11 +139,12 @@
             </div>
         </div>
         <div class="collapse navbar-collapse" id="sidebar-menu">
-            <ul class="navbar-nav pt-lg-4">
-                <li class="icons @(activePage == "Home" ? "activePage" : "")">
-                    <a class="nav-link p-3" asp-action="Index" asp-controller="Home" data-bs-toggle="tooltip" data-bs-placement="right" title="Hoem">
+            <ul class="navbar-nav pt-lg-3">
+                <li class="nav-item @(ViewData["Title"] == "MediaPost"  ? "active fw-bold" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Home">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <i class="ti ti-home text-pink" style="font-size: 30px;"></i>
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <i class="ti ti-home fs-2 @(ViewData["Title"] == "MediaPost"  ? "text-blue" : "")"></i>
                         </span>
                         <span class="nav-link-title ms-2 fs-3">
                             Home
@@ -174,10 +152,12 @@
                     </a>
                 </li>
 
-                <li class="icons @(activePage == "QandA" ? "activePage" : "")">
-                    <a class="nav-link p-3" asp-action="Index" asp-controller="QandA" data-bs-toggle="tooltip" data-bs-placement="right" title="Question and Answer">
+                <li class="nav-item @(ViewData["Title"] == "QuestionPost"  ? "active fw-bold" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="QandA">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <i class="ti ti-message-question" style="font-size: 30px;"></i>
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <i class="ti ti-message-question fs-2 @(ViewData["Title"] == "QuestionPost"  ? "text-blue" : "")"></i>
+
                         </span>
                         <span class="nav-link-title ms-2 fs-3">
                             Q And A
@@ -185,28 +165,34 @@
                     </a>
                 </li>
 
-                <li class="icons @(activePage == "Chat" ? "activePage" : "")">
-                    <a class="nav-link p-3" asp-action="Index" asp-controller="Chat" data-bs-toggle="tooltip" data-bs-placement="right" title="Chat">
+                <li class="nav-item @(ViewData["Title"] == "Chat"  ? "active fw-bold" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Chat">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <i class="ti ti-message-circle-2" style="font-size: 30px;"></i>
+                            <!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                            <i class="ti ti-message-circle-2 fs-2 @(ViewData["Title"] == "Chat"  ? "text-blue" : "")"></i>
                         </span>
                         <span class="nav-link-title ms-2 fs-3">
                             Chat
                         </span>
                     </a>
                 </li>
-
-                <li class="icons @(activePage == "Settings" ? "activePage" : "")">
-                    <a class="nav-link p-3" asp-action="MyAccount" asp-controller="Settings" data-bs-toggle="tooltip" data-bs-placement="right" title="Chat">
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="MyAccount" asp-controller="Setting">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <i class="ti ti-settings" style="font-size: 30px;"></i>
+                            <i class="ti ti-settings fs-2"></i>
                         </span>
-                        <span class="nav-link-title ms-2 fs-3">
+                        <span class="nav-link-title">
                             Settings
                         </span>
                     </a>
                 </li>
+
+
+
+
+
             </ul>
         </div>
     </div>
 </aside>
+

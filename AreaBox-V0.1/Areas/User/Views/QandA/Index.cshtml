@@ -1,7 +1,6 @@
 ﻿@model AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send.UQuestionPostIndexDto
 @{
-    ViewData["Title"] = "Index";
-    ViewData["ActivePage"] = "QandA";
+    ViewData["Title"] = "QuestionPost";
 }
 
 
@@ -60,7 +59,7 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-3 align-items-end">
- 
+
                     <div class="col">
                         @*NOTE ---  this will take it from cookie  *@
                         <input type="hidden" value="1" id="postInCity" />
@@ -74,7 +73,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label"></label>
-                    <select class="form-select" id="categoryDropdownModel"  name="Category">
+                    <select class="form-select" id="categoryDropdownModel" name="Category">
                     </select>
                 </div>
             </div>
@@ -249,275 +248,227 @@
             </div>
         </div>
         <div class="col text-center ">
-            <button type="button" class="btn btn-purple mt-5 " id="loadBut"  onclick="loadMorePosts()">
-            load more content
-        </button>
+            <button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
+                load more content
+            </button>
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script src="~/js/searchbycategory.js"></script>
+    <script src="~/js/shared/getusercategories.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="~/js/RefreshQuestionPost.js"></script>
+    <script src="~/js/SetlocationName.js"></script>
 
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-
-
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/AdminApi/GetAllCountryAndCities',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var countryDropdown = $('#countryDropdown');
-                var cityDropdown = $('#cityDropdown');
-
-                $.each(data, function (key, entry) {
-
-                    
-                    countryDropdown.append($('<option></option>').attr('value', entry.countryId).text(entry.countryName));
-
-
-                    $.each(entry.cities, function (cityKey, cityEntry) {
-                        
-                        cityDropdown.append($('<option></option>').attr('value', cityEntry.citryId).text(cityEntry.cityName));
-                    });
-                });
-            },
-            error: function (error) {
-                console.error('Error fetching country data:', error);
-            }
-        });
-    });
-</script>
-
-
-
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/AdminApi/GetAllCategories',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var categoryDropdownFilter = $('#categoryDropdown');
-                $.each(data, function (key, entry) {
-                    categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-                });
-            },
-            error: function (error) {
-                console.error('Error fetching category data:', error);
-            }
-        });
-        $('#mediaManagementModal').on('show.bs.modal', function (event) {
+    <script>
+        $(document).ready(function () {
             $.ajax({
-                url: '/AdminApi/GetAllCategories',
+                url: '/AdminApi/GetAllCountryAndCities',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    var categoryDropdown = $('#categoryDropdownModel');
-                    categoryDropdown.empty();
+                    var countryDropdown = $('#countryDropdown');
+                    var cityDropdown = $('#cityDropdown');
+
                     $.each(data, function (key, entry) {
-                        categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+
+
+                        countryDropdown.append($('<option></option>').attr('value', entry.countryId).text(entry.countryName));
+
+
+                        $.each(entry.cities, function (cityKey, cityEntry) {
+
+                            cityDropdown.append($('<option></option>').attr('value', cityEntry.citryId).text(cityEntry.cityName));
+                        });
                     });
                 },
                 error: function (error) {
-                    console.error('Error fetching category data:', error);
+                    console.error('Error fetching country data:', error);
                 }
             });
         });
+    </script>
 
 
-    });
-</script>
+
+    <script>
+        $(document).ready(function () {
+            $('#mediaManagementModal').on('show.bs.modal', function (event) {
+                $.ajax({
+                    url: '/UserApi/GetAllUserCategories',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var categoryDropdown = $('#categoryDropdownModel');
+                        categoryDropdown.empty();
+                        $.each(data, function (key, entry) {
+                            categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching category data:', error);
+                    }
+                });
+            });
 
 
-<script>
-    $(document).ready(function () {
-        $("#SavePost").click(function () {
-            var postData = {
-                CategoryId: $('#categoryDropdownModel').val(),
-                CityId: $('#postInCity').val(),
-                Title: $('#questionTitle').val(),
-                Description: $('#questionDescription').val()
-            };
+        });
+    </script>
 
 
-            // Append text data to FormData
-            var formData = new FormData();
-            for (var key in postData) {
-                formData.append(key, postData[key]);
+    <script>
+        $(document).ready(function () {
+            $("#SavePost").click(function () {
+                var postData = {
+                    CategoryId: $('#categoryDropdownModel').val(),
+                    CityId: $('#postInCity').val(),
+                    Title: $('#questionTitle').val(),
+                    Description: $('#questionDescription').val()
+                };
+
+
+                // Append text data to FormData
+                var formData = new FormData();
+                for (var key in postData) {
+                    formData.append(key, postData[key]);
+                }
+                console.log(postData);
+                $.ajax({
+                    url: '/QandA/AddPost',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $('#post-container').empty();
+                        page = 1;
+                        loadMorePosts();
+                        // Handle success response if needed
+                        $('#success-body').text(data);
+                        $('#alertSuccess').show();
+                        setTimeout(function () {
+                            $('#alertSuccess').hide();
+                        }, 3000);
+
+                    },
+                    error: function (error) {
+                        $('#error-body').text(error.responseText);
+                        $('#alertDanger').show();
+                        setTimeout(function () {
+                            $('#alertDanger').hide();
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+    <script>
+        var page = 2; // Initialize the page number for lazy loading
+        var loading = false; // Flag to track if loading is in progress
+
+        $(window).scroll(function () {
+            if (
+                !loading &&
+                $(window).scrollTop() + $(window).height() >= $(document).height() - 100
+            ) {
+                loading = true; // Set loading flag to true
+                loadMorePosts();
             }
-            console.log(postData);
+        });
+        var Pages = @Model.PagesCount;
+        function loadMorePosts() {
+            var categoryId = $('#categoryDropdown').val();
+            if (page <= Pages) {
+                console.log("Loading posts - Page " + page);
+                $('#loading-indicator').show();
+                $("#refreshLoc").prop("disabled", true);
+                $("#ApplyBtn").prop("disabled", true);
+                $('#loadBut').hide();
+
+
+                $.ajax({
+                    url: '/QandA/GetQuestionPostPartialList',
+                    type: 'GET',
+                    data: { page: page, categoryId: categoryId },
+                    success: function (data) {
+                        // Append the new posts to the post container
+                        $('#post-container').append(data);
+                        page++; // Increment the page number for the next request
+                        loading = false; // Reset loading flag after successful load
+                        $('#loading-indicator').hide();
+                        $("#refreshLoc").prop("disabled", false);
+                        $("#ApplyBtn").prop("disabled", false);
+                        $('#loadBut').show();
+
+                    },
+                    error: function () {
+                        console.log('Error loading posts.');
+                        $('#loading-indicator').hide();
+                        $("#refreshLoc").prop("disabled", false);
+                        $("#ApplyBtn").prop("disabled", false);
+                        loading = false; // Reset loading flag even on error
+                    }
+                });
+            } else {
+                console.log("All posts loaded");
+                $('#loadBut').hide();
+
+            }
+        }
+
+    </script>
+
+    <script>
+        $('#reportQPostModal').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            var questionPostId = $(event.relatedTarget).data('id');
+            $('#mpostIdInput').val(questionPostId);
+
             $.ajax({
-                url: '/QandA/AddPost',
-                type: 'POST',
-                data: formData,
-                processData: false, 
-                contentType: false,
-                success: function (data) {
-                    $('#post-container').empty();
-                    page = 1;
-                    loadMorePosts();
-                    // Handle success response if needed
-                    $('#success-body').text(data);
-                    $('#alertSuccess').show();
-                    setTimeout(function () {
-                        $('#alertSuccess').hide();
-                    }, 3000);
-                  
+                url: '/QandA/GetQuestionPostReportTypes',
+                type: 'GET',
+                data: { questionPostId: questionPostId },
+                success: function (response) {
+                    var options = '';
+
+                    response.forEach(function (reason) {
+                        options += `<option value="${reason.reportTypeId}" data-description="${reason.description}" data-qpostid="${questionPostId}">${reason.type}</option>`;
+                    });
+
+                    $('#reportReason').html(options);
+
+                    $('#reportReason').on('change', function () {
+                        var selectedDescription = $(this).find(':selected').data('description');
+                        var selectedMpostId = $(this).find(':selected').data('qpostid');
+                        $('#descriptionDisplay').val(selectedDescription);
+                    }).trigger('change');
                 },
                 error: function (error) {
-                    $('#error-body').text(error.responseText);
-                    $('#alertDanger').show();
-                    setTimeout(function () {
-                        $('#alertDanger').hide();
-                    }, 3000);
+                    console.error('Error fetching report types:', error);
                 }
             });
         });
-    });
-</script>
 
-
-
-<script>
-    var page = 2; // Initialize the page number for lazy loading
-    var loading = false; // Flag to track if loading is in progress
-
-    $(window).scroll(function () {
-        if (
-            !loading &&
-            $(window).scrollTop() + $(window).height() >= $(document).height() - 100
-        ) {
-            loading = true; // Set loading flag to true
-            loadMorePosts();
-        }
-    });
-
-    function loadMorePosts() {
-        if (page <= @Model.PagesCount) {
-            console.log("Loading posts - Page " + page);
-            $('#loading-indicator').show();
-            $('#loadBut').hide();
-
-
-            $.ajax({
-                url: '/QandA/GetQuestionPostPartialList',
-                type: 'GET',
-                data: { page: page },
-                success: function (data) {
-                    // Append the new posts to the post container
-                    $('#post-container').append(data);
-                    page++; // Increment the page number for the next request
-                    loading = false; // Reset loading flag after successful load
-                    $('#loading-indicator').hide();
-                    $('#loadBut').show();
-
-                },
-                error: function () {
-                    console.log('Error loading posts.');
-                    $('#loading-indicator').hide();
-                    loading = false; // Reset loading flag even on error
-                }
-            });
-        } else {
-            console.log("All posts loaded");
-            $('#loadBut').hide();
-
-        }
-    }
-
-</script>
-
-<script>
-    $('#reportQPostModal').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        var questionPostId = $(event.relatedTarget).data('id');
-        $('#mpostIdInput').val(questionPostId);
-
-        $.ajax({
-            url: '/QandA/GetQuestionPostReportTypes',
-            type: 'GET',
-            data: { questionPostId: questionPostId },
-            success: function (response) {
-                var options = '';
-
-                response.forEach(function (reason) {
-                    options += `<option value="${reason.reportTypeId}" data-description="${reason.description}" data-qpostid="${questionPostId}">${reason.type}</option>`;
-                });
-
-                $('#reportReason').html(options);
-
-                $('#reportReason').on('change', function () {
-                    var selectedDescription = $(this).find(':selected').data('description');
-                    var selectedMpostId = $(this).find(':selected').data('qpostid');
-                    $('#descriptionDisplay').val(selectedDescription);
-                }).trigger('change');
-            },
-            error: function (error) {
-                console.error('Error fetching report types:', error);
-            }
-        });
-    });
-
-    $('#reportButton').on('click', function () {
-        var selectedQpostId = $('#reportReason').find(':selected').data('qpostid');
-        var selectedReportTypeId = $('#reportReason').val();
-
-        var formData = new FormData();
-        formData.append('ReportTypeId', selectedReportTypeId);
-        formData.append('QpostId', selectedQpostId);
-
-        $.ajax({
-            url: '/QandA/AddReportInQuestionPost',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                $('#success-body').text(data);
-                $('#alertSuccess').show();
-                setTimeout(function () {
-                    $('#alertSuccess').hide();
-                }, 3000);
-            },
-            error: function (error) {
-                $('#error-body').text(error.responseText);
-                $('#alertDanger').show();
-                setTimeout(function () {
-                    $('#alertDanger').hide();
-                }, 3000);
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        $('#deleteQPostModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var QPostId = button.data('qpid');
-
-            $('#deleteQPostButton').data('qpid', QPostId);
-        });
-
-        $('#deleteQPostButton').on('click', function (event) {
-            var questionPostId = $(this).data('qpid');
+        $('#reportButton').on('click', function () {
+            var selectedQpostId = $('#reportReason').find(':selected').data('qpostid');
+            var selectedReportTypeId = $('#reportReason').val();
 
             var formData = new FormData();
-            formData.append('questionPostId', questionPostId);
+            formData.append('ReportTypeId', selectedReportTypeId);
+            formData.append('QpostId', selectedQpostId);
 
             $.ajax({
-                url: '/QandA/DeleteQuestionPost',
+                url: '/QandA/AddReportInQuestionPost',
                 type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    $('#post-container').empty();
-                    page = 1;
-                    loadMorePosts();
                     $('#success-body').text(data);
                     $('#alertSuccess').show();
                     setTimeout(function () {
@@ -533,54 +484,96 @@
                 }
             });
         });
-    });
-</script>
+    </script>
 
-<script>
-    $(document).ready(function () {
-        $('#editQPostModal').on('show.bs.modal', function (event) {
-            $.ajax({
-                url: '/AdminApi/GetAllCategories',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    var categoryDropdown = $('#editCategoryDropdownModel');
-                    categoryDropdown.empty();
-                    $.each(data, function (key, entry) {
-                        categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-                    });
-                },
-                error: function (error) {
-                    console.error('Error fetching category data:', error);
-                }
+    <script>
+        $(document).ready(function () {
+            $('#deleteQPostModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var QPostId = button.data('qpid');
+
+                $('#deleteQPostButton').data('qpid', QPostId);
             });
 
-            var button = $(event.relatedTarget);
-            var QPostId = button.data('qpid');
+            $('#deleteQPostButton').on('click', function (event) {
+                var questionPostId = $(this).data('qpid');
 
-            $.ajax({
-                url: '/QandA/GetQuestionPostDetails',
-                type: 'GET',
-                data: { questionPostId: QPostId },
-                success: function (data) {
-                    $('#editQPostId').val(data.id);
-                    $('#editQuestionTitle').val(data.title);
-                    $('#editQuestionDescription').val(data.description);
-                },
-                error: function (error) {
-                    console.error('Error fetching question post details:', error);
-                }
+                var formData = new FormData();
+                formData.append('questionPostId', questionPostId);
+
+                $.ajax({
+                    url: '/QandA/DeleteQuestionPost',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $('#post-container').empty();
+                        page = 1;
+                        loadMorePosts();
+                        $('#success-body').text(data);
+                        $('#alertSuccess').show();
+                        setTimeout(function () {
+                            $('#alertSuccess').hide();
+                        }, 3000);
+                    },
+                    error: function (error) {
+                        $('#error-body').text(error.responseText);
+                        $('#alertDanger').show();
+                        setTimeout(function () {
+                            $('#alertDanger').hide();
+                        }, 3000);
+                    }
+                });
             });
         });
+    </script>
 
-        $('#updatePost').on('click', function () {
-            var formData = new FormData();
+    <script>
+        $(document).ready(function () {
+            $('#editQPostModal').on('show.bs.modal', function (event) {
+                $.ajax({
+                    url: '/AdminApi/GetAllCategories',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var categoryDropdown = $('#editCategoryDropdownModel');
+                        categoryDropdown.empty();
+                        $.each(data, function (key, entry) {
+                            categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching category data:', error);
+                    }
+                });
 
-            formData.append('Id', $('#editQPostId').val());
-            formData.append('CategoryId', $('#editCategoryDropdownModel').val());
-            formData.append('CityId', $('#postInCity').val());
-            formData.append('Title', $('#editQuestionTitle').val());
-            formData.append('Description', $('#editQuestionDescription').val());
+                var button = $(event.relatedTarget);
+                var QPostId = button.data('qpid');
+
+                $.ajax({
+                    url: '/QandA/GetQuestionPostDetails',
+                    type: 'GET',
+                    data: { questionPostId: QPostId },
+                    success: function (data) {
+                        $('#editQPostId').val(data.id);
+                        $('#editQuestionTitle').val(data.title);
+                        $('#editQuestionDescription').val(data.description);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching question post details:', error);
+                    }
+                });
+            });
+
+            $('#updatePost').on('click', function () {
+                var formData = new FormData();
+
+                formData.append('Id', $('#editQPostId').val());
+                formData.append('CategoryId', $('#editCategoryDropdownModel').val());
+                formData.append('CityId', $('#postInCity').val());
+                formData.append('Title', $('#editQuestionTitle').val());
+                formData.append('Description', $('#editQuestionDescription').val());
 
             $.ajax({
                 url: '/QandA/EditQuestionPost',
@@ -771,7 +764,7 @@
     });
 </script>
 
-
+}
 
 
 

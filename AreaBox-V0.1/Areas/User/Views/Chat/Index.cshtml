@@ -3,32 +3,32 @@
 
 @{
 	var user = await _userManager.GetUserAsync(User);
-	ViewData["Title"] = "Index";
-	ViewData["ActivePage"] = "Chat";
+	ViewData["Title"] = "Chat";
 }
 
 
 <div class="row justify-content-center">
-	<div class="col-lg-9 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
-		<div id="post-container">
+	<div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-7 ">
+		<div id="post-container" class="">
 			@Html.Partial("_ChatPartial")
 		</div>
 		<div id="loading-indicator" class="my-5" style="display: none;">
 			<div class="spinner-border text-primary"></div>
 		</div>
 	</div>
-	<div class="col-lg-3 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
 		<div class="make-me-sticky">
 			<partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
 		</div>
 
 	</div>
 </div>
+@section Scripts {
 
-
+    <script src="~/js/setlocationname.js"></script>
+    <script src="~/js/refreshchatpage.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -176,6 +176,4 @@
 		connection.invoke("LeaveCityGroup", city).catch(err => console.error(err));
 	});
 </script>
-
-
-
+}
