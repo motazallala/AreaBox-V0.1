@@ -4,6 +4,7 @@ using AreaBox_V0._1.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaBox_V0._1.Migrations
 {
     [DbContext(typeof(AreaBoxDbContext))]
-    partial class AreaBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240121215329_addCascadeToCategoryRelation")]
+    partial class addCascadeToCategoryRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -796,7 +799,6 @@ namespace AreaBox_V0._1.Migrations
                     b.HasOne("AreaBox_V0._1.Data.Model.ReportTypes", "ReportType")
                         .WithMany("MediaPostsReports")
                         .HasForeignKey("ReportTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_MediaPostsReports_ReportType");
 
@@ -866,7 +868,6 @@ namespace AreaBox_V0._1.Migrations
                     b.HasOne("AreaBox_V0._1.Data.Model.QuestionPosts", "Qpost")
                         .WithMany()
                         .HasForeignKey("QpostId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_QuestionPostsReports_QuestionPosts");
 

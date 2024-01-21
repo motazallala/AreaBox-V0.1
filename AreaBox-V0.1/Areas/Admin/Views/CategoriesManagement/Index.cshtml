@@ -1,11 +1,9 @@
-﻿@model IEnumerable<UUserCategoriesOutputDto>
+﻿@model List<AreaBox_V0._1.Areas.Admin.Models.CategoriesModel.Send.CategoriesIndexDto>;
 @{
-    ViewData["Title"] = "My Category";
-    Layout = "~/Areas/User/Views/Shared/_SettingsLayout.cshtml";
+	ViewData["Title"] = "Index";
 }
 
-
-<div class="modal modal-blur fade" id="addUserCategory" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal modal-blur fade" id="modal-team" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -15,8 +13,7 @@
 			<div class="modal-body">
 				<div class="row mb-3 align-items-end">
 					<div class="col">
-						<select type="text" id="allCategory" class="form-select">
-						</select>
+						<input class="form-control" type="text" id="addCategory" />
 					</div>
 				</div>
 			</div>
@@ -27,6 +24,7 @@
 		</div>
 	</div>
 </div>
+
 
 <div class="modal modal-blur fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -62,62 +60,42 @@
 <div id="loading-indicator" class="my-5" style="display: none;">
 	<div class="spinner-border text-primary"></div>
 </div>
-<div class="card-body">
-    <h2 class="mb-4">My Category</h2>
-    <h3>All Category</h3>
-	<a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#addUserCategory">
-        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
-        Add Category
-    </a>
-    <br />
-    <br />
-    @if(Model.Any())
-    {
-        <div class="tags-list" id="tagsList">
-        @foreach(var item in Model)
-        {
-            <span class="tag">
-                @item.CategoryName
-					<a class="btn-close" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-categoryid="@item.CategoryId"></a>
-            </span>
-        }
-        </div>
-    }
-    else
-    {
-        <p> there are no Category Add new One</p>
-    }
+<div class="card" id="categoryContent">
+	<div class="card-body">
+		<h2 class="mb-4">My Category</h2>
+		<h3>All Category</h3>
+		<a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-team">
+			<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+			<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+			Add Category
+		</a>
+		<br />
+		<br />
+		@if (Model.Any())
+		{
+			<div class="tags-list" id="tagsList">
+				@foreach (var item in Model)
+				{
+					<span class="tag">
+						@item.CategoryName
+						<a class="btn-close" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-categoryid="@item.CategoryId"></a>
+					</span>
+				}
+			</div>
+		}
+		else
+		{
+			<p> there are no Category Add new One</p>
+		}
+	</div>
 </div>
 
 @section Scripts {
-
-	<script>
-		$(document).ready(function () {
-			var categoryDropdown = $('#allCategory')
-			$('#addUserCategory').on('show.bs.modal', function (event) {
-				$.ajax({
-					url: '/UserApi/GetAllCategory',
-					type: 'GET',
-					success: function (data) {
-						categoryDropdown.empty();
-						$.each(data, function (key, entry) {
-							categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
-						});
-					},
-					error: function (error) {
-
-					}
-				});
-			});
-		});
-	</script>
-
 	<script>
 		$(document).ready(function () {
 			$("#addCategoryBtn").on('click', function () {
 				var data = {
-					CategoryId: $("#allCategory").val()
+					categoryName: $("#addCategory").val()
 				};
 
 				var formData = new FormData();
@@ -127,7 +105,7 @@
 				}
 
 				$.ajax({
-					url: '/UserApi/AddUserCategory',
+					url: '/CategoriesManagement/AddCategory',
 					type: 'POST',
 					data: formData,
 					processData: false,
@@ -150,6 +128,7 @@
 					}
 				});
 			});
+
 		});
 	</script>
 
@@ -161,11 +140,12 @@
 			$('#deleteCategoryModal').on('show.bs.modal', function (event) {
 				button = $(event.relatedTarget);
 				categoryId = button.data('categoryid');
+				debugger
 			});
 
 			$("#deleteCeategory").on('click', function (event) {
 				var data = {
-					categoryId: categoryId
+					categoreId: categoryId
 				};
 
 				var formData = new FormData();
@@ -175,7 +155,7 @@
 				}
 
 				$.ajax({
-					url: '/UserApi/DeleteUserCategory',
+					url: '/CategoriesManagement/RemoveCategory',
 					type: 'POST',
 					data: formData,
 					processData: false,
@@ -205,15 +185,17 @@
 			var listOfCategory = $('#tagsList');
 			$('#loading-indicator').show();
 			$.ajax({
-				url: '/UserApi/GetAllUserCategories',
+				url: '/CategoriesManagement/GetAllCategory',
 				type: 'GET',
 				success: function (data) {
+
 					listOfCategory.empty();
 					$.each(data, function (key, entry) {
 						listOfCategory.append(
 							$(`<span class="tag">${entry.categoryName}<a class="btn-close" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-categoryid="${entry.categoryId}"></a></span>`)
 						);
 					});
+
 					$('#loading-indicator').hide();
 				},
 				error: function () {
@@ -223,4 +205,3 @@
 		}
 	</script>
 }
-

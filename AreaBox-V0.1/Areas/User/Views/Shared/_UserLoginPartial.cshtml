@@ -7,9 +7,9 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a id="logout" asp-area="Auth" asp-page="/Account/Logout" class="nav-link btn btn-link text-dark border-0">Logout</a>
-        </li>
+        <form id="logoutForm" class="form-inline" asp-area="Auth" asp-page="/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+        </form>
     }
 </ul>
 

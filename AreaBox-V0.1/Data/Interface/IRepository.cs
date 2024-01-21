@@ -14,6 +14,8 @@ namespace AreaBox_V0._1.Data.Interface
 
 		Task<T> GetByIdAsync(string id);
 
+		Task<T> GetByIdAsync(int id);
+
 		Task<TViewModel> Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
 		 where TEntity : class
 		 where TViewModel : class;

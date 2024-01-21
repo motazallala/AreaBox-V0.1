@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Areas.Admin.Models.CitiesModel.send;
+﻿using AreaBox_V0._1.Areas.Admin.Models.CategoriesModel.Send;
+using AreaBox_V0._1.Areas.Admin.Models.CitiesModel.send;
 using AreaBox_V0._1.Areas.Admin.Models.Countries.send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostCommentsDto.Send;
 using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
@@ -95,7 +96,7 @@ namespace AreaBox_V0._1.Common
                 .ForMember(dest => dest.ProfilePicture, src => src.MapFrom(src => src.User.ProfilePicture))
                 ;
 
-
+            CreateMap<Categories, CategoriesIndexDto>();
 			CreateMap<QuestionPosts, UQuestionPostOutPutDto>()
                 .ForMember(dest => dest.UserName, src => src.MapFrom(src => src.Qpuser.UserName))
 				.ForMember(dest => dest.UserImage, src => src.MapFrom(src => src.Qpuser.ProfilePicture))

@@ -25,24 +25,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <script defer>
-        document.addEventListener("DOMContentLoaded", function () {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    document.cookie = `latitude=${latitude}; path=/`;
-                    document.cookie = `longitude=${longitude}; path=/`;
-
-                });
-            } else {
-                console.error("Geolocation is not supported by this browser.");
-            }
-        });
-    </script>
-
+    <script defer src="~/js/getUserGeolocation.js"></script>
 
     <style>
         @@import url('https://rsms.me/inter/inter.css');
@@ -50,7 +33,20 @@
 /*         :root {
             --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
         }
- */
+ */      
+        .make-me-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+        }
+
+        .alertPos {
+            position: fixed;
+            top: 10vh;
+            right: 16vh;
+            z-index: 1000;
+            width: 350px;
+        }
 
         :root {
             --tblr-font-sans-serif: 'Ubuntu';
@@ -69,6 +65,46 @@
             <!-- Page body -->
             <div class="page-header d-print-none">
                 <div class="container-xl">
+                    <div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
+                        <div class="d-flex">
+                            <div class="me-2">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                                <i style="font-size:24px" class="ti ti-check"></i>
+                            </div>
+                            <div id="success-body">
+                                Wow! Everything worked!
+                            </div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                    </div>
+
+
+
+                    <div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
+                        <div class="d-flex">
+                            <div class="me-2">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+                                <i style="font-size:24px" class="ti ti-alert-circle"></i>
+                            </div>
+                            <div id="error-body">
+                                I'm so sorry…
+                            </div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                    </div>
+
+                    <div class="alert alert-important alert-warning alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
+                        <div class="d-flex">
+                            <div class="me-2">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+                                <i style="font-size:24px" class="ti ti-alert-triangle"></i>
+                            </div>
+                            <div id="error-body">
+                                Uh oh, something went wrong
+                            </div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                    </div>
                     @RenderBody()
                 </div>
 

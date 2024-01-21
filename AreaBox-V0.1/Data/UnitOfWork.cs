@@ -8,7 +8,8 @@ namespace AreaBox_V0._1.Data;
 
 public class UnitOfWork : IUnitOfWork
 {
-	public IUserManagement Users { get; private set; }
+	public IUserManagementRepository Users { get; private set; }
+
 	public ICategoriesRepository Categories { get; private set; }
 
 	public ICitiesRepository Cities { get; private set; }
@@ -23,8 +24,6 @@ public class UnitOfWork : IUnitOfWork
 
 	public IMediaPostReportsRepository MediaPostReports { get; private set; }
 
-
-
 	public IQuestionPostCommentsRepository QuestionPostComments { get; private set; }
 
 	public IQuestionPostRepository QuestionPosts { get; private set; }
@@ -36,6 +35,10 @@ public class UnitOfWork : IUnitOfWork
 	public ITechnicalReportsRepository TechnicalReports { get; private set; }
 
 	public IUserCategoriesRepository UserCategories { get; private set; }
+
+	public IUserMediaPostSaveRepository SavedMediaPosts { get; private set; }
+
+	public IUserQuestionPostSaveRepository SavedQuestionPosts { get; private set; }
 
 
 	private readonly AreaBoxDbContext db;
@@ -60,6 +63,8 @@ public class UnitOfWork : IUnitOfWork
 		ReportTypes = new ReportTypeRepository(db, mapper);
 		TechnicalReports = new TechnicalReportsRepository(db, mapper);
 		UserCategories = new UserCategoriesRepository(db, mapper);
+        SavedMediaPosts = new UserMediaPostSaveRepository(db, mapper);
+        SavedQuestionPosts = new UserQuestionPostSaveRepository(db, mapper);
 	}
 
 	public void Dispose()

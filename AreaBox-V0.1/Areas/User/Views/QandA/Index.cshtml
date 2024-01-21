@@ -3,53 +3,6 @@
     ViewData["Title"] = "QuestionPost";
 }
 
-
-<style>
-    .make-me-sticky {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-    }
-
-    .alertPos {
-        position: fixed;
-        top: 10vh;
-        right: 16vh;
-        z-index: 1000;
-        width: 350px;
-    }
-
-</style>
-
-
-<div class="alert alert-success alert-important alert-dismissible alertPos" id="alertSuccess" role="alert" style="display: none;">
-    <div class="d-flex">
-        <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l5 5l10 -10" /></svg>
-        </div>
-        <div id="success-body">
-            Wow! Everything worked!
-        </div>
-    </div>
-    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
-</div>
-
-
-
-<div class="alert alert-danger alert-important alert-dismissible alertPos" id="alertDanger" role="alert" style="display: none;">
-    <div class="d-flex">
-        <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
-        </div>
-        <div id="error-body">
-            I'm so sorry…
-        </div>
-    </div>
-    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
-</div>
-
 <div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

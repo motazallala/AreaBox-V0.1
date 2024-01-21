@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace AreaBox_V0._1.Data.Interface
 {
-	public interface IUserManagement : IRepository<ApplicationUser>
+	public interface IUserManagementRepository : IRepository<ApplicationUser>
 	{
 		Task<IEnumerable<ApplicationUserDto>> FindAndFilter(Expression<Func<ApplicationUser, bool>> match,
 																			string[] includes = null,

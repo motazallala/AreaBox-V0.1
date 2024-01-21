@@ -6,6 +6,12 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <script defer src="~/js/getUserGeolocation.js"></script>
+}
+
 <!--=====================================-->
 <!--=          Banner Start       		=-->
 <!--=====================================-->
@@ -155,5 +161,3 @@
 <!--=====================================-->
 <section class="banner-newsletter">
 </section>
-
-

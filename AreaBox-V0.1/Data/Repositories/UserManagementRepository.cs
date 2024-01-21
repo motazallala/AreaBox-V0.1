@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace AreaBox_V0._1.Data.Repositories
 {
-	public class UserManagementRepository : Repository<ApplicationUser>, IUserManagement
+	public class UserManagementRepository : Repository<ApplicationUser>, IUserManagementRepository
 	{
 		private readonly AreaBoxDbContext _db;
 		private readonly IMapper _mapper;

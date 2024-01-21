@@ -135,7 +135,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Category).WithMany()
                 .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserCategories_Category");
 
             entity.HasOne(d => d.User).WithMany()
@@ -244,7 +244,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Mpcategory).WithMany(p => p.MediaPosts)
                 .HasForeignKey(d => d.MpcategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_MediaPosts_Categories");
 
             entity.HasOne(d => d.Mpcity).WithMany(p => p.MediaPosts)
@@ -275,7 +275,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
             entity.HasOne(report => report.ReportType)
                   .WithMany(type => type.MediaPostsReports)
                   .HasForeignKey(report => report.ReportTypeId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK_MediaPostsReports_ReportType");
 
 			entity.HasOne(d => d.Mpost).WithMany(p => p.MediaPostsReports)
@@ -342,7 +342,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Qpcategory).WithMany(p => p.QuestionPosts)
                 .HasForeignKey(d => d.QpcategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_QuestionPosts_Categories");
 
             entity.HasOne(d => d.Qpcity).WithMany(p => p.QuestionPosts)
@@ -368,7 +368,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.Qpost).WithMany()
                 .HasForeignKey(d => d.QpostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_QuestionPostsReports_QuestionPosts");
 
             entity.HasOne(report => report.ReportType)

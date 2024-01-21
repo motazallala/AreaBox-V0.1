@@ -12,6 +12,7 @@ using System.Text.Encodings.Web;
 using System.Text;
 using System.Text.RegularExpressions;
 using AreaBox_V0._1.Areas.User.Models.UserInfoDto.Input;
+using AreaBox_V0._1.Areas.Admin.Models.CategoriesModel.Send;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Route("UserApi/[action]")]
@@ -33,9 +34,15 @@ public class UserApiController : ControllerBase
         _location = location;
     }
 
+	[HttpGet]
+	public async Task<IActionResult> GetAllCategory()
+	{
+		var getAllCategories = await _db.Categories.GetAllAsync<Categories, CategoriesIndexDto>();
+		return Ok(getAllCategories);
+	}
 
-    #region User Category
-    [HttpGet]
+	#region User Category
+	[HttpGet]
     public async Task<IActionResult> GetAllUserCategories()
     {
         var userId = _userManager.GetUserId(User);
@@ -49,7 +56,7 @@ public class UserApiController : ControllerBase
         return Ok(userCategoriesList);
     }
     [HttpPost]
-    public async Task<IActionResult> AddUserCategory([FromForm] UUserCategoriesInputDto input)
+    public async Task<IActionResult> AddUserCategory([FromForm] int categoryId)
     {
         var userId = _userManager.GetUserId(User);
         if (userId == null)
@@ -57,17 +64,17 @@ public class UserApiController : ControllerBase
             return BadRequest("Log in to report the post");
         }
 
-        if (input.CategoryId == null)
+        if (categoryId == null)
         {
             return BadRequest("Fill the information !!");
         }
 
-        var category = await _db.Categories.CheckItemExistence<Categories>(e => e.CategoryId == input.CategoryId);
+        var category = await _db.Categories.CheckItemExistence<Categories>(e => e.CategoryId == categoryId);
         if (category == false)
         {
             return BadRequest("the category not Exists");
         }
-        var usercategory = await _db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == input.CategoryId);
+        var usercategory = await _db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
         if (usercategory == true)
         {
             return BadRequest("the usercategory Exists");
@@ -75,7 +82,7 @@ public class UserApiController : ControllerBase
         var newUserCategory = new UserCategories
         {
             UserId = userId,
-            CategoryId = input.CategoryId
+            CategoryId = categoryId
 
         };
 
@@ -86,7 +93,7 @@ public class UserApiController : ControllerBase
 
     }
 
-    [HttpDelete]
+    [HttpPost]
     public async Task<IActionResult> DeleteUserCategory([FromForm] int categoryId)
     {
         var userId = _userManager.GetUserId(User);
@@ -101,20 +108,18 @@ public class UserApiController : ControllerBase
         var isExist = await _db.UserCategories.CheckItemExistence<UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
         if (isExist == false)
         {
-            return Ok("the category is not exist for this user");
+            return BadRequest("the category is not exist for this user");
         }
         var itemToRemove = await _db.UserCategories.Find<UserCategories, UserCategories>(e => e.UserId == userId && e.CategoryId == categoryId);
         if (itemToRemove == null)
         {
-            return Ok("the category is not exist for this user");
-        }
-        else
-        {
-            return Ok("the category removed Successfully");
-
+            return BadRequest("the category is not exist for this user");
         }
 
+        _db.UserCategories.Remove(itemToRemove);
+        await _db.Save();
 
+        return Ok("the category removed Successfully");
     }
     #endregion
 

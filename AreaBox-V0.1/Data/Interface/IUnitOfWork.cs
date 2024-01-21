@@ -2,7 +2,7 @@
 
 public interface IUnitOfWork : IDisposable
 {
-	IUserManagement Users { get; }
+	IUserManagementRepository Users { get; }
 	ICategoriesRepository Categories { get; }
 	ICitiesRepository Cities { get; }
 	ICountriesRepository Countries { get; }
@@ -21,6 +21,8 @@ public interface IUnitOfWork : IDisposable
 	IReportTypeRepository ReportTypes { get; }
 	ITechnicalReportsRepository TechnicalReports { get; }
 	IUserCategoriesRepository UserCategories { get; }
+	IUserMediaPostSaveRepository SavedMediaPosts { get; }
+	IUserQuestionPostSaveRepository SavedQuestionPosts { get; }
 
 
 	Task<int> Save();

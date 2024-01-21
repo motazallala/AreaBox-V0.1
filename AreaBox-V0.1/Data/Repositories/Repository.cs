@@ -43,6 +43,11 @@ namespace AreaBox_V0._1.Data.Repositories
 			return await _db.Set<T>().FindAsync(id);
 		}
 
+		public async Task<T> GetByIdAsync(int id)
+		{
+			return await _db.Set<T>().FindAsync(id);
+		}
+
 		public void Add(T entity)
 		{
 			_db.Set<T>().Add(entity);
@@ -160,7 +165,6 @@ namespace AreaBox_V0._1.Data.Repositories
 
 		}
 
-
 		public async Task<int> Count()
 		{
 			return await _db.Set<T>().CountAsync();
@@ -176,7 +180,5 @@ namespace AreaBox_V0._1.Data.Repositories
 		{
 			_db.Attach(entity);
 		}
-
-
 	}
 }
