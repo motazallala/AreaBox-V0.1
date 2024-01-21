@@ -3,4 +3,5 @@
 public static class PostConfig
 {
 	public const int PageSize = 5;
+    public const int QuestionPostCommentsSize = 5;
 }

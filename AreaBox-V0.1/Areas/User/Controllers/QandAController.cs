@@ -21,7 +21,7 @@ public class QandAController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork db;
     private readonly ILocationService location;
-    private readonly int PageSize = 15;
+    private readonly int PageSize = 5;
     public QandAController(UserManager<ApplicationUser> userManager, IUnitOfWork _db, ILocationService _location)
     {
         _userManager = userManager;
@@ -242,8 +242,8 @@ public class QandAController : Controller
 			return BadRequest("The post not exists");
 		}
 
-		int resultCount = await db.QuestionPostComments.Count<QuestionPostComments>();
-		int pages = (int)Math.Ceiling((double)resultCount / PageSize);
+		int resultCount = await db.QuestionPostComments.Count<QuestionPostComments>(e => e.QpostId == questionPostId);
+		int pages = (int)Math.Ceiling((double)resultCount / PostConfig.QuestionPostCommentsSize);
 		if (page > pages)
 		{
 			return Ok("No more comments");
@@ -251,8 +251,8 @@ public class QandAController : Controller
 		}
 		int skip = PageSize * (page - 1);
 		int take = PageSize;
-		var resalt = await db.QuestionPostComments.FindAndFilter<QuestionPostComments, UQuestionPostCommentsOutputDto>(new[] { "User" }, skip, take, e => e.QpostId == questionPostId);
-		return Ok(resalt);
+		var results = await db.QuestionPostComments.FindAndFilter<QuestionPostComments, UQuestionPostCommentsOutputDto>(new[] { "User" }, skip, take, e => e.QpcommentDate, OrderBy.Descending, e => e.QpostId == questionPostId);
+		return Ok(results);
 	}
 
     [HttpPost]

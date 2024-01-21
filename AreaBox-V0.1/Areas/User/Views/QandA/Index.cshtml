@@ -609,14 +609,19 @@
         let currentPage = 1;
         let questionPostId;
         let resCount = 0;
-        var userName = document.querySelector('h3[data-username]').getAttribute('data-username');
-        var userImage = document.querySelector('img[data-userimage]').getAttribute('data-userimage');
-        var QPTitle = document.querySelector('h3[data-title]').getAttribute('data-title');
-        var QPDescription = document.querySelector('p[data-description]').getAttribute('data-description');
         var addUserImage = document.getElementById('UserImage');
+        var userName;
+        var userImage;
+        var QPTitle;
+        var QPDescription;
 
         $('#myQuestionPostComment').on('show.bs.modal', function (event) {
             questionPostId = $(event.relatedTarget).data('id');
+            var button = $(event.relatedTarget);
+            userName = button.data('username');
+            userImage = button.data('userimage');
+            QPTitle = button.data('title');
+            QPDescription = button.data('description');
 
             // $(window).scroll(function () {
             // 	if (
@@ -687,8 +692,8 @@
 
                     addUserImage.src = userImage;
                     $('#UserName').append(userName);
-                    $('#QPTitle').append(QPTitle)
-                    $('#QPDescription').append(QPDescription)
+                    $('#QPTitle').append(QPTitle);
+                    $('#QPDescription').append(QPDescription);
 
                     if (response == 'No more comments' && resCount == 0) {
                         $('#commentPager').hide();
