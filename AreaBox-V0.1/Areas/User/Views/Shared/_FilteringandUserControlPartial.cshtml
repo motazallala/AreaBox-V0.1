@@ -1,0 +1,72 @@
+﻿@inject UserManager<ApplicationUser> user
+
+@{
+	var userData = await user.GetUserAsync(User);
+}
+<div class="col">
+    <div class="card">
+        <div class="card-header">
+
+            <div class="row align-items-center">
+                <div class="col-auto me-auto">
+                    <img src="@userData.ProfilePicture" alt="" class="avatar rounded" style="width: 60px; height:57px">
+                </div>
+                <div class="col-auto me-auto">
+                    <div class="fw-bold">
+                        <h3 class="card-title">@userData.UserName</h3>
+                        <div class="card-subtitle"> century-city / Category</div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-actions pe-3">
+                <partial name="_UserLoginPartial" />
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <div class="form-label">Country:</div>
+                <input class="form-control" id="countryText" name="Country" disabled />
+            </div>
+            <div class="mb-3">
+
+                <div class="form-label">City:</div>
+                <input class="form-control" type="text" id="cityText" name="City" disabled />
+            </div>
+            <div class="mb-3">
+
+                <div class="form-label">Category:</div>
+                <select class="form-select" id="categoryDropdown" name="Category">
+                </select>
+
+            </div>
+
+        </div>
+        <div class="card-footer ">
+            <div class="row">
+
+                <div class="col-auto me-auto">
+                    <button id="refreshLoc" class="btn btn-primary ">
+                        <i class="ti ti-reload me-2"></i>
+                        Refresh
+                    </button>
+                </div>
+
+                <div class="col-auto ">
+                    <button type="submit" class="btn btn-primary" id="ApplyBtn">Apply</button>
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+<div class="col text-end ">
+
+    <button type="button" class="btn btn-primary mt-5 " data-bs-toggle="modal" data-bs-target="#mediaManagementModal" data-id="213">
+        <i class="ti ti-plus me-1" style="font-size: 24px;"></i>
+        Add New Post
+    </button>
+</div>
+

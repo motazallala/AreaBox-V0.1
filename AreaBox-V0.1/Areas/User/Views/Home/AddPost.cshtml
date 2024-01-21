@@ -1,0 +1,26 @@
+﻿@model AreaBox_V0._1.Models.Dto.MediaPostsDto;
+@{
+    ViewData["Title"] = "AddPost";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <h1>@ViewData["Title"]</h1>
+
+    <form method="post" enctype="multipart/form-data" action="/Home/UploadVideo">
+        <div>
+            <label for="videoFile">Upload Video File:</label>
+            <input type="file" id="videoFile" name="videoFile" accept="video/*" required />
+        </div>
+        <div>
+            <button type="submit">Upload</button>
+        </div>
+    </form>
+
+</body>
+</html>
+

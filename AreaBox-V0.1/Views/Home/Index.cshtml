@@ -1,8 +1,163 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using AreaBox_V0._1.Data.Model
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <script defer src="~/js/getUserGeolocation.js"></script>
+}
+
+<!--=====================================-->
+<!--=          Banner Start       		=-->
+<!--=====================================-->
+<section class="hero-banner">
+    <div class="container">
+        <div class="hero-content" data-sal="zoom-out" data-sal-duration="1000">
+            <h1 class="item-title">Area Box Community</h1>
+            <p>Provides multilingual support, further enhancing its global accessibility and user inclusivity.</p>
+            <div class="item-number">10,95219</div>
+            <div class="conn-people">Connected People</div>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a asp-action="Index" asp-controller="Home" asp-area="User" class="button-slide">
+                <span class="btn-text">Discover Now</span>
+                <span class="btn-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
+                        <path fill-rule="evenodd" fill="rgb(255, 255, 255)" d="M16.671,9.998 L12.997,9.998 L16.462,6.000 L5.000,6.000 L5.000,4.000 L16.462,4.000 L12.997,0.002 L16.671,0.002 L21.003,5.000 L16.671,9.998 ZM17.000,5.379 L17.328,5.000 L17.000,4.621 L17.000,5.379 ZM-0.000,4.000 L3.000,4.000 L3.000,6.000 L-0.000,6.000 L-0.000,4.000 Z" />
+                    </svg>
+                </span>
+                </a>
+            }
+            else
+            {
+                <a asp-area="Auth" asp-page="/Login" class="button-slide">
+                    <span class="btn-text">Discover Now</span>
+
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
+                            <path fill-rule="evenodd" fill="rgb(255, 255, 255)" d="M16.671,9.998 L12.997,9.998 L16.462,6.000 L5.000,6.000 L5.000,4.000 L16.462,4.000 L12.997,0.002 L16.671,0.002 L21.003,5.000 L16.671,9.998 ZM17.000,5.379 L17.328,5.000 L17.000,4.621 L17.000,5.379 ZM-0.000,4.000 L3.000,4.000 L3.000,6.000 L-0.000,6.000 L-0.000,4.000 Z" />
+                        </svg>
+                    </span>
+                </a>
+            }
+        </div>
+    </div>
+    <div class="leftside-image">
+        <div class="cartoon-image" data-sal="slide-down" data-sal-duration="1000" data-sal-delay="100">
+            <img src="~/userhome/media/banner/people_1.png" alt="People">
+        </div>
+        <div class="shape-image" data-sal="slide-down" data-sal-duration="500" data-sal-delay="700">
+            <img src="~/userhome/media/banner/shape_1.png" alt="shape">
+        </div>
+    </div>
+    <div class="map-line">
+        <img src="~/userhome/media/banner/map_line.png" alt="map" data-sal="slide-up" data-sal-duration="500" data-sal-delay="800">
+        <ul class="map-marker">
+            <li data-sal="slide-up" data-sal-duration="700" data-sal-delay="1000"><img src="~/userhome/media/banner/marker_1.png" alt="marker"></li>
+            <li data-sal="slide-up" data-sal-duration="800" data-sal-delay="1000"><img src="~/userhome/media/banner/marker_2.png" alt="marker"></li>
+            <li data-sal="slide-up" data-sal-duration="900" data-sal-delay="1000"><img src="~/userhome/media/banner/marker_3.png" alt="marker"></li>
+            <li data-sal="slide-up" data-sal-duration="1000" data-sal-delay="1000"><img src="~/userhome/media/banner/marker_4.png" alt="marker"></li>
+        </ul>
+    </div>
+</section>
+<!--=====================================-->
+<!--=         Why Choose Start       	=-->
+<!--=====================================-->
+<section class="why-choose-us">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="why-choose-box">
+                    <div class="item-subtitle">What We Do</div>
+                    <h2 class="item-title"><span>Why Join Our</span> Area Box from Social Network ?</h2>
+                    <p>Area Box is a groundbreaking web application revolutionizing social connections by introducing location-based communication. Users can seamlessly engage with content, chat, and participate in a unique Q&A feature, fostering vibrant local communities and personalized online experiences.</p>
+                    @if (!SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-area="Auth" asp-page="/Register" class="button-slide">
+                            <span class="btn-text">Join Our Community</span>
+                            <span class="btn-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="10px">
+                                    <path fill-rule="evenodd" fill="rgb(255, 255, 255)" d="M16.671,9.998 L12.997,9.998 L16.462,6.000 L5.000,6.000 L5.000,4.000 L16.462,4.000 L12.997,0.002 L16.671,0.002 L21.003,5.000 L16.671,9.998 ZM17.000,5.379 L17.328,5.000 L17.000,4.621 L17.000,5.379 ZM-0.000,4.000 L3.000,4.000 L3.000,6.000 L-0.000,6.000 L-0.000,4.000 Z" />
+                                </svg>
+                            </span>
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="why-choose-box">
+                    <ul class="features-list">
+                        <li>
+                            <div class="media">
+                                <div class="item-icon">
+                                    <i class="icofont-multimedia"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="item-title">Media Page</h3>
+                                    <p>A dynamic visual hub enabling users to share and explore location-specific photos, fostering an interactive experience with likes and comments.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="media">
+                                <div class="item-icon">
+                                    <i class="icofont-question-square"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="item-title">Q&A Page</h3>
+                                    <p>A knowledge-sharing hub where users ask and answer questions, promoting collaborative learning and serving as a valuable resource for insights.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="media">
+                                <div class="item-icon">
+                                    <i class="icofont-chat"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="item-title">Chat Page</h3>
+                                    <p>Real-time, location-based communication platform for users to engage in group chats, enhancing community connections and facilitating instant interactions.</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+<!--=         Community Start       	=-->
+<!--=====================================-->
+<section class="community-network">
+    <ul class="map-marker">
+        <li><img src="~/userhome/media/banner/marker_1.png" alt="marker"></li>
+        <li><img src="~/userhome/media/banner/marker_2.png" alt="marker"></li>
+        <li><img src="~/userhome/media/banner/marker_3.png" alt="marker"></li>
+        <li><img src="~/userhome/media/banner/marker_4.png" alt="marker"></li>
+        <li><img src="~/userhome/media/banner/marker_5.png" alt="marker"></li>
+    </ul>
+    <div class="container">
+        <div class="row justify-content-end">
+            <div class="col-lg-6">
+                <div class="community-content">
+                    <h2 class="item-title">195 Countries We Build Our Largest Community in <span>Area Box Network</span></h2>
+                    <p>Area Box is designed to be inclusive and accessible globally, supporting a diverse range of international languages. Users can enjoy the platform in their preferred language, ensuring a seamless and personalized experience for individuals from various linguistic backgrounds.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-shape" data-sal="slide-left" data-sal-duration="500" data-sal-delay="500">
+        <img src="~/userhome/media/figure/shape_7.png" alt="bg">
+    </div>
+</section>
+<!--=====================================-->
+<!--=          NewsLetter Start       		=-->
+<!--=====================================-->
+<section class="banner-newsletter">
+</section>

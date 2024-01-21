@@ -3,7 +3,7 @@
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class Cities
+public class Cities
 {
     public int CitryId { get; set; }
 

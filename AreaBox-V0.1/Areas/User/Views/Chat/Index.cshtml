@@ -1,0 +1,184 @@
+﻿@inject UserManager<ApplicationUser> _userManager
+
+
+@{
+	var user = await _userManager.GetUserAsync(User);
+	var cuserId = user?.Id;
+	ViewData["Title"] = "Chat";
+}
+
+<div class="row justify-content-center">
+	<div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-7 ">
+		<div id="post-container" class="">
+			@Html.Partial("_ChatPartial")
+		</div>
+		<div id="loading-indicator" class="my-5" style="display: none;">
+			<div class="spinner-border text-primary"></div>
+		</div>
+	</div>
+	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+		<div class="make-me-sticky">
+			<partial name="../Shared/_FilteringandUserControlPartial.cshtml" />
+		</div>
+
+	</div>
+</div>
+
+@section Scripts {
+    <script defer src="~/js/setlocationname.js"></script>
+    <script src="~/js/refreshchatpage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        var city;
+        var key;
+        var connection; // Declare connection variable here
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    try {
+                        const response = await $.ajax({
+                            url: `/Chat/GetGeolocation`,
+                            type: 'GET',
+                            data: { latitude, longitude },
+                        });
+
+                        const geolocationInfo = JSON.parse(response);
+                        city = geolocationInfo.City;
+                        key = geolocationInfo.Key;
+
+                        initiateSignalRConnection();
+                    } catch (error) {
+                        console.error('Error fetching geolocation details:', error);
+                        $('#loadingPlaceholder').hide();
+                    }
+                });
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        });
+
+        function initiateSignalRConnection() {
+            if (city && key) {
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/chathub")
+                    .withAutomaticReconnect()
+                    .configureLogging(signalR.LogLevel.Information)
+                    .build();
+
+                function scrollToBottom() {
+                    const chatContainer = document.querySelector(".card-body.scrollable");
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+
+                connection.on("ReceiveMessage", (userId, userName, userImage, message, time) => {
+                    const chatBubbles = document.querySelector(".chat-bubbles");
+                    const chatItem = document.createElement("div");
+
+                    chatItem.className = "chat-item";
+
+                    const isCurrentUser = userId === "@cuserId";
+
+                    const alignmentClass = isCurrentUser ? "justify-content-start" : "justify-content-end";
+                    const bubbleClass = isCurrentUser ? "bg-primary text-white" : "bg-light";
+                    let chatBubble = ``;
+
+                    if (isCurrentUser) {
+                        chatBubble = `
+                                    <div class="row align-items-end ${alignmentClass}">
+                                        <div class="col-auto d-flex align-items-center justify-content-center">
+                                            <span class="avatar" style="background-image: url(${userImage});"></span>
+                                        </div>
+                                        <div class="col col-lg-6">
+                                            <div class="chat-bubble ${bubbleClass}">
+                                                <div class="chat-bubble-title">
+                                                    <div class="row">
+                                                        <div class="col chat-bubble-author">${userName}</div>
+                                                        <div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="chat-bubble-body">
+                                                    <p>${message}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                    } else {
+                        chatBubble = `
+                                    <div class="row align-items-end ${alignmentClass}">
+                                        <div class="col col-lg-6">
+                                            <div class="chat-bubble ${bubbleClass}">
+                                                <div class="chat-bubble-title">
+                                                    <div class="row">
+                                                        <div class="col chat-bubble-author">${userName}</div>
+                                                        <div class="col-auto chat-bubble-date">${new Date(time).toLocaleTimeString()}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="chat-bubble-body">
+                                                    <p>${message}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <span class="avatar" style="background-image: url('${userImage}');"></span>
+                                        </div>
+                                    </div>
+                                `;
+                    }
+
+                    chatItem.innerHTML = chatBubble;
+                    chatBubbles.appendChild(chatItem);
+                    scrollToBottom();
+                });
+
+                // Start the SignalR connection
+                connection.start().then(() => {
+                    connection.invoke("JoinCityGroup", key).then(() => {
+                        $('#success-body').text(`You have successfully joined the ${city} chat group.`);
+                        $('#alertSuccess').show();
+                        setTimeout(function () {
+                            $('#alertSuccess').hide();
+                        }, 4000);
+                    }).catch(err => console.error(err));
+                }).catch(err => console.error(err));
+
+                window.addEventListener('beforeunload', leaveCityGroup);
+            } else {
+                $('#error-body').text(`Geolocation is not enabled, please enable it first!`);
+                $('#alertDanger').show();
+                setTimeout(function () {
+                    $('#alertDanger').hide();
+                }, 4000);
+            }
+        }
+
+        // Move these functions outside the initiateSignalRConnection function
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput");
+            const message = messageInput.value;
+            const time = Date.now();
+
+            connection.invoke("JoinCityGroup", key).catch(err => console.error(err));
+            connection.invoke("SendMessage", message, key, time).catch(err => console.error(err));
+
+            messageInput.value = "";
+        }
+
+        function handleEnter(event) {
+            if (event.keyCode === 13) {
+                sendMessage();
+            }
+        }
+
+        function leaveCityGroup() {
+            connection.invoke("LeaveCityGroup", key).catch(err => console.error(err));
+        }
+    </script>
+}
+

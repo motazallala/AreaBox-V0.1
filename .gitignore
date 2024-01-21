@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/AreaBox-V0.1/appsettings.json
+/AreaBox-V0.1/Areas/User/Controllers/SettingsController.cs
+/AreaBox-V0.1/Areas/User/Views/Settings/MyAccount.cshtml
+/AreaBox-V0.1/Areas/User/Views/Settings
+/.gitignore

@@ -1,0 +1,149 @@
+﻿@page
+@model RegisterModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" href="media/favicon.png">
+    <link rel="stylesheet" href="~/userhome/dependencies/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/userhome/dependencies/icofont/icofont.min.css">
+    <link rel="stylesheet" href="~/userhome/dependencies/slick-carousel/css/slick.css">
+    <link rel="stylesheet" href="~/userhome/dependencies/slick-carousel/css/slick-theme.css">
+    <link rel="stylesheet" href="~/userhome/dependencies/magnific-popup/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/userhome/dependencies/sal.js/sal.css" type="text/css">
+    <link rel="stylesheet" href="~/userhome/dependencies/select2/css/select2.min.css" type="text/css">
+    <link rel="stylesheet" href="~/UserHome/assets/css/app.css">
+</head>
+<body>
+    <a href="#wrapper" data-type="section-switch" class="scrollup">
+        <i class="icofont-bubble-up"></i>
+    </a>
+    <!-- Preloader Start Here -->
+    <div id="preloader"></div>
+    <!-- Preloader End Here -->
+    <div id="wrapper" class="wrapper overflow-hidden">
+
+        <!--=====================================-->
+        <!--=          Header Menu Start       	=-->
+        <!--=====================================-->
+        <div class="login-page-wrap">
+            <div class="content-wrap">
+                <div class="login-content">
+                    <div class="item-logo">
+                        <a asp-action="Index" asp-area="" asp-controller="Home"><img src="~/userhome/media/image-removebg-preview 1.png" alt="logo"></a>
+                    </div>
+                    <div class="login-form-wrap">
+                        <div class="tab-content">
+                            <div class="tab-pane login-tab fade show active" id="login-tab" role="tabpanel">
+                                <h3 class="item-title">Sign Up Your Account</h3>
+                                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" autocomplete="off" novalidate>
+                                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Input.FirstName" class="form-control" autocomplete="off" aria-required="true" placeholder="First Name">
+                                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Input.LastName" class="form-control" autocomplete="off" aria-required="true" placeholder="Last Name">
+                                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Input.UserName" class="form-control" autocomplete="off" aria-required="true" placeholder="User Name" />
+                                        <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <select asp-for="Input.Gender" class="select2" data-placeholder="Select Gender" aria-required="true">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                        <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <input type="date" asp-for="Input.DOB" class="form-control" autocomplete="username" aria-required="true" placeholder="Your Birth Day">
+                                        <span asp-validation-for="Input.DOB" class="text-danger"></span>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="E-mail" />
+                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="submit" id="registerSubmit" class="submit-btn" value="Complete Registration">
+                                    </div>
+                                    <div class="form-group">
+                                        <a id="register" asp-area="Auth" asp-page="/Register">Sign In</a>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-line">
+                        <img src="~/userhome/media/banner/map_line.png" alt="map">
+                        <ul class="map-marker">
+                            <li><img src="~/userhome/media/banner/marker_1.png" alt="marker"></li>
+                            <li><img src="~/userhome/media/banner/marker_2.png" alt="marker"></li>
+                            <li><img src="~/userhome/media/banner/marker_3.png" alt="marker"></li>
+                            <li><img src="~/userhome/media/banner/marker_4.png" alt="marker"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="header-search" class="header-search">
+                <button type="button" class="close">×</button>
+                <form class="header-search-form">
+                    <input type="search" value="" placeholder="Search here..." />
+                    <button type="submit" class="search-btn">
+                        <i class="flaticon-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/userhome/dependencies/jquery/js/jquery.min.js"></script>
+    <script src="~/userhome/dependencies/popper.js/js/popper.min.js"></script>
+    <script src="~/userhome/dependencies/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/userhome/dependencies/imagesloaded/js/imagesloaded.pkgd.min.js"></script>
+    <script src="~/userhome/dependencies/isotope-layout/js/isotope.pkgd.min.js"></script>
+    <script src="~/userhome/dependencies/slick-carousel/js/slick.min.js"></script>
+    <script src="~/userhome/dependencies/sal.js/sal.js"></script>
+    <script src="~/userhome/dependencies/magnific-popup/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/userhome/dependencies/bootstrap-validator/js/validator.min.js"></script>
+    <script src="~/userhome/dependencies/select2/js/select2.min.js"></script>
+    <script src="~/userhome/assets/js/app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtmXSwv4YmAKtcZyyad9W7D4AC08z0Rb4"></script>
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</body>
+</html>
+
+
+

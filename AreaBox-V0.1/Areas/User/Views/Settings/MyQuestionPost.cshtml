@@ -1,0 +1,130 @@
+﻿@model List<AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send.UQuestionPostOutPutDto>
+
+@{
+	ViewData["Title"] = "My Question Post";
+	Layout = "~/Areas/User/Views/Shared/_SettingsLayout.cshtml";
+}
+
+
+<div class="card-body">
+	<h1>My Question Post</h1>
+	<div class="row row-cards">
+		@foreach (var qpost in Model)
+		{
+			<div class="col-sm-12 col-lg-6">
+				<div class="card d-flex flex-column">
+					<div class="card-header">
+						<div class="card-actions">
+							<div class="dropdown">
+								<a class="btn-action dropdown-toggle" data-bs-toggle="dropdown"
+								   aria-haspopup="true"
+								   aria-expanded="false">
+									<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+									<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+										 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+										 stroke-linecap="round" stroke-linejoin="round">
+										<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+										<path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+										<path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+										<path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+									</svg>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end">
+									<a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#reportPostModal" data-id="">Edit The Post</a>
+									<a class="dropdown-item link-danger" data-bs-toggle="modal" data-bs-target="#deleteMyQuestionPost" style="cursor: pointer;">Delete Post</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-body d-flex flex-column">
+						<div class="d-flex align-items-center  mb-3">
+							<img class="avatar" src="@qpost.UserImage" />
+							<div class="ms-3">
+								<a href="#" class="text-body">@qpost.UserName</a>
+								<div class="text-secondary">@qpost.Qpdate</div>
+								<div class="text-secondary">@qpost.CountryName / @qpost.CityName</div>
+							</div>
+						</div>
+						<h3 class="card-title"><a href="#">@qpost.Qptitle</a></h3>
+						<div class="text-secondary">@qpost.Qpdescription</div>
+						<div class="ms-auto">
+							<a class="text-secondary" data-bs-toggle="modal" data-bs-target="#myQuestionPostComment">
+								<i class="ti ti-message" style="font-size:15px"></i>
+								@qpost.CommentCount;
+							</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+
+<div class="modal modal-blur fade" id="myQuestionPostComment" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Comments</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="col-md-12">
+				<div class="page-body">
+					<div class="container-xl">
+						<div class="card">
+							<div class="card-body" style="height: 60vh; overflow-y: auto;">
+								<div class="chat">
+									<div id="commentsContainer">
+										<!-- Comments Question My Post will be appended here -->
+									</div>
+									<div id="commentPager">
+										<button class="btn btn-primary mt-5" id="loadMoreComments">Load More</button>
+									</div>
+									<div id="loading-indicator2" class="my-5" style="display: none;">
+										<div class="spinner-border text-primary"></div>
+									</div>
+								</div>
+							</div>
+							<div class="card-footer">
+								<input type="text" class="form-control mb-2" id="commentContentInput" placeholder="Add a comment...">
+								<button class="btn btn-primary" id="addCommentButton">Add Comment</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal modal-blur fade" id="deleteMyQuestionPost" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-status bg-danger"></div>
+			<div class="modal-body text-center py-4">
+				<!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+				<svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+				<h3>Are you sure?</h3>
+				<div class="text-secondary">Do you really want to remove Question Post? What you've done cannot be undone.</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<a href="#" class="btn w-100" data-bs-dismiss="modal">
+								Cancel
+							</a>
+						</div>
+						<div class="col">
+							<a href="#" class="btn btn-danger w-100" data-bs-dismiss="modal">
+								Delete Post
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

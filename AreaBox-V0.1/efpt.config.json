@@ -7,7 +7,7 @@
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models",
+   "OutputPath": "Models2",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "AreaBox_V0._1",
    "Schemas": null,
@@ -72,6 +72,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[PostReports]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PostTypes]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[QuestionPostComments]",
          "ObjectType": 0
       },
@@ -92,6 +100,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[UserCategories]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[UsersMediaPostComments]",
          "ObjectType": 0
       },
@@ -100,12 +112,13 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-8d4ecu1.AreaBoxDb.dbo",
+   "UiHint": "motazallala.AreaBoxDb.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
    "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": true,
    "UseHandleBars": false,
    "UseHierarchyId": false,

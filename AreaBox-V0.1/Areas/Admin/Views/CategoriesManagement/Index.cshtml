@@ -1,0 +1,207 @@
+﻿@model List<AreaBox_V0._1.Areas.Admin.Models.CategoriesModel.Send.CategoriesIndexDto>;
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="modal modal-blur fade" id="modal-team" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add a new team</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row mb-3 align-items-end">
+					<div class="col">
+						<input class="form-control" type="text" id="addCategory" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="addCategoryBtn" data-bs-dismiss="modal">Add Category</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal modal-blur fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-status bg-danger"></div>
+			<div class="modal-body text-center py-4">
+				<!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+				<svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+				<h3>Are you sure?</h3>
+				<div class="text-secondary">Do you really want to delete this category? What you've done cannot be undone.</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<a class="btn w-100" data-bs-dismiss="modal">
+								Cancel
+							</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-danger w-100" id="deleteCeategory" data-bs-dismiss="modal">
+								Delete
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="loading-indicator" class="my-5" style="display: none;">
+	<div class="spinner-border text-primary"></div>
+</div>
+<div class="card" id="categoryContent">
+	<div class="card-body">
+		<h2 class="mb-4">My Category</h2>
+		<h3>All Category</h3>
+		<a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-team">
+			<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+			<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+			Add Category
+		</a>
+		<br />
+		<br />
+		@if (Model.Any())
+		{
+			<div class="tags-list" id="tagsList">
+				@foreach (var item in Model)
+				{
+					<span class="tag">
+						@item.CategoryName
+						<a class="btn-close" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-categoryid="@item.CategoryId"></a>
+					</span>
+				}
+			</div>
+		}
+		else
+		{
+			<p> there are no Category Add new One</p>
+		}
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$("#addCategoryBtn").on('click', function () {
+				var data = {
+					categoryName: $("#addCategory").val()
+				};
+
+				var formData = new FormData();
+
+				for (var key in data) {
+					formData.append(key, data[key]);
+				}
+
+				$.ajax({
+					url: '/CategoriesManagement/AddCategory',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						loadPage();
+						$('#addCategory').val('');
+						$('#success-body').text(data);
+						$('#alertSuccess').show();
+						setTimeout(function () {
+							$('#alertSuccess').hide();
+						}, 4000);
+					},
+					error: function (error) {
+						$('#error-body').text(error.responseText);
+						$('#alertDanger').show();
+						setTimeout(function () {
+							$('#alertDanger').hide();
+						}, 4000);
+					}
+				});
+			});
+
+		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			var button;
+			var categoryId;
+
+			$('#deleteCategoryModal').on('show.bs.modal', function (event) {
+				button = $(event.relatedTarget);
+				categoryId = button.data('categoryid');
+				debugger
+			});
+
+			$("#deleteCeategory").on('click', function (event) {
+				var data = {
+					categoreId: categoryId
+				};
+
+				var formData = new FormData();
+
+				for (var key in data) {
+					formData.append(key, data[key]);
+				}
+
+				$.ajax({
+					url: '/CategoriesManagement/RemoveCategory',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						loadPage();
+						$('#success-body').text(data);
+						$('#alertSuccess').show();
+						setTimeout(function () {
+							$('#alertSuccess').hide();
+						}, 4000);
+					},
+					error: function (error) {
+						$('#error-body').text(error.responseText);
+						$('#alertDanger').show();
+						setTimeout(function () {
+							$('#alertDanger').hide();
+						}, 4000);
+					}
+				});
+			});
+		});
+	</script>
+
+	<script>
+		function loadPage() {
+			var listOfCategory = $('#tagsList');
+			$('#loading-indicator').show();
+			$.ajax({
+				url: '/CategoriesManagement/GetAllCategory',
+				type: 'GET',
+				success: function (data) {
+
+					listOfCategory.empty();
+					$.each(data, function (key, entry) {
+						listOfCategory.append(
+							$(`<span class="tag">${entry.categoryName}<a class="btn-close" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-categoryid="${entry.categoryId}"></a></span>`)
+						);
+					});
+
+					$('#loading-indicator').hide();
+				},
+				error: function () {
+					$('#loading-indicator').hide();
+				}
+			});
+		}
+	</script>
+}

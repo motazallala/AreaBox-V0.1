@@ -1,0 +1,309 @@
+﻿@model AreaBox_V0._1.Areas.Admin.Models.MediaPost.MediaPostIndexViewModel;
+@{
+	ViewData["Title"] = "Index";
+}
+<div class="row">
+	<div class="col-12">
+		<h2>Media Post List : </h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-9">
+		<div class="row row-cards">
+			<div class="col-12">
+				<div class="card">
+					<div class="table-responsive table-nowrap">
+						<table border="1" class="table table-vcenter card-table table-striped">
+							<thead>
+
+								<tr>
+									<th>User Name</th>
+									<th>Location</th>
+									<th>Category Name</th>
+									<th>Publish time</th>
+									<th>State</th>
+									<th>Control</th>
+								</tr>
+
+							</thead>
+							<tbody>
+								@foreach (var item in Model.mediaPosts)
+								{
+									<tr>
+										<td>@item.User.UserName</td>
+										<td>@item.City.Country.CountryName / @item.City.CityName</td>
+										<td class="text-secondary">
+											@item.Category.CategoryName
+										</td>
+										<td>@item.Date</td>
+										<td>
+											<span class="post-state-badge @item.Id">
+												@if (item.State == false)
+												{
+													<span class="badge bg-success me-1"></span> <span>Published</span>
+												}
+												else
+												{
+													<span class="badge bg-danger me-1"></span> <span>Suspended</span>
+												}
+											</span>
+										</td>
+										<td>
+											<button type="button" class="btn btn-purple w-100" data-bs-toggle="modal" data-bs-target="#mediaManagementModal" data-id="@item.Id">
+												View
+											</button>
+										</td>
+									</tr>
+								}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<partial name="_PaginationPartial" model="Model" />
+	</div>
+	<div class="col-3">
+		<form class="card" asp-action="Index" asp-area="admin" asp-controller="MediaManagement" method="get">
+			<div class="card-header">
+				<h3 class="card-title">Basic form</h3>
+			</div>
+			<div class="card-body">
+				<div class="mb-3">
+					<div class="form-label">Country:</div>
+					<select class="form-select" id="countryDropdown" value='@Model.paramss["Country"]' name="Country">
+					</select>
+				</div>
+				<div class="mb-3">
+					<div style="display: inline-block; margin-right: 10px;">
+						<div class="form-label">City:</div>
+						<select class="form-select" id="cityDropdown" value='@Model.paramss["City"]' name="City">
+						</select>
+					</div>
+				</div>
+				<div class="mb-3">
+					<div style="display: inline-block; margin-right: 10px;">
+						<div class="form-label">Category:</div>
+						<select class="form-select" id="categoryDropdown" value='@Model.paramss["Category"]' name="Category">
+						</select>
+					</div>
+				</div>
+				<div class="mb-3">
+
+					<div style="display: inline-block; margin-right: 10px;">
+						<div class="form-label">Search:</div>
+						<input type="text" class="form-control" name="ss" value='@Model.paramss["ss"]' placeholder="Input placeholder"/>
+					</div>
+				</div>
+
+			</div>
+			<div class="card-footer">
+				<a asp-action="@Model.Action" asp-controller="@Model.Controller" class="btn btn-outline-warning">
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-zoom-reset" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M21 21l-6 -6" /><path d="M3.268 12.043a7.017 7.017 0 0 0 6.634 4.957a7.012 7.012 0 0 0 7.043 -6.131a7 7 0 0 0 -5.314 -7.672a7.021 7.021 0 0 0 -8.241 4.403" /><path d="M3 4v4h4" /></svg>
+					Reset
+				</a>
+				<button type="submit" class="btn btn-primary justify-content-end">Search</button>
+			</div>
+		</form>
+
+
+
+	</div>
+
+</div>
+
+
+<div class="modal" id="mediaManagementModal" tabindex="-1">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Media Post Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div id="loadingPlaceholder" style="display: block;">
+					<div class="col-12">
+						<div class="card placeholder-glow">
+							<div class="ratio ratio-21x9 card-img-top placeholder"></div>
+							<div class="card-body">
+								<div class="placeholder col-9 mb-3"></div>
+								<div class="placeholder placeholder-xs col-10"></div>
+								<div class="placeholder placeholder-xs col-11"></div>
+								<div class="mt-3">
+									<a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-4" aria-hidden="true"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="actualContent" style="display: none;" class="row">
+					<div class="col-md-5">
+						<img id="mediaImage" src="" alt="Media Image" class="img-fluid">
+					</div>
+
+					<div class="col-md-1 d-flex align-items-center justify-content-center">
+						<div class="border-left border-2" style="height: 100%;"></div>
+					</div>
+
+					<div class="col-md-6">
+						<div id="mediaDetails">
+						</div>
+						<div class="form-check form-switch mt-3">
+							<input class="form-check-input" type="checkbox" id="enablePostSwitch">
+							<label class="form-check-label" for="enablePostSwitch">State</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="saveChanges()">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('#mediaManagementModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var postId = button.data('id');
+			$('#enablePostSwitch').data('postId', postId);
+
+
+			$('#loadingPlaceholder').show();
+			$('#actualContent').hide();
+
+			$.ajax({
+				url: `/AdminApi/GetMediaPostDetails/${postId}`,
+				type: 'GET',
+				data: { id: postId },
+				success: function (data) {
+					$('#loadingPlaceholder').hide();
+					$('#actualContent').show();
+
+					$('#mediaImage').attr('src', data.imageSrc);
+					$('#mediaDetails').html(`
+								<p>Name Publisher: ${data.name}</p>
+								<p>Email: ${data.email}</p>
+								<p>City: ${data.city}</p>
+								<p>Country: ${data.country}</p>
+								<p>Category: ${data.category}</p>
+								<p>Description: ${data.description}</p>
+								<p>Date: ${data.date}</p>
+
+							`);
+
+
+					var enablePostSwitch = $('#enablePostSwitch');
+					enablePostSwitch.prop('checked', data.state === false);
+					updateSwitchLabel(enablePostSwitch.prop('checked'));
+				},
+				error: function (error) {
+					console.error('Error fetching media details:', error);
+
+					$('#loadingPlaceholder').hide();
+				}
+			});
+		});
+
+		function updateSwitchLabel(isChecked) {
+			var label = $('#enablePostSwitch').next('.form-check-label');
+			label.text(isChecked ? 'Activated' : 'Suspended');
+		}
+
+		$('#enablePostSwitch').on('change', function () {
+			updateSwitchLabel($(this).prop('checked'));
+		});
+	});
+</script>
+
+<script>
+	function saveChanges() {
+		var postId = $('#enablePostSwitch').data('postId');
+		var enablePostSwitch = $('#enablePostSwitch');
+		var newState = enablePostSwitch.prop('checked') ? 'true' : 'false';
+
+		$.ajax({
+			url: `/AdminApi/DisableMediaPost`,
+			type: 'POST',
+			data: { id: postId, newState },
+			success: function (data) {
+				updateBadge(postId, enablePostSwitch.prop('checked'));
+				$('#mediaManagementModal').modal('hide');
+			},
+			error: function (error) {
+				console.error('Error updating post state:', error);
+			}
+		});
+	}
+	function updateBadge(userId, isChecked) {
+		var badge = $('.post-state-badge.' + userId + ' .badge');
+		var text = $('.post-state-badge.' + userId + ' span:last-child');
+
+		if (isChecked) {
+			badge.removeClass('bg-danger').addClass('bg-success');
+			text.text('Published');
+		} else {
+			badge.removeClass('bg-success').addClass('bg-danger');
+			text.text('Suspended');
+		}
+	}
+</script>
+
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			url: '/AdminApi/GetAllCountryAndCities',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var countryDropdown = $('#countryDropdown');
+				var cityDropdown = $('#cityDropdown');
+
+				$.each(data, function (key, entry) {
+				
+					debugger
+					countryDropdown.append($('<option></option>').attr('value', entry.countryId).text(entry.countryName));
+
+					
+					$.each(entry.cities, function (cityKey, cityEntry) {
+						debugger
+						cityDropdown.append($('<option></option>').attr('value', cityEntry.citryId).text(cityEntry.cityName));
+					});
+				});
+			},
+			error: function (error) {
+				console.error('Error fetching country data:', error);
+			}
+		});
+	});
+</script>
+
+
+
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			url: '/AdminApi/GetAllCategories',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var categoryDropdown = $('#categoryDropdown');
+
+				$.each(data, function (key, entry) {
+					categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+				});
+			},
+			error: function (error) {
+				console.error('Error fetching category data:', error);
+			}
+		});
+	});
+</script>
+
+
+

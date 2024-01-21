@@ -1,0 +1,734 @@
+﻿@model AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send.UQuestionPostIndexDto
+@{
+    ViewData["Title"] = "QuestionPost";
+}
+
+<div class="modal modal-blur" id="mediaManagementModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a new team</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 align-items-end">
+
+                    <div class="col">
+                        @*NOTE ---  this will take it from cookie  *@
+                        <input type="hidden" value="1" id="postInCity" />
+                        <label class="form-label">Question Title</label>
+                        <input type="text" class="form-control" id="questionTitle" />
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">Question Description</label>
+                    <textarea class="form-control" data-bs-toggle="autosize" id="questionDescription" placeholder="Type something…"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"></label>
+                    <select class="form-select" id="categoryDropdownModel" name="Category">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SavePost" data-bs-dismiss="modal">Add Post</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal modal-blur" id="reportQPostModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report this post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="reportReason" class="form-label">Select a reason for reporting:</label>
+                    <select class="form-select" id="reportReason" aria-label="Report Reason">
+                        <!-- Options will be populated here -->
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="reportDescription" class="form-label">Description:</label>
+                    <textarea class="form-control" id="descriptionDisplay" rows="3" disabled></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="reportButton" data-bs-dismiss="modal" onclick="reportMediaPost()">Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="deleteQPostModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-danger"></div>
+            <div class="modal-body text-center py-4">
+                <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                <h3>Are you sure?</h3>
+                <div class="text-secondary">Do you really want to delete this Question? What you've done cannot be undone.</div>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                        <div class="col">
+                            <a class="btn w-100" data-bs-dismiss="modal">
+                                Cancel
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-danger w-100" id="deleteQPostButton" data-bs-dismiss="modal">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-blur" id="editQPostModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Question Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editQPostId" />
+                <div class="row mb-3 align-items-end">
+                    <div class="col">
+                        <label class="form-label">Question Title</label>
+                        <input type="text" class="form-control" id="editQuestionTitle" />
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">Question Description</label>
+                    <textarea class="form-control" data-bs-toggle="autosize" id="editQuestionDescription" placeholder="Type something…"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"></label>
+                    <select class="form-select" id="editCategoryDropdownModel" name="Category">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updatePost" data-bs-dismiss="modal">Update Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-blur fade" id="myQuestionPostComment" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="col-md-12">
+                <div class="page-body">
+                    <div class="container-xl">
+                        <div class="d-flex align-items-center  mb-3">
+                            <img class="avatar" src="" id="UserImage"/>
+                            <div class="ms-2">
+                                <a class="text-body" id="UserName"></a>
+                                <div class="text-secondary" id="QPDate"></div>
+                            </div>
+                        </div>
+                        <h3 class="card-title"><a id="QPTitle"></a></h3>
+                        <div class="text-secondary mb-2" id="QPDescription"></div>
+                        <div class="card">
+                            <div class="card-body" style="height: 60vh; overflow-y: auto;">
+                                <div class="chat">
+                                    <div id="commentsContainer">
+
+                                    </div>
+                                    <div id="commentPager">
+                                        <button class="btn btn-primary mt-5" id="loadMoreComments">Load More</button>
+                                    </div>
+                                    <div id="loading-indicator2" class="my-5" style="display: none;">
+                                        <div class="spinner-border text-primary"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <input type="text" class="form-control mb-2" id="commentContentInput" placeholder="Add a comment...">
+                                <button class="btn btn-primary" id="addCommentButton">Add Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
+        <div class="make-me-sticky">
+
+            @Html.Partial("_FilteringandUserControlPartial")
+
+        </div>
+
+    </div>
+    <div class="col-lg-8 col-sm-12 order-lg-1 order-sm-2 order-2 px-lg-4 px-xl-6">
+        <div id="post-container">
+            @Html.Partial("_QuestionPostListPartial", Model.questionPostsDtos)
+        </div>
+        <div class="col text-center">
+            <div id="loading-indicator" class="my-5" style="display: none;">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        </div>
+        <div class="col text-center ">
+            <button type="button" class="btn btn-purple mt-5 " id="loadBut" onclick="loadMorePosts()">
+                load more content
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/searchbycategory.js"></script>
+    <script src="~/js/shared/getusercategories.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="~/js/RefreshQuestionPost.js"></script>
+    <script src="~/js/SetlocationName.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/AdminApi/GetAllCountryAndCities',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var countryDropdown = $('#countryDropdown');
+                    var cityDropdown = $('#cityDropdown');
+
+                    $.each(data, function (key, entry) {
+
+
+                        countryDropdown.append($('<option></option>').attr('value', entry.countryId).text(entry.countryName));
+
+
+                        $.each(entry.cities, function (cityKey, cityEntry) {
+
+                            cityDropdown.append($('<option></option>').attr('value', cityEntry.citryId).text(cityEntry.cityName));
+                        });
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching country data:', error);
+                }
+            });
+        });
+    </script>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('#mediaManagementModal').on('show.bs.modal', function (event) {
+                $.ajax({
+                    url: '/AdminApi/GetAllCategories',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var categoryDropdown = $('#categoryDropdownModel');
+                        categoryDropdown.empty();
+                        $.each(data, function (key, entry) {
+                            categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching category data:', error);
+                    }
+                });
+            });
+
+
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#SavePost").click(function () {
+                var postData = {
+                    CategoryId: $('#categoryDropdownModel').val(),
+                    CityId: $('#postInCity').val(),
+                    Title: $('#questionTitle').val(),
+                    Description: $('#questionDescription').val()
+                };
+
+
+                // Append text data to FormData
+                var formData = new FormData();
+                for (var key in postData) {
+                    formData.append(key, postData[key]);
+                }
+                console.log(postData);
+                $.ajax({
+                    url: '/QandA/AddPost',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $('#post-container').empty();
+                        page = 1;
+                        loadMorePosts();
+                        // Handle success response if needed
+                        $('#success-body').text(data);
+                        $('#alertSuccess').show();
+                        setTimeout(function () {
+                            $('#alertSuccess').hide();
+                        }, 3000);
+
+                    },
+                    error: function (error) {
+                        $('#error-body').text(error.responseText);
+                        $('#alertDanger').show();
+                        setTimeout(function () {
+                            $('#alertDanger').hide();
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+    <script>
+        var page = 2; // Initialize the page number for lazy loading
+        var loading = false; // Flag to track if loading is in progress
+
+        $(window).scroll(function () {
+            if (
+                !loading &&
+                $(window).scrollTop() + $(window).height() >= $(document).height() - 100
+            ) {
+                loading = true; // Set loading flag to true
+                loadMorePosts();
+            }
+        });
+        var Pages = @Model.PagesCount;
+        function loadMorePosts() {
+            var categoryId = $('#categoryDropdown').val();
+            if (page <= Pages) {
+                console.log("Loading posts - Page " + page);
+                $('#loading-indicator').show();
+                $("#refreshLoc").prop("disabled", true);
+                $("#ApplyBtn").prop("disabled", true);
+                $('#loadBut').hide();
+
+
+                $.ajax({
+                    url: '/QandA/GetQuestionPostPartialList',
+                    type: 'GET',
+                    data: { page: page, categoryId: categoryId },
+                    success: function (data) {
+                        // Append the new posts to the post container
+                        $('#post-container').append(data);
+                        page++; // Increment the page number for the next request
+                        loading = false; // Reset loading flag after successful load
+                        $('#loading-indicator').hide();
+                        $("#refreshLoc").prop("disabled", false);
+                        $("#ApplyBtn").prop("disabled", false);
+                        $('#loadBut').show();
+
+                    },
+                    error: function () {
+                        console.log('Error loading posts.');
+                        $('#loading-indicator').hide();
+                        $("#refreshLoc").prop("disabled", false);
+                        $("#ApplyBtn").prop("disabled", false);
+                        loading = false; // Reset loading flag even on error
+                    }
+                });
+            } else {
+                console.log("All posts loaded");
+                $('#loadBut').hide();
+
+            }
+        }
+
+    </script>
+
+    <script>
+        $('#reportQPostModal').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            var questionPostId = $(event.relatedTarget).data('id');
+            $('#mpostIdInput').val(questionPostId);
+
+            $.ajax({
+                url: '/QandA/GetQuestionPostReportTypes',
+                type: 'GET',
+                data: { questionPostId: questionPostId },
+                success: function (response) {
+                    var options = '';
+
+                    response.forEach(function (reason) {
+                        options += `<option value="${reason.reportTypeId}" data-description="${reason.description}" data-qpostid="${questionPostId}">${reason.type}</option>`;
+                    });
+
+                    $('#reportReason').html(options);
+
+                    $('#reportReason').on('change', function () {
+                        var selectedDescription = $(this).find(':selected').data('description');
+                        var selectedMpostId = $(this).find(':selected').data('qpostid');
+                        $('#descriptionDisplay').val(selectedDescription);
+                    }).trigger('change');
+                },
+                error: function (error) {
+                    console.error('Error fetching report types:', error);
+                }
+            });
+        });
+
+        $('#reportButton').on('click', function () {
+            var selectedQpostId = $('#reportReason').find(':selected').data('qpostid');
+            var selectedReportTypeId = $('#reportReason').val();
+
+            var formData = new FormData();
+            formData.append('ReportTypeId', selectedReportTypeId);
+            formData.append('QpostId', selectedQpostId);
+
+            $.ajax({
+                url: '/QandA/AddReportInQuestionPost',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#success-body').text(data);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 3000);
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#deleteQPostModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var QPostId = button.data('qpid');
+
+                $('#deleteQPostButton').data('qpid', QPostId);
+            });
+
+            $('#deleteQPostButton').on('click', function (event) {
+                var questionPostId = $(this).data('qpid');
+
+                var formData = new FormData();
+                formData.append('questionPostId', questionPostId);
+
+                $.ajax({
+                    url: '/QandA/DeleteQuestionPost',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $('#post-container').empty();
+                        page = 1;
+                        loadMorePosts();
+                        $('#success-body').text(data);
+                        $('#alertSuccess').show();
+                        setTimeout(function () {
+                            $('#alertSuccess').hide();
+                        }, 3000);
+                    },
+                    error: function (error) {
+                        $('#error-body').text(error.responseText);
+                        $('#alertDanger').show();
+                        setTimeout(function () {
+                            $('#alertDanger').hide();
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#editQPostModal').on('show.bs.modal', function (event) {
+                $.ajax({
+                    url: '/AdminApi/GetAllCategories',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var categoryDropdown = $('#editCategoryDropdownModel');
+                        categoryDropdown.empty();
+                        $.each(data, function (key, entry) {
+                            categoryDropdown.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching category data:', error);
+                    }
+                });
+
+                var button = $(event.relatedTarget);
+                var QPostId = button.data('qpid');
+
+                $.ajax({
+                    url: '/QandA/GetQuestionPostDetails',
+                    type: 'GET',
+                    data: { questionPostId: QPostId },
+                    success: function (data) {
+                        $('#editQPostId').val(data.id);
+                        $('#editQuestionTitle').val(data.title);
+                        $('#editQuestionDescription').val(data.description);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching question post details:', error);
+                    }
+                });
+            });
+
+            $('#updatePost').on('click', function () {
+                var formData = new FormData();
+
+                formData.append('Id', $('#editQPostId').val());
+                formData.append('CategoryId', $('#editCategoryDropdownModel').val());
+                formData.append('CityId', $('#postInCity').val());
+                formData.append('Title', $('#editQuestionTitle').val());
+                formData.append('Description', $('#editQuestionDescription').val());
+
+            $.ajax({
+                url: '/QandA/EditQuestionPost',
+                type: 'POST',
+                data: formData,  
+                processData: false, 
+                contentType: false,
+                success: function (response) {
+                    $('#post-container').empty();
+                    page = 1;
+                    loadMorePosts();
+                    $('#success-body').text(response);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                    }, 3000);
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        let currentPage = 1;
+        let questionPostId;
+        let resCount = 0;
+        var addUserImage = document.getElementById('UserImage');
+        var userName;
+        var userImage;
+        var QPTitle;
+        var QPDescription;
+
+        $('#myQuestionPostComment').on('show.bs.modal', function (event) {
+            questionPostId = $(event.relatedTarget).data('id');
+            var button = $(event.relatedTarget);
+            userName = button.data('username');
+            userImage = button.data('userimage');
+            QPTitle = button.data('title');
+            QPDescription = button.data('description');
+
+            // $(window).scroll(function () {
+            // 	if (
+            // 		!commentLoading &&
+            // 		$(window).scrollTop() + $(window).height() >= $(document).height() - 100
+            // 	) {
+            // 		commentLoading = true;
+            // 		loadMoreComments();
+            // 	}
+            // });
+
+            loadMoreComments();
+        });
+
+        $('#myQuestionPostComment').on('hide.bs.modal', function () {
+            currentPage = 1;
+
+            if (resCount > 0) {
+                resCount--;
+            }
+            addUserImage.src = '';
+            $('#UserName').text('');
+            $('#QPTitle').text('');
+            $('#QPDescription').text('');
+            $('#commentsContainer').empty();
+            $('#commentPager').show();
+        });
+
+        function displayComments(comments) {
+            let commentsHtml = '';
+            comments.forEach(function (comment) {
+                commentsHtml += `
+                                                    <div class="row align-items-end">
+                                                        <div class="col-auto">
+                                                            <img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+                                                        </div>
+                                                        <div class="col col-lg-10 mt-3">
+                                                            <div class="chat-bubble">
+                                                                <div class="chat-bubble-title">
+                                                                    <div class="row">
+                                                                        <div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+                                                                        <div class="col-auto chat-bubble-date">${comment.commentDate}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="chat-bubble-body">
+                                                                    <!-- Displaying the comment content -->
+                                                                    <p>${comment.commentContent}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    `;
+            });
+            $('#commentsContainer').append(commentsHtml);
+        }
+
+        function loadMoreComments() {
+            $.ajax({
+                url: `/QandA/GetQuestionPostComments`,
+                type: 'GET',
+                data: { questionPostId: questionPostId, page: currentPage },
+                success: function (response) {
+
+                    addUserImage.src = '';
+                    $('#UserName').text('');
+                    $('#QPTitle').text('');
+                    $('#QPDescription').text('');
+
+                    addUserImage.src = userImage;
+                    $('#UserName').append(userName);
+                    $('#QPTitle').append(QPTitle);
+                    $('#QPDescription').append(QPDescription);
+
+                    if (response == 'No more comments' && resCount == 0) {
+                        $('#commentPager').hide();
+                        $('#commentsContainer').html('<div class="text-center d-flex flex-column align-items-center" style="height: 100%;"><i class="ti ti-messages fa-6x mb-3 mt-7" style="font-size: 150px;"></i><p style="font-weight: bold;">No comments yet. Be the first one!</p></div>');
+                        return;
+                    }
+
+                    if (response == 'No more comments') {
+                        $('#commentPager').hide();
+                    }
+
+                    if (response.length > 0) {
+                        if (response.length < 5) {
+                            $('#commentPager').hide();
+                        }
+
+                        displayComments(response);
+                        currentPage++;
+                        resCount++;
+                        commentLoading = false;
+                        $('#commentsModal').scrollTop($('#commentsModal')[0].scrollHeight);
+                    }
+                    else {
+                        commentLoading = false;
+                        $('#commentPager').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error('Error loading more comments:', error);
+                }
+            });
+        }
+
+        $('#loadMoreComments').on('click', function () {
+            loadMoreComments();
+        });
+
+        function addComment() {
+            var commentContent = $('#commentContentInput').val();
+            var formData = new FormData();
+            formData.append('PostId', questionPostId);
+            formData.append('CommentContent', commentContent);
+
+            $.ajax({
+                url: '/QandA/AddCommentToQuestionPost',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#commentContentInput').val('');
+                    currentPage = 1;
+                    $('#commentsContainer').empty();
+                    $('#commentPager').show();
+                    loadMoreComments();
+                },
+                error: function (error) {
+                    console.error('Error adding comment:', error);
+                }
+            });
+        }
+
+        $('#addCommentButton').on('click', function () {
+            addComment();
+        });
+
+        $('#commentContentInput').on('keydown', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                addComment();
+            }
+        });
+    });
+</script>
+
+}
+
+
+
+
+
+
+
+
+

@@ -2,8 +2,12 @@
 
 namespace AreaBox_V0._1.Data.Model;
 
-public partial class QuestionPosts
+public class QuestionPosts
 {
+    public QuestionPosts()
+    {
+        this.QpostId = Guid.NewGuid().ToString();
+    }
     public string QpostId { get; set; }
 
     public int QpcategoryId { get; set; }
@@ -17,6 +21,7 @@ public partial class QuestionPosts
     public string Qptitle { get; set; }
 
     public string Qpdescription { get; set; }
+    public int? CommentCount { get; set; }
 
     public bool Qpstate { get; set; }
 
