@@ -13,21 +13,23 @@ namespace AreaBox_V0._1.Utilities
         {
 			_userManager = userManager;
 		}
-
-        public async Task JoinCityGroup(string city)
+        public async Task JoinCityGroup(string city, string category)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, city);
+            string group = category == null ? "General" : category;
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"{city}-{group}");
         }
 
-        public async Task SendMessage(string message, string city, long time)
+        public async Task SendMessage(string message, string city, string category, long time)
         {
-			var user = await _userManager.GetUserAsync(Context.User);
-			await Clients.Group(city).SendAsync("ReceiveMessage", user.Id, user.UserName, user.ProfilePicture, $"{message}", time);
+            string group = category == null ? "General" : category;
+            var user = await _userManager.GetUserAsync(Context.User);
+            await Clients.Group($"{city}-{group}").SendAsync("ReceiveMessage", user.Id, user.UserName, user.ProfilePicture, message, time);
         }
 
-        public async Task LeaveCityGroup(string city)
+        public async Task LeaveCityGroup(string city, string category)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, city);
+            string group = category == null ? "General" : category;
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"{city}-{group}");
         }
     }
 }

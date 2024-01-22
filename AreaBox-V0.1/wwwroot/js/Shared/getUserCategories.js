@@ -5,9 +5,9 @@
         dataType: 'json',
         success: function (data) {
             var categoryDropdownFilter = $('#categoryDropdown');
-            categoryDropdownFilter.append($('<option></option>').attr('value', 0).text('All'));
+            categoryDropdownFilter.append($('<option data-name="General"></option>').attr('value', 0).text('All'));
             $.each(data, function (key, entry) {
-                categoryDropdownFilter.append($('<option></option>').attr('value', entry.categoryId).text(entry.categoryName));
+                categoryDropdownFilter.append($(`<option data-name="${entry.categoryName}"></option>`).attr('value', entry.categoryId).text(entry.categoryName));
             });
         },
         error: function (error) {
