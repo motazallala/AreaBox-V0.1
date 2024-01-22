@@ -203,7 +203,9 @@
 </div>
 
 
-
+<audio controls="controls" id="likeSound" hidden>
+	<source src="~/sound_effects/like.mp3" type="audio/mpeg" />
+</audio>
 <div class="row justify-content-center">
 	<div class="col-lg-4 col-sm-12 order-lg-2 order-sm-1 order-1  mb-4">
 		<div class="make-me-sticky">
@@ -262,6 +264,7 @@
 					var currentLikeCount = parseInt(likeCountElement.text(), 10);
 					if (xhr.status === 200) {
 						if (data === "Post Liked") {
+
 							document.getElementById('likeSound').play();
 							button.prop('disabled', false);
 							button.addClass('active');
