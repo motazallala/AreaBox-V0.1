@@ -18,9 +18,7 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-3 align-items-end">
-                    <div class="col">
                         <label class="form-label">Plesas not once you delete your data you can't recover your account!</label>
-                    </div>
                     <div class="col">
                         <label class="form-label">Current Password</label>
                         <input type="password" id="oldPassword" class="form-control" />
@@ -69,11 +67,12 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    $('#success-body').text(data);
+                    $('#success-body').text(response);
                     $('#alertSuccess').show();
                     setTimeout(function () {
                         $('#alertSuccess').hide();
-                    }, 3000);
+                        window.location.href = '/';
+                    }, 2500);
                 },
                 error: function (error) {
                     $('#error-body').text(error.responseText);

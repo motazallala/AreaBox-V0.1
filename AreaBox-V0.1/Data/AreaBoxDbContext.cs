@@ -140,7 +140,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.User).WithMany()
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserCategories_AspNetUsers");
         });
 
