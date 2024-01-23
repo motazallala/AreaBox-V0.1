@@ -31,11 +31,11 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
             if (state)
             {
-                return Ok(new { Message = $"MediaPost has been successfully Published" });
+                return Ok("MediaPost has been successfully Published");
             }
             else
             {
-                return Ok(new { Message = $"MediaPost has been successfully Suspended" });
+                return Ok("MediaPost has been successfully Suspended");
             }
 
         }
@@ -124,8 +124,6 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
         public async Task<IActionResult> GetAllCategories()
         {
             var categoriesList = await db.Countries.GetAllAsync<Categories, CategoriesDto>();
-
-
             return Ok(categoriesList);
         }
 
@@ -239,11 +237,11 @@ namespace AreaBox_V0._1.Areas.Admin.Controllers
 
             if (state)
             {
-                return Ok(new { Message = $"User has been successfully Activated" });
+                return Ok("User has been successfully Activated");
             }
             else
             {
-                return Ok(new { Message = $"User has been successfully Suspended" });
+                return Ok("User has been successfully Suspended");
             }
         }
 
