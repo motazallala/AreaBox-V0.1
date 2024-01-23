@@ -70,4 +70,9 @@ public class SettingsController : Controller
         return View();
     }
 
+    public IActionResult PersonalData()
+    {
+        return View();
+    }
+
 }

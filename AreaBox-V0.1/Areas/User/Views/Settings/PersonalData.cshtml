@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Personal Data";
+    Layout = "~/Areas/User/Views/Shared/_SettingsLayout.cshtml";
+}
+
+
+
+<!--=====================================-->
+<!--=       Delete user data model      =-->
+<!--=====================================-->
+
+<div class="modal modal-blur" id="deleteAccountModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Your data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 align-items-end">
+                        <label class="form-label">Plesas not once you delete your data you can't recover your account!</label>
+                    <div class="col">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="oldPassword" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="deleteAccountBtn" data-bs-dismiss="modal">Delete Account</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card-body">
+    <h1>Personal Data</h1>
+    <div class="row row-cards">
+        <div class="row">
+            <div class="col-md-6">
+                <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+                <p>
+                    <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+                </p>
+                <form id="downloadForm" action="/UserApi/downloadPersonalData" method="post">
+                    <button class="btn btn-primary" type="submit">Download</button>
+                </form>
+                <a data-bs-toggle="modal" data-bs-target="#deleteAccountModal" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $('#deleteAccountBtn').on('click', function () {
+            var formData = new FormData();
+
+            formData.append('password', $('#oldPassword').val());
+
+            $.ajax({
+                url: '/UserApi/DeleteUserData',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $('#success-body').text(response);
+                    $('#alertSuccess').show();
+                    setTimeout(function () {
+                        $('#alertSuccess').hide();
+                        window.location.href = '/';
+                    }, 2500);
+                },
+                error: function (error) {
+                    $('#error-body').text(error.responseText);
+                    $('#alertDanger').show();
+                    setTimeout(function () {
+                        $('#alertDanger').hide();
+                    }, 3000);
+                }
+            });
+        }); 
+    </script>
+}
+
+
+

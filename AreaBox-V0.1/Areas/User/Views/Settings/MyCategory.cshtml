@@ -115,7 +115,7 @@
 
 	<script>
 		$(document).ready(function () {
-			$("#addCategoryBtn").on('click', function () {
+			$("#addCategoryBtn").off('click').on('click', function () {
 				var data = {
 					CategoryId: $("#allCategory").val()
 				};
@@ -163,7 +163,7 @@
 				categoryId = button.data('categoryid');
 			});
 
-			$("#deleteCeategory").on('click', function (event) {
+			$("#deleteCeategory").off('click').on('click', function (event) {
 				var data = {
 					categoryId: categoryId
 				};
@@ -202,18 +202,17 @@
 
 	<script>
 		function loadPage() {
-			var listOfCategory = $('#tagsList');
 			$('#loading-indicator').show();
 			$.ajax({
-				url: '/UserApi/GetAllUserCategories',
+				url: '/Settings/MyCategory',
 				type: 'GET',
 				success: function (data) {
-					listOfCategory.empty();
-					$.each(data, function (key, entry) {
-						listOfCategory.append(
-							$(`<span class="tag">${entry.categoryName}<a class="btn-close" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-categoryid="${entry.categoryId}"></a></span>`)
-						);
-					});
+					var startIndex = data.indexOf('<div class="card-body">');
+
+					var contentToReplace = data.substring(startIndex);
+
+					$('.card-body').html(contentToReplace);
+
 					$('#loading-indicator').hide();
 				},
 				error: function () {
@@ -222,5 +221,6 @@
 			});
 		}
 	</script>
+
 }
 
