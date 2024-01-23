@@ -11,6 +11,7 @@
             if (error.code === error.PERMISSION_DENIED) {
                 
                 alert("To use our website, please enable location services in your browser settings.");
+                window.location.href = "/";
             } else {
                 console.error("Error getting geolocation:", error.message);
             }
