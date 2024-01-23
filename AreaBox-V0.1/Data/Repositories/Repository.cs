@@ -66,11 +66,11 @@ namespace AreaBox_V0._1.Data.Repositories
 
 
 
-		public async Task<TViewModel> Find<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
+		public async Task<TViewModel> Find<TEntity, TViewModel>(Expression<Func<TViewModel, bool>> match, string[] includes = null)
 			 where TEntity : class
 			 where TViewModel : class
 		{
-			IQueryable<TEntity> query = _db.Set<TEntity>();
+			IQueryable<TViewModel> query = _db.Set<TViewModel>();
 
 			if (includes != null)
 			{
@@ -84,11 +84,11 @@ namespace AreaBox_V0._1.Data.Repositories
 			return viewModels;
 		}
 
-		public async Task<IEnumerable<TViewModel>> FindAll<TEntity, TViewModel>(Expression<Func<TEntity, bool>> match, string[] includes = null)
+		public async Task<IEnumerable<TViewModel>> FindAll<TEntity, TViewModel>(Expression<Func<TViewModel, bool>> match, string[] includes = null)
 			where TEntity : class
 			 where TViewModel : class
 		{
-			IQueryable<TEntity> query = _db.Set<TEntity>();
+			IQueryable<TViewModel> query = _db.Set<TViewModel>();
 
 			if (includes != null)
 			{
@@ -108,39 +108,7 @@ namespace AreaBox_V0._1.Data.Repositories
 		{
 			IQueryable<TEntity> query = _db.Set<TEntity>();
 
-			if (includes != null)
-			{
-				foreach (var include in includes)
-				{
-					query = query.Include(include);
-				}
-			}
-			if (match != null)
-			{
-				foreach (var item in match)
-				{
 
-					query = query.Where(item);
-
-				}
-			}
-			if (orderBy != null)
-			{
-				if (orderByDirection == OrderBy.Ascending)
-					query = query.OrderBy(orderBy);
-				else
-					query = query.OrderByDescending(orderBy);
-
-			}
-			if (skip.HasValue)
-			{
-				query = query.Skip(skip.Value);
-			}
-
-			if (take.HasValue)
-			{
-				query = query.Take(take.Value);
-			}
 			var entities = await query.ToListAsync();
 			var viewModels = _mapper.Map<IEnumerable<TViewModel>>(entities);
 			return viewModels;
@@ -154,10 +122,9 @@ namespace AreaBox_V0._1.Data.Repositories
 			{
 				foreach (var item in match)
 				{
-					if (item != null)
-					{
-						query = query.Where(item);
-					}
+
+					query = query.Where(item);
+
 				}
 			}
 
