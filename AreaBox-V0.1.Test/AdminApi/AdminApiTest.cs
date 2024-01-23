@@ -24,14 +24,13 @@ namespace AreaBox_V0._1.Test.AdminApi
 			mockUnitOfWork.Setup(uow => uow.MediaPosts).Returns(Mock.Of<IMediaPostRepository>());
 			mockUnitOfWork.Setup(uow => uow.Users).Returns(Mock.Of<IUserManagementRepository>());
 			adminApiController = new AdminApiController(mockUnitOfWork.Object);
-
 		}
 
 		[Fact]
 		public async Task DisableMediaPost_ValidData_ReturnsOk()
 		{
 			// Arrange
-			string postId = "137ca00e-e1ce-436e-9aa3-0e837b74350c";
+			string postId = "29e36807-e910-40ac-9370-c6ab8a5894a0";
 			string newState = "true";
 
 			// Act
@@ -53,7 +52,7 @@ namespace AreaBox_V0._1.Test.AdminApi
 		public async Task DisableUser_ValidData_ReturnsOk()
 		{
 			// Arrange
-			string userId = "247fd2b8-bfaf-45cb-a835-324cf9c90ec7";
+			string userId = "31b511c6-8bee-438e-a227-bd60a11266ea";
 			string newState = "true";
 
 			// Act

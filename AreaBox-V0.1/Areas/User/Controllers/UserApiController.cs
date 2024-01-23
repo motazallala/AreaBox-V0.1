@@ -414,7 +414,7 @@ public class UserApiController : ControllerBase
 
     #endregion
 
-    private bool ContainsOnlyLetters(string input)
+    public bool ContainsOnlyLetters(string input)
     {
         Regex regex = new Regex("^[a-zA-Z]+$");
         return regex.IsMatch(input);
