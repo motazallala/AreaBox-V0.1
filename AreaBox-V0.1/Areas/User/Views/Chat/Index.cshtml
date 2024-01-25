@@ -66,6 +66,7 @@
         });
 
         function initiateSignalRConnection(category) {
+            debugger
             if (connection) {
                 connection.invoke("LeaveCityGroup", city, currentCategory).catch(err => console.error(err));
             }
@@ -171,7 +172,8 @@
 
         $("#ApplyBtn").off('click').on('click', function () {
             var selectedOption = $('#categoryDropdown option:selected');
-            var dataNameValue = selectedOption.data('name');
+            var dataNameValue = selectedOption.data('name') || selectedOption.innerHTML;
+            debugger
             window.scrollTo(0, 0);
             $('.chat-bubbles').empty();
             initiateSignalRConnection(dataNameValue);

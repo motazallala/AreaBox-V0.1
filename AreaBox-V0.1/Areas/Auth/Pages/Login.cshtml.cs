@@ -2,19 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using AreaBox_V0._1.Data.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using AreaBox_V0._1.Data.Model;
+using System.ComponentModel.DataAnnotations;
 
 namespace AreaBox_V0._1.Areas.Auth.Pages
 {
@@ -130,7 +123,17 @@ namespace AreaBox_V0._1.Areas.Auth.Pages
                     }
 
                     _logger.LogInformation("User logged in.");
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    if (roles.Contains("SuperAdmin") || roles.Contains("ContentManager") || roles.Contains("TechnicalSupport"))
+                    {
+                        // Assuming "Admin" is the area name, and "Dashboard" is the controller name, and "Index" is the action name
+                        string redirectUrl = Url.Action("Index", "Dashboard", new { area = "Admin" });
+
+                        return LocalRedirect(redirectUrl);
+                    }
+
                     return LocalRedirect(returnUrl);
+
                 }
                 if (result.RequiresTwoFactor)
                 {

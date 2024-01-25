@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AreaBox_V0._1.Areas.User.Models.UserInfoDto.Input;
 using AreaBox_V0._1.Areas.Admin.Models.CategoriesModel.Send;
+using System.Text.Json;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Route("UserApi/[action]")]
@@ -23,15 +24,19 @@ public class UserApiController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IImageService _imageService;
     private readonly ILocationService _location;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+
     public UserApiController(IUnitOfWork db,
         UserManager<ApplicationUser> userManager,
         IImageService imageService,
-        ILocationService location)
+        ILocationService location,
+        SignInManager<ApplicationUser> signInManager)
     {
         _db = db;
         _userManager = userManager;
         _imageService = imageService;
         _location = location;
+        _signInManager = signInManager;
     }
 
 	[HttpGet]
@@ -345,7 +350,71 @@ public class UserApiController : ControllerBase
     }
     #endregion
 
-    private bool ContainsOnlyLetters(string input)
+
+    #region Personal Data
+    [HttpPost]
+    public async Task<IActionResult> DownloadPersonalData()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        }
+
+        var personalData = new Dictionary<string, string>();
+        var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
+                        prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
+        foreach (var p in personalDataProps)
+        {
+            personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
+        }
+
+        var logins = await _userManager.GetLoginsAsync(user);
+        foreach (var l in logins)
+        {
+            personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
+        }
+
+        personalData.Add($"Authenticator Key", await _userManager.GetAuthenticatorKeyAsync(user));
+
+        Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
+        return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteUserData([FromForm] string password)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        }
+
+        bool RequirePassword = await _userManager.HasPasswordAsync(user);
+
+        if (RequirePassword)
+        {
+            if (!await _userManager.CheckPasswordAsync(user, password))
+            {
+                return BadRequest("Incorrect password");
+            }
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+
+        if (!result.Succeeded)
+        {
+            BadRequest($"Unexpected error occurred deleting user.");
+        }
+
+        await _signInManager.SignOutAsync();
+        return Ok("We're sorry to see you go. Your account has been successfully deleted.");
+    }
+
+
+    #endregion
+
+    public bool ContainsOnlyLetters(string input)
     {
         Regex regex = new Regex("^[a-zA-Z]+$");
         return regex.IsMatch(input);
