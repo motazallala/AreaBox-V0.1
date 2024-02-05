@@ -1,4 +1,5 @@
-﻿using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
+﻿using AreaBox_V0._1.Areas.Admin.Pages.Settings.Manage;
+using AreaBox_V0._1.Areas.User.Models.UMediaPostDto.send;
 using AreaBox_V0._1.Areas.User.Models.UQuestionPostDto.send;
 using AreaBox_V0._1.Areas.User.Models.UUserCategoriesDto.Send;
 using AreaBox_V0._1.Data.Interface;
@@ -6,6 +7,7 @@ using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Models.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
@@ -15,11 +17,15 @@ public class SettingsController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _db;
+    private readonly ILogger<EnableAuthenticatorModel> _logger;
 
-    public SettingsController(UserManager<ApplicationUser> userManager, IUnitOfWork db)
+
+    public SettingsController(UserManager<ApplicationUser> userManager, IUnitOfWork db, ILogger<EnableAuthenticatorModel> logger)
     {
         _userManager = userManager;
         _db = db;
+        _logger = logger;
+
     }
     public IActionResult MyAccount()
     {

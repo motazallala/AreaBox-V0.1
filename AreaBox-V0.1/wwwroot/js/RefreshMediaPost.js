@@ -37,6 +37,7 @@ function getPageCount(categoryId) {
         data: { categoryId: categoryId },
         success: function (pagesCount) {
             // Handle the pagesCount value (you can use it as needed)
+            debugger
             Pages = pagesCount;
             console.log('Pages Count:', pagesCount);
         },

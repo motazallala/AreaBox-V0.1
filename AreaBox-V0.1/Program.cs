@@ -21,7 +21,16 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AreaBoxDbContext>();
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AddPageRoute("/User/Settings/TwoFactorAuthentication", "/Settings/TwoFactorAuthentication");
+    options.Conventions.AddPageRoute("/User/Settings/ShowRecoveryCodes", "/Settings/ShowRecoveryCodes");
+    options.Conventions.AddPageRoute("/User/Settings/ResetAuthenticator", "/Settings/TwoFactResetAuthenticatororAuthentication");
+    options.Conventions.AddPageRoute("/User/Settings/GenerateRecoveryCodes", "/Settings/GenerateRecoveryCodes");
+    options.Conventions.AddPageRoute("/User/Settings/EnableAuthenticator", "/Settings/EnableAuthenticator");
+    options.Conventions.AddPageRoute("/User/Settings/Disable2fa", "/Settings/Disable2fa");
+});
+
 builder.Services.AddSignalR();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IImageService, ImageService>();

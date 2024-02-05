@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using AreaBox_V0._1.Areas.User.Models.UserInfoDto.Input;
 using AreaBox_V0._1.Areas.Admin.Models.CategoriesModel.Send;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AreaBox_V0._1.Areas.User.Controllers;
 [Route("UserApi/[action]")]
@@ -411,6 +412,51 @@ public class UserApiController : ControllerBase
         return Ok("We're sorry to see you go. Your account has been successfully deleted.");
     }
 
+
+    #endregion
+
+    #region TwoFactorAuthentication
+
+    [HttpGet]
+    public async Task<IActionResult> GetTwoFactorAuthentication()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        }
+
+        var HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
+        var Is2faEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+        var IsMachineRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user);
+        var RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user);
+
+        var result = new
+        {
+            HasAuthenticator,
+            Is2faEnabled,
+            IsMachineRemembered,
+            RecoveryCodesLeft
+        };
+
+        return Ok(result);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> ForgetTwoFactorAuthentication()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        }
+
+        await _signInManager.ForgetTwoFactorClientAsync();
+
+        return Ok("The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.");
+    }
 
     #endregion
 

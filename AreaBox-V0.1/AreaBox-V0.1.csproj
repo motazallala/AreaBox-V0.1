@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\qr.js" />
     <None Include="wwwroot\lib\webfont\fonts\tabler-icons.woff2" />
     <None Include="wwwroot\lib\webfont\tabler-icons.scss" />
     <None Include="wwwroot\sound_effects\like.mp3" />
