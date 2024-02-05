@@ -19,6 +19,7 @@
                             <div class="row">
                                 <div class="col">
                                     <h3>@post.User.UserName Have a Question</h3>
+                                    <div class="card-subtitle"> @post.City.CityName-@post.City.Country.CountryName / @post.Category.CategoryName</div>
         
                                 </div>
                                 <div class="col text-end">
@@ -76,6 +77,7 @@
 
                                 <div class="col-md-6 markdown">
                                     <h3>Question Title :  @post.Title</h3>
+                                    
                                     <h4>The Question</h4>
                                     <p>“@post.Description”</p>
                                 </div>

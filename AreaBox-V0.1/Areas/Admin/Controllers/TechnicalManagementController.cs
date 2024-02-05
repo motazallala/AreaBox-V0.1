@@ -36,10 +36,15 @@ public class TechnicalManagementController : Controller
 		}
 		int skip = pageSize * (id - 1);
 		int take = pageSize;
-		var result = await db.TechnicalReports.FindAndFilter<TechnicalReports, TechnicalReportsDto>(new[] { "User" }, skip, take, e => e.ReportDateTime, OrderBy.Descending, e =>
-																																											(SendedToSuAdmin ? e.ReviewByAdmin == true : e.ReviewByAdmin == false) &&
-																																											 (ReviewedBySuAdmin ? e.Reviewed == true && e.ReviewByAdmin == true : e.Reviewed == false) &&
-																																											 (ReviewCompleted ? e.Complete == true && e.Reviewed == true && e.ReviewByAdmin == true : e.Complete == false));
+		var result = await db.TechnicalReports.FindAndFilter<TechnicalReports, TechnicalReportsDto>(new[] { "User" }, skip, take, e => e.ReportDateTime, OrderBy.Descending, e => (!SendedToSuAdmin && !ReviewedBySuAdmin && !ReviewCompleted ? true : true) &&
+																																											(SendedToSuAdmin ? e.ReviewByAdmin == true : true) &&
+																																											(ReviewedBySuAdmin ? e.Reviewed == true : true) &&
+																																											(ReviewCompleted ? e.Complete == true : true) &&
+																																											(SendedToSuAdmin && ReviewedBySuAdmin && ReviewCompleted ? e.Complete == true && e.Reviewed == true && e.ReviewByAdmin == true : true) &&
+																																											(SendedToSuAdmin && ReviewedBySuAdmin ? e.Reviewed == true && e.ReviewByAdmin == true : true) &&
+																																											(SendedToSuAdmin && ReviewCompleted ? e.Complete == true && e.ReviewByAdmin == true : true) &&
+																																											(ReviewedBySuAdmin && ReviewCompleted ? e.Complete == true && e.Reviewed == true : true)
+																																											);
 
 
 
