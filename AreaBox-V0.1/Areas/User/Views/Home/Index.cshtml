@@ -236,10 +236,10 @@
 
 @section Scripts {
 
-    <script src="~/js/shared/getusercategories.js"></script>
+	<script src="~/js/shared/getusercategories.js"></script>
 	<script src="~/js/SetlocationName.js"></script>
 	<script src="~/js/RefreshMediaPost.js"></script>
-    <script src="~/js/searchbycategory.js"></script>
+	<script src="~/js/searchbycategory.js"></script>
 
 	<script>
 		$(document).on('click', '.likeBtn', function () {
@@ -294,8 +294,24 @@
 
 	</script>
 
+	<script>
+		async function getPageCountNew(categoryId) {
+				const pagesCount = await $.ajax({
+					url: '/UserApi/GetPageMediaPostCount',
+					type: 'GET',
+					data: { categoryId: categoryId },
+				});
+
+				Pages = pagesCount;
+				console.log('Pages Count:', pagesCount);
+				return pagesCount;
+			}
+
+	</script>
 
 	<script>
+		var Pages = @Model.PagesCount;
+		var forceReload = false;
 		$(document).ready(function () {
 			// Initialize Dropzone
 
@@ -378,22 +394,31 @@
 					url: '/Home/AddPost',
 					type: 'POST',
 					data: formData,
-					processData: false,  // Important: Don't process the data
-					contentType: false,  // Important: Don't set content type to 'application/json'
-					success: function (data) {
+					processData: false,
+					contentType: false,
+					success: async function (data) {
+						debugger
+						var categoryId = $('#categoryDropdown').val();
+
+						// Call getPageCountNew and wait for it to complete
+						await getPageCountNew(categoryId);
+
+						// Rest of your code...
 						myDropzone.removeAllFiles(true);
 						$('#mediaTitle').val('');
 						$('#mediaDescription').val('');
 						$('#post-container').empty();
 						page = 1;
-						loadMorePosts();
+
+						// Now, call loadMorePosts
+						await loadMorePosts();
+
 						// Handle success response if needed
 						$('#success-body').text(data);
 						$('#alertSuccess').show();
 						setTimeout(function () {
 							$('#alertSuccess').hide();
 						}, 3000);
-
 					},
 					error: function (error) {
 						// Handle error response if needed
@@ -407,10 +432,10 @@
 			});
 		});
 
-		var Pages = @Model.PagesCount;
 		function loadMorePosts() {
-			debugger
+			debugger;
 			var categoryId = $('#categoryDropdown').val();
+
 			if (page <= Pages) {
 				console.log("Loading posts - Page " + page);
 				$('#loading-indicator').show();
@@ -418,11 +443,10 @@
 				$("#ApplyBtn").prop("disabled", true);
 				$('#loadBut').hide();
 
-
 				$.ajax({
 					url: '/Home/GetMediaPostPartialList',
 					type: 'GET',
-					data: { page: page, categoryId : categoryId },
+					data: { page: page, categoryId: categoryId },
 					success: function (data) {
 						// Append the new posts to the post container
 						$('#post-container').append(data);
@@ -448,6 +472,7 @@
 				$('#loadBut').hide();
 			}
 		}
+		
 	</script>
 	<script>
 		var page = 2; // Initialize the page number for lazy loading
@@ -458,7 +483,7 @@
 				!loading &&
 				$(window).scrollTop() + $(window).height() >= $(document).height() - 100
 			) {
-				
+
 				loading = true; // Set loading flag to true
 				loadMorePosts();
 			}
@@ -612,7 +637,7 @@
 				mediaPostId = $(event.relatedTarget).data('id');
 
 				mediaPostImage = $(event.relatedTarget).data('postimage');
-				
+
 				$('#mediaPostCommentImage').attr('src', mediaPostImage);
 
 				// $(window).scroll(function () {
@@ -631,7 +656,7 @@
 			$('#commentsModal').on('hide.bs.modal', function () {
 				currentPage = 1;
 
-				if(resCount > 0){
+				if (resCount > 0) {
 					resCount--;
 				}
 
@@ -643,26 +668,26 @@
 				let commentsHtml = '';
 				comments.forEach(function (comment) {
 					commentsHtml += `
-												<div class="row align-items-end">
-													<div class="col-auto">
-														<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
-													</div>
-													<div class="col col-lg-10 mt-3">
-														<div class="chat-bubble">
-															<div class="chat-bubble-title">
-																<div class="row">
-																	<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
-																	<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+														<div class="row align-items-end">
+															<div class="col-auto">
+																<img class="avatar" src="${comment.profilePicture}" alt="User Avatar">
+															</div>
+															<div class="col col-lg-10 mt-3">
+																<div class="chat-bubble">
+																	<div class="chat-bubble-title">
+																		<div class="row">
+																			<div class="col chat-bubble-author">${comment.firstName} ${comment.lastName}</div>
+																			<div class="col-auto chat-bubble-date">${comment.commnetDate}</div>
+																		</div>
+																	</div>
+																	<div class="chat-bubble-body">
+																		<!-- Displaying the comment content -->
+																		<p>${comment.commentContent}</p>
+																	</div>
 																</div>
 															</div>
-															<div class="chat-bubble-body">
-																<!-- Displaying the comment content -->
-																<p>${comment.commentContent}</p>
-															</div>
 														</div>
-													</div>
-												</div>
-												`;
+														`;
 				});
 				$('#commentsContainer').append(commentsHtml);
 			}
