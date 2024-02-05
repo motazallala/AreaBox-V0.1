@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\CitiesModel\input\" />
+    <Folder Include="Areas\Admin\Models\Dashboard\input\" />
     <Folder Include="Areas\Admin\Models\MediaPostReportsDto\input\" />
     <Folder Include="Areas\Admin\Models\Pages\ReportManagement\input\" />
     <Folder Include="Areas\Admin\Models\QuestionPostDto\input\" />
