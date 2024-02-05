@@ -33,7 +33,7 @@ public class QuestionPostsSeeder : ISeeder
             {
                 QpcategoryId  = exCategories.CategoryId,
                 QpcityId = exCity2.CitryId,
-                Qpdate = DateTime.Now.AddDays(1),
+                Qpdate = DateTime.Now.AddDays(-1),
                 QpuserId = exUser.Id,
                 Qptitle = "this is test 2",
                 Qpdescription = "this is long test 2",
@@ -43,7 +43,7 @@ public class QuestionPostsSeeder : ISeeder
             {
                 QpcategoryId  = exCategories.CategoryId,
                 QpcityId = exCity.CitryId,
-                Qpdate = DateTime.Now.AddDays(2),
+                Qpdate = DateTime.Now.AddDays(-2),
                 QpuserId = exUser2.Id,
                 Qptitle = "this is test 3",
                 Qpdescription = "this is long test 3",
