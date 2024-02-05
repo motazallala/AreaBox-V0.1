@@ -4,6 +4,7 @@ using AreaBox_V0._1.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AreaBox_V0._1.Migrations
 {
     [DbContext(typeof(AreaBoxDbContext))]
-    partial class AreaBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240203190552_editTheDatainTR")]
+    partial class editTheDatainTR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -462,10 +465,10 @@ namespace AreaBox_V0._1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TechnicalReportId"));
 
-                    b.Property<bool>("Complete")
+                    b.Property<bool?>("Complete")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("CompleteDateTime")
+                    b.Property<DateTime>("CompleteDateTime")
                         .HasColumnType("datetime")
                         .HasColumnName("CompleteDateTime");
 
@@ -482,10 +485,10 @@ namespace AreaBox_V0._1.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("ReportDateTime");
 
-                    b.Property<bool>("ReviewByAdmin")
+                    b.Property<bool?>("ReviewByAdmin")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ReviewByAdminDateTime")
+                    b.Property<DateTime>("ReviewByAdminDateTime")
                         .HasColumnType("datetime")
                         .HasColumnName("ReviewByAdminDateTime");
 
@@ -494,10 +497,10 @@ namespace AreaBox_V0._1.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("ReviewNote");
 
-                    b.Property<bool>("Reviewed")
+                    b.Property<bool?>("Reviewed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ReviewedDateTime")
+                    b.Property<DateTime>("ReviewedDateTime")
                         .HasColumnType("datetime")
                         .HasColumnName("ReviewedDateTime");
 

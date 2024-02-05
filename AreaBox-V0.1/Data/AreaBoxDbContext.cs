@@ -58,7 +58,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .WithOne(report => report.User)
                 .HasForeignKey(report => report.UserId);
 
-		});
+        });
 
         modelBuilder.Entity<Categories>(entity =>
         {
@@ -124,7 +124,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
         });
         modelBuilder.Entity<UserCategories>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.CategoryId});
+            entity.HasKey(e => new { e.UserId, e.CategoryId });
 
             entity.Property(e => e.CategoryId)
                 .IsRequired();
@@ -191,7 +191,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MediaPostLikes>(entity =>
         {
-            entity.HasKey(e => new { e.MpostId , e.UserId});
+            entity.HasKey(e => new { e.MpostId, e.UserId });
 
             entity.Property(e => e.MpostId)
                 .IsRequired()
@@ -278,7 +278,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                   .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK_MediaPostsReports_ReportType");
 
-			entity.HasOne(d => d.Mpost).WithMany(p => p.MediaPostsReports)
+            entity.HasOne(d => d.Mpost).WithMany(p => p.MediaPostsReports)
                 .HasForeignKey(d => d.MpostId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_MediaPostsReports_MediaPosts");
@@ -377,7 +377,7 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_QuestionPostsReports_ReportType");
 
-			entity.HasOne(d => d.User).WithMany(d => d.QuestionPostsReports)
+            entity.HasOne(d => d.User).WithMany(d => d.QuestionPostsReports)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_QuestionPostsReports_Users");
@@ -416,9 +416,28 @@ public class AreaBoxDbContext : IdentityDbContext<ApplicationUser>
                 .HasMaxLength(450)
                 .HasColumnName("TechnicalAdminId");
 
+            entity.Property(e => e.ReportDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("ReportDateTime");
+
+            entity.Property(e => e.ReviewByAdminDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("ReviewByAdminDateTime");
+
+
+            entity.Property(e => e.ReviewedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("ReviewedDateTime");
+
+            entity.Property(e => e.CompleteDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("CompleteDateTime");
             entity.Property(e => e.ReviewNote)
                 .HasMaxLength(450)
                 .HasColumnName("ReviewNote");
+            entity.Property(e => e.CompleteNote)
+                .HasMaxLength(450)
+                .HasColumnName("CompleteNote");
 
             entity.HasOne(d => d.User).WithMany(p => p.TechnicalReports)
                 .HasForeignKey(d => d.UserId)
