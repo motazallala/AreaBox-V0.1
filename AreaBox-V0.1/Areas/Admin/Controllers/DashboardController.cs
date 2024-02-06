@@ -6,11 +6,14 @@ using AreaBox_V0._1.Data.Interface;
 using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Data.Repositories;
 using AreaBox_V0._1.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AreaBox_V0._1.Areas.Admin.Controllers;
 [Area("Admin")]
 [Route("[controller]/[action]")]
+[Authorize(Roles = "SuperAdmin,ContentManager,TechnicalSupport")]
 public class DashboardController : Controller
 {
         private readonly IUnitOfWork db;
@@ -42,5 +45,6 @@ public class DashboardController : Controller
     {
         return View();
     }
+
 }
 
