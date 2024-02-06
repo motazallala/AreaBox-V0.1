@@ -1,0 +1,46 @@
+﻿@model AreaBox_V0._1.Data.Model.TechnicalReports
+
+@{
+    ViewData["Title"] = "AddTechicalReport";
+    Layout = "~/Areas/User/Views/Shared/_SettingsLayout.cshtml";
+}
+
+<h1>AddTechicalReport</h1>
+
+<h4>TechnicalReports</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddTechicalReport" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <select asp-for="Type" class="form-control" >
+                    <option value="Bug">Bug</option>
+                    <option value="Issue">Issue</option>
+                    <option value="IssueonAccount">Issue on Account</option>
+                </select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Details" class="control-label"></label>
+                <input asp-for="Details" class="form-control" />
+                <span asp-validation-for="Details" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserEmail" class="control-label"></label>
+                <input asp-for="UserEmail" class="form-control" />
+                <span asp-validation-for="UserEmail" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-area="User" asp-controller="Settings" asp-action="TechicalReport">Back to List</a>
+</div>
+
