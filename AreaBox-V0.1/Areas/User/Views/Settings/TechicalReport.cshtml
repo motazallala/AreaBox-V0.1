@@ -1,8 +1,41 @@
-﻿
+﻿@model IEnumerable<AreaBox_V0._1.Data.Model.TechnicalReports>
 @{
     ViewData["Title"] = "Techical Report";
     Layout = "~/Areas/User/Views/Shared/_SettingsLayout.cshtml";
 }
+<div class="card-body">
+
+<a asp-area="User" asp-controller="Settings" asp-action="AddTechicalReport" class="btn mb-2">add new TechicalReport</a>
 
 <h1>TechicalReport</h1>
 
+
+<div class="table-responsive table-nowrap">
+	<table border="1" class="table table-vcenter card-table table-striped">
+		<thead>
+
+			<tr>
+				<th>Type</th>
+				<th>Details</th>
+				<th>User Email</th>
+
+			</tr>
+
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.Type</td>
+					<td>@item.Details</td>
+
+					<td>@item.UserEmail</td>
+
+				</tr>
+			}
+
+		</tbody>
+	</table>
+</div>
+
+</div>
