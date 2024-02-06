@@ -22,6 +22,7 @@ using AreaBox_V0._1.Data.Model;
 using AreaBox_V0._1.Services;
 using SixLabors.ImageSharp;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace AreaBox_V0._1.Areas.Auth.Pages;
 
@@ -82,6 +83,8 @@ public class RegisterModel : PageModel
 
         [Required]
         [Display(Name = "Date Of Birth")]
+        [DataType(DataType.Date)]
+        [MinimumAge(15, ErrorMessage = "You must be at least 15 years old.")]
         public DateTime DOB { get; set; }
 
         [Required]
@@ -111,6 +114,25 @@ public class RegisterModel : PageModel
     {
         returnUrl ??= Url.Content("~/");
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+        var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == Input.Email);
+
+        if (existingUser != null)
+        {
+            ModelState.AddModelError(string.Empty, "Email address is already in use.");
+            return Page();
+        }
+
+
+        var existingUserName = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == Input.UserName);
+
+        if (existingUserName != null)
+        {
+            ModelState.AddModelError(string.Empty, "User Name is already in use.");
+            return Page();
+        }
+
+
         if (ModelState.IsValid)
         {
 
