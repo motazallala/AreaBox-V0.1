@@ -115,9 +115,9 @@ public class RegisterModel : PageModel
         returnUrl ??= Url.Content("~/");
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-        var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == Input.Email);
+        var existingEmail = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == Input.Email);
 
-        if (existingUser != null)
+        if (existingEmail != null)
         {
             ModelState.AddModelError(string.Empty, "Email address is already in use.");
             return Page();

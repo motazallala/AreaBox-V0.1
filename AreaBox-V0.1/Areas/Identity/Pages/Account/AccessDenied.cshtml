@@ -2,9 +2,11 @@
 @model AccessDeniedModel
 @{
     ViewData["Title"] = "Access denied";
+    Layout = "";
 }
 
 <header>
     <h1 class="text-danger">@ViewData["Title"]</h1>
     <p class="text-danger">You do not have access to this resource.</p>
+    <a class="btn btn-success" asp-area="" asp-controller="Home" asp-action="Index">Back To Home</a>
 </header>
